@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Eslarma — панель</title>
+<meta name="theme-color" content="#0b0b10" id="metaTheme">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Eslarma">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+(function(){var mq=matchMedia('(prefers-color-scheme: light)');function a(){var t=mq.matches?'light':'dark';document.documentElement.dataset.theme=t;document.getElementById('metaTheme')&&document.getElementById('metaTheme').setAttribute('content',t==='light'?'#f5f5f8':'#0b0b10')}a();try{mq.addEventListener('change',a)}catch(e){}})();
+</script>
+<style>
+:root{
+  --bg:#0b0b10;--surface:#14141c;--surface2:#1c1c27;--line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);
+  --text:#f7f7fa;--muted:#8e8e9e;--muted2:#b4b4c2;
+  --grad:linear-gradient(120deg,#6a2cf5 0%,#a62fd8 35%,#e1306c 70%,#f77737 100%);
+  --grad-soft:linear-gradient(120deg,rgba(106,44,245,.18),rgba(225,48,108,.14) 60%,rgba(247,119,55,.12));
+  --ok:#34d399;--bad:#fb5a7a;--warn:#fbbf24;--blue:#7aa7ff;--r:18px;--nav:rgba(11,11,16,.86);
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+}
+[data-theme=light]{
+  --bg:#f5f5f8;--surface:#ffffff;--surface2:#f0f0f5;--line:rgba(0,0,0,.06);--line2:rgba(0,0,0,.1);
+  --text:#14141c;--muted:#6b6b7b;--muted2:#4a4a5a;--nav:rgba(245,245,248,.88);--shadow:0 8px 24px rgba(20,20,40,.08);
+  --ok:#059669;--bad:#e11d48;--warn:#b45309;--blue:#2563eb;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.45 Inter,-apple-system,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+body{padding:env(safe-area-inset-top) 0 calc(84px + env(safe-area-inset-bottom))}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px}
+header{position:sticky;top:0;z-index:5;background:var(--nav);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--line)}
+header .wrap{display:flex;align-items:center;gap:12px;padding-top:12px;padding-bottom:12px}
+.logo{width:38px;height:38px;border-radius:11px;background:var(--grad);display:grid;place-items:center;font-weight:800;color:#fff;font-size:18px;flex:none}
+h1{font-size:20px;margin:0;font-weight:800;letter-spacing:-.02em}
+.sub{color:var(--muted);font-size:13px}
+h2{font-size:28px;font-weight:800;letter-spacing:-.03em;margin:22px 0 12px}
+h3{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:22px 4px 8px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.hero{background:var(--grad);color:#fff;border:0;padding:18px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.12)}
+.hero .big{font-size:34px;font-weight:800;letter-spacing:-.03em;line-height:1.1}
+.hero .lbl{opacity:.85;font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px}
+.stat{padding:14px}
+.stat .v{font-size:24px;font-weight:800;letter-spacing:-.02em}
+.stat .k{font-size:13px;color:var(--muted)}
+.list{overflow:hidden}
+.row{display:flex;gap:12px;align-items:center;padding:14px 16px;border-top:1px solid var(--line);min-height:56px;text-decoration:none;color:inherit}
+.row:first-child{border-top:0}
+.row .main{flex:1;min-width:0}
+.row .t{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .m{font-size:13px;color:var(--muted);margin-top:2px}
+.num{width:40px;height:40px;border-radius:12px;background:var(--surface2);display:grid;place-items:center;font-weight:700;font-size:13px;color:var(--muted2);flex:none}
+.pill{font-size:12px;font-weight:600;padding:4px 10px;border-radius:99px;white-space:nowrap;background:var(--surface2);color:var(--muted2)}
+.pill.ok{background:rgba(52,211,153,.15);color:var(--ok)}.pill.bad{background:rgba(251,90,122,.15);color:var(--bad)}
+.pill.warn{background:rgba(251,191,36,.15);color:var(--warn)}.pill.blue{background:rgba(122,167,255,.15);color:var(--blue)}
+.chev{color:var(--muted);font-size:20px}
+.metrics{display:flex;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--muted2);margin-top:6px}
+.metrics b{color:var(--text)}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:6px;background:var(--surface2);border-radius:16px}
+.seg a{display:block;text-align:center;padding:14px 8px;border-radius:12px;font-weight:700;text-decoration:none;color:var(--muted2);min-height:48px}
+.seg a.on{background:var(--surface);color:var(--text);box-shadow:var(--shadow)}
+.seg small{display:block;font-weight:500;font-size:12px;color:var(--muted);margin-top:2px}
+.note{font-size:14px;color:var(--muted);padding:12px 4px}
+.slots{display:flex;gap:8px;margin-top:12px}
+.slot{flex:1;text-align:center;padding:10px 0;border-radius:12px;background:rgba(255,255,255,.18);font-weight:700}
+.bar{height:8px;border-radius:99px;background:var(--surface2);overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--grad);border-radius:99px}
+.empty{padding:28px 16px;text-align:center;color:var(--muted)}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:9;background:var(--nav);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+nav .wrap{display:grid;grid-template-columns:repeat(4,1fr)}
+nav button{all:unset;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 0 7px;font-size:11px;font-weight:600;color:var(--muted);min-height:48px}
+nav button svg{width:24px;height:24px}
+nav button.on{color:var(--text)}
+nav button.on svg{stroke:url(#g)}
+.view{display:none;animation:in .25s ease}.view.on{display:block}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.view{animation:none}}
+@media (min-width:700px){.grid{grid-template-columns:repeat(4,1fr)}}
+a{color:var(--blue)}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#6a2cf5"/><stop offset=".5" stop-color="#e1306c"/><stop offset="1" stop-color="#f77737"/></linearGradient></defs></svg>
+<header><div class="wrap"><div class="logo">e</div><div><h1>Eslarma</h1><div class="sub" id="upd">загрузка…</div></div></div></header>
+
+<main class="wrap">
+  <section class="view on" id="v-home">
+    <h2>Обзор</h2>
+    <div class="card hero">
+      <div class="lbl">Режим публикации</div>
+      <div class="big" id="modeBig">—</div>
+      <div class="slots" id="slots"></div>
+    </div>
+    <div class="grid" id="kpi"></div>
+    <h3>Последние ролики</h3>
+    <div class="card list" id="recent"></div>
+  </section>
+
+  <section class="view" id="v-queue">
+    <h2>Очередь</h2>
+    <div class="card list" id="queue"></div>
+  </section>
+
+  <section class="view" id="v-grow">
+    <h2>Рост</h2>
+    <h3>Темы</h3>
+    <div class="card list" id="topics"></div>
+    <h3>Конкуренты</h3>
+    <div class="card list" id="comp"></div>
+    <h3>Выводы</h3>
+    <div class="card list" id="learned"></div>
+  </section>
+
+  <section class="view" id="v-mode">
+    <h2>Режим</h2>
+    <div class="seg" id="seg">
+      <a id="m-auto" href="https://t.me/eslarma_helper_bot?start=mode_auto">Автоматически<small>публикует сам</small></a>
+      <a id="m-approve" href="https://t.me/eslarma_helper_bot?start=mode_approve">С одобрением<small>сначала вам в Telegram</small></a>
+    </div>
+    <p class="note">Нажатие открывает бота в Telegram — там нажмите «Start». Режим меняется в течение 30 минут, здесь он обновится после следующего обновления данных.</p>
+    <h3>Правила безопасности</h3>
+    <div class="card list">
+      <div class="row"><div class="main"><div class="t">Проверка по 9 пунктам</div><div class="m">Ролик с хотя бы одной ошибкой не публикуется — вам приходит сообщение.</div></div></div>
+      <div class="row"><div class="main"><div class="t">Слоты: 09:00 · 15:00 · 21:00</div><div class="m">По Бишкеку, один ролик за раз.</div></div></div>
+      <div class="row"><div class="main"><div class="t">Опубликованное не трогается</div><div class="m">Программа никогда не удаляет и не публикует повторно.</div></div></div>
+    </div>
+  </section>
+</main>
+
+<nav><div class="wrap">
+  <button class="on" data-v="home" aria-label="Обзор"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Обзор</button>
+  <button data-v="queue" aria-label="Очередь"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="m10 9 5 3-5 3z"/></svg>Очередь</button>
+  <button data-v="grow" aria-label="Рост"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>Рост</button>
+  <button data-v="mode" aria-label="Режим"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Режим</button>
+</div></nav>
+
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=n=>n==null?'—':Number(n).toLocaleString('ru-RU');
+const date=s=>{if(!s)return'';const d=new Date(s);return isNaN(d)?esc(s):d.toLocaleString('ru-RU',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Asia/Bishkek'})};
+const cls={published:'ok',rejected:'bad',needs_owner:'bad',failed:'bad',awaiting_approval:'warn',in_progress:'blue',approved:'blue'};
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id==='v-'+b.dataset.v));
+  scrollTo({top:0});
+});
+function row(i,n){
+  const s=i.stats;
+  const m=s?`<div class="metrics"><span>👁 <b>${fmt(s.views)}</b></span><span>↗ <b>${fmt(s.shares)}</b></span><span>🔖 <b>${fmt(s.saved)}</b></span><span>❤ <b>${fmt(s.likes)}</b></span></div>`:'';
+  const tag=i.permalink?'a':'div';
+  return `<${tag} class="row" ${i.permalink?`href="${esc(i.permalink)}" target="_blank" rel="noopener"`:''}>
+    <div class="num">${esc(i.id)}</div>
+    <div class="main"><div class="t">${esc(i.hook||'Без заголовка')}</div>
+    <div class="m">${esc(i.topic||'')}${i.topic&&i.published_at?' · ':''}${date(i.published_at)}</div>${m}</div>
+    <span class="pill ${cls[i.status]||''}">${esc(i.status_ru)}</span>${i.permalink?'<span class="chev">›</span>':''}</${tag}>`;
+}
+const list=(el,html,empty)=>{$(el).innerHTML=html||`<div class="empty">${empty}</div>`};
+fetch('data.json?'+Date.now()).then(r=>r.json()).then(d=>{
+  $('#upd').textContent='Обновлено '+date(d.updated);
+  const auto=d.mode!=='approve';
+  $('#modeBig').textContent=auto?'Автоматически':'С одобрением';
+  $('#slots').innerHTML=d.slots.map(s=>`<div class="slot">${s}</div>`).join('');
+  $('#m-auto').classList.toggle('on',auto);$('#m-approve').classList.toggle('on',!auto);
+  const pub=d.items.filter(i=>i.status==='published');
+  const wait=d.items.filter(i=>['downloaded','new','retry','approved','awaiting_approval','in_progress'].includes(i.status));
+  const views=pub.reduce((a,i)=>a+((i.stats||{}).views||0),0);
+  const shares=pub.reduce((a,i)=>a+((i.stats||{}).shares||0),0);
+  $('#kpi').innerHTML=[[pub.length,'опубликовано'],[wait.length,'в очереди'],[fmt(views),'просмотров'],[fmt(shares),'репостов']]
+    .map(([v,k])=>`<div class="card stat"><div class="v">${v}</div><div class="k">${k}</div></div>`).join('');
+  const byDate=[...pub].sort((a,b)=>String(b.published_at).localeCompare(String(a.published_at)));
+  list('#recent',byDate.slice(0,5).map(row).join(''),'Пока нет опубликованных');
+  list('#queue',[...wait,...d.items.filter(i=>['needs_owner','rejected','failed'].includes(i.status)),...byDate].map(row).join(''),'Очередь пуста');
+  const tp=(d.topics||[]).map(t=>({...t,v:+t.median_views_24h||0})).sort((a,b)=>b.v-a.v);const mx=Math.max(1,...tp.map(t=>t.v));
+  list('#topics',tp.map(t=>`<div class="row"><div class="main"><div class="t">${esc(t.topic)}</div><div class="m">${esc(t.reels)} рол. · медиана ${fmt(t.v)} просм. · репосты ${esc(t.median_shares)}</div><div class="bar"><i style="width:${Math.round(t.v/mx*100)}%"></i></div></div></div>`).join(''),'Нет данных');
+  const c=(d.competitors||{}).top||[];
+  list('#comp',c.slice(0,15).map(x=>`<a class="row" href="${esc(x.url)}" target="_blank" rel="noopener"><div class="main"><div class="t">${esc(x.hook||x.caption||x.url)}</div><div class="m">#${esc(x.hashtag||'')} · ❤ ${fmt(x.likes)} · 💬 ${fmt(x.comments)}${x.views?' · 👁 '+fmt(x.views):''}</div></div><span class="chev">›</span></a>`).join(''),'Анализ конкурентов ещё не запускался');
+  list('#learned',((d.learned||{}).prompt_notes||[]).map(n=>`<div class="row"><div class="main"><div class="t" style="white-space:normal">${esc(n)}</div></div></div>`).join(''),'Выводов пока нет');
+}).catch(()=>{$('#upd').textContent='Нет данных'});
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
