@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-24T03:05+00:00",
+ "updated": "2026-11-24T03:49+00:00",
  "mode": "auto",
  "slots": [
   "09:00",
@@ -275,13 +275,13 @@
   },
   {
    "id": "0020",
-   "status": "in_progress",
-   "status_ru": "делается",
+   "status": "published",
+   "status_ru": "опубликован",
    "source": "https://www.instagram.com/reel/De_sLOIo_Nv/",
-   "hook": "Farzand tarbiyasida nima uchun shoshilmaslik kerak?",
+   "hook": "Bitta nasihat bilan bola o'zgaradimi?",
    "topic": "tarbiya",
-   "permalink": null,
-   "published_at": null,
+   "permalink": "https://www.instagram.com/reel/DgG9UGgk71A/",
+   "published_at": "2026-11-24T03:11:15+00:00",
    "received_at": "2026-11-19T03:46:25+00:00",
    "qa_pass": null,
    "qa": {},
@@ -477,13 +477,13 @@
    "hook": "Eng katta boylik cho'ntakda emas",
    "hook_type": "statement",
    "topic": "shukr",
-   "views_24h": "",
-   "reach_24h": "",
+   "views_24h": "185",
+   "reach_24h": "151",
    "skip_rate_3s": "",
    "avg_watch_s": "",
-   "saves": "",
-   "shares": "",
-   "notes": "slot 15:00; E-001 statement arm; E-003 concrete share line; E-004 one-metaphor (family courtyard = treasure; dream clouds ERTAGA)"
+   "saves": "2",
+   "shares": "1",
+   "notes": "slot 15:00; E-001 statement arm; E-003 concrete share line; E-004 one-metaphor (family courtyard = treasure; dream clouds ERTAGA); metrics at age ~18-19 h via IG Graph (24 Nov 09:00); views/reach/saved/shares only"
   },
   {
    "date": "2026-11-23",
@@ -491,13 +491,55 @@
    "hook": "Katta o'zgarish qayerdan boshlanadi?",
    "hook_type": "question",
    "topic": "shoshilmaslik-davomli-amal",
+   "views_24h": "187",
+   "reach_24h": "151",
+   "skip_rate_3s": "",
+   "avg_watch_s": "",
+   "saves": "1",
+   "shares": "0",
+   "notes": "slot 21:00; E-001 question arm; E-003 concrete share line; E-004 one-metaphor (garden: sapling watered daily -> fruit tree); metrics at age ~18-19 h via IG Graph (24 Nov 09:00); views/reach/saved/shares only"
+  },
+  {
+   "date": "2026-11-23",
+   "reel_uuid": "ig:DgFVRJkgqHK",
+   "hook": "Nikohda 2 ta xato — siz qaysi birida?",
+   "hook_type": "question",
+   "topic": "nikoh",
+   "views_24h": "199",
+   "reach_24h": "162",
+   "skip_rate_3s": "",
+   "avg_watch_s": "",
+   "saves": "3",
+   "shares": "5",
+   "notes": "src_0021, published 23 Nov 17:02 Bishkek (queue was not updated); metrics at ~21 h via IG Graph"
+  },
+  {
+   "date": "2026-11-23",
+   "reel_uuid": "ig:DgFJajYjFc3",
+   "hook": "Hali emas — hech qachon emas degani emas",
+   "hook_type": "statement",
+   "topic": "sabr-kutish",
+   "views_24h": "1602",
+   "reach_24h": "1346",
+   "skip_rate_3s": "",
+   "avg_watch_s": "",
+   "saves": "13",
+   "shares": "9",
+   "notes": "src_0018 REPUBLISHED 23 Nov 15:18 Bishkek; breakout #2; metrics at ~23 h via IG Graph"
+  },
+  {
+   "date": "2026-11-24",
+   "reel_uuid": "ig:18105603362533619",
+   "hook": "Bitta nasihat bilan bola o'zgaradimi?",
+   "hook_type": "question",
+   "topic": "tarbiya-shoshilmaslik",
    "views_24h": "",
    "reach_24h": "",
    "skip_rate_3s": "",
    "avg_watch_s": "",
    "saves": "",
    "shares": "",
-   "notes": "slot 21:00; E-001 question arm; E-003 concrete share line; E-004 one-metaphor (garden: sapling watered daily -> fruit tree)"
+   "notes": "src_0020; published 09:11 Bishkek (09:00 slot) via Composio direct; E-001 question arm; E-003 share line to parents; E-004 one-metaphor (courtyard sapling = child)"
   }
  ],
  "topics": [
