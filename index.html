@@ -194,7 +194,7 @@ async function api(cmd,arg){
   const r=await fetch(U+'/functions/v1/eslarma',{method:'POST',headers:{apikey:K,Authorization:'Bearer '+S.a,'Content-Type':'application/json'},body:JSON.stringify({cmd,arg})});
   const d=await r.json().catch(()=>({}));
   if(r.status===401){keep(null);show()}
-  if(!r.ok)throw Object.assign(Error(d.error||'http'),{kind:d.error});
+  if(!r.ok)throw Object.assign(Error(d.error||'http'),{kind:d.error,http:d.http,len:d.len});
   return d}
 let tt;const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),4000)};
 const WHY={nokey:'Сайт готов, но осталось вставить ключ GitHub ниже.',forbidden:'Этот вход не хозяина программы.',github:'GitHub не ответил. Попробуйте позже или проверьте ключ.',novideo:'Видео этого ролика не найдено.'};
@@ -256,7 +256,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-id]');if(b
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id==='v-'+b.dataset.v));scrollTo({top:0})});
 $('#login').onsubmit=async e=>{e.preventDefault();$('#loginMsg').textContent='';try{await auth('password',{email:$('#email').value.trim(),password:$('#pass').value});$('#pass').value='';show();load()}catch(x){$('#loginMsg').textContent=x.code===400?'Неверная почта или пароль.':'Не получилось войти, попробуйте ещё раз.'}};
 $('#add').onsubmit=async e=>{e.preventDefault();const u=$('#url').value.trim();if(!/^https?:\/\/(www\.)?instagram\.com\/\S+/i.test(u))return toast('Нужна ссылка instagram.com');if(await send('link',u,'Ссылка принята'))$('#url').value=''};
-$('#keyf').onsubmit=async e=>{e.preventDefault();const m=$('#keyMsg');m.textContent='Проверяю…';try{const d=await api('setkey',$('#key').value.trim());$('#key').value='';m.textContent='';toast('Ключ сохранён');load()}catch(x){m.textContent=({format:'Это не похоже на ключ: он начинается с github_pat_.',engine:'У ключа нет доступа к eslarma-engine с правом Actions.',bot:'У ключа нет доступа к eslarma-bot с правами Contents и Actions.'})[x.kind]||'Не получилось сохранить, попробуйте ещё раз.'}};
+$('#keyf').onsubmit=async e=>{e.preventDefault();const m=$('#keyMsg');m.textContent='Проверяю…';try{const d=await api('setkey',$('#key').value.trim());$('#key').value='';m.textContent='';toast('Ключ сохранён');load()}catch(x){m.textContent=({format:'Это не похоже на ключ: он начинается с github_pat_.',badkey:'GitHub не узнаёт этот ключ: он скопирован не целиком или уже удалён (символов: '+x.len+', обычно 93).',ghdown:'GitHub сейчас сбоит. Нажмите ещё раз через минуту.',engine:'У ключа нет доступа к eslarma-engine с правом Actions.',bot:'У ключа нет доступа к eslarma-bot с правами Contents и Actions.'})[x.kind]||'Не получилось сохранить, попробуйте ещё раз.';if(x.http)m.textContent+=' (код '+x.http+')'}};
 $('#m-auto').onclick=()=>confirm('Публиковать ролики без вашего одобрения?')&&send('mode','auto','Режим: автоматически');
 $('#m-approve').onclick=()=>send('mode','approve','Режим: с одобрением');
 $('#make').onclick=()=>send('make','','Запускаю');
