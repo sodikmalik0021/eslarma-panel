@@ -156,17 +156,11 @@ textarea{font:inherit;width:100%;padding:13px 14px;border-radius:14px;border:1px
 
   <section class="view" id="v-ai">
     <h2>AI-агент</h2>
-    <form class="card add" id="aif" hidden>
-      <b>Подключите ИИ, один раз</b>
-      <span class="help" style="padding:0">Нужен бесплатный ключ: <a href="https://console.groq.com/keys" target="_blank" rel="noopener">console.groq.com/keys</a> → войти → Create API Key → скопировать (начинается с gsk_) → вставить сюда. С этим же ключом программа лучше понимает смысл речи.</span>
-      <input id="aikey" type="password" autocomplete="off" aria-label="Ключ ИИ" required>
-      <button class="btn main" type="submit">Сохранить и проверить</button><p class="help" id="aiMsg" role="alert" style="padding:0"></p>
-    </form>
-    <div id="aibox" hidden>
+    <div id="aibox">
       <div class="chips" id="qs"></div>
       <div class="chat" id="chat" aria-live="polite"></div>
       <form class="card add" id="askf"><textarea id="q" rows="2" placeholder="Спросите о роликах, Instagram, стиле или пришлите ссылку" aria-label="Вопрос агенту" required></textarea><button class="btn main" type="submit">Отправить</button></form>
-      <p class="help">Агент отвечает по данным программы. Менять что-либо он может только после вашей кнопки.</p>
+      <p class="help">На кнопки сверху и ссылки агент отвечает сразу, на свои вопросы — за 1–2 минуты. Менять что-либо он может только после вашей кнопки.</p>
     </div>
   </section>
 
@@ -225,7 +219,7 @@ const keep=s=>{S=s&&{a:s.access_token,r:s.refresh_token,e:Date.now()+s.expires_i
 async function auth(type,body){const r=await fetch(U+'/auth/v1/token?grant_type='+type,{method:'POST',headers:{apikey:K,'Content-Type':'application/json'},body:JSON.stringify(body)});if(!r.ok)throw Object.assign(Error('auth'),{code:r.status});keep(await r.json())}
 async function api(cmd,arg,more){
   if(S&&S.e-Date.now()<60000){try{await auth('refresh_token',{refresh_token:S.r})}catch(e){if(e.code>=400&&e.code<500){keep(null);show()}throw e}}
-  const r=await fetch(U+'/functions/v1/eslarma',{method:'POST',headers:{apikey:K,Authorization:'Bearer '+S.a,'Content-Type':'application/json'},body:JSON.stringify({cmd,arg,...more}),signal:AbortSignal.timeout(cmd==='ask'?90000:25000)});
+  const r=await fetch(U+'/functions/v1/'+((more||{}).fn||'eslarma'),{method:'POST',headers:{apikey:K,Authorization:'Bearer '+S.a,'Content-Type':'application/json'},body:JSON.stringify({cmd,arg,...more}),signal:AbortSignal.timeout(cmd==='ask'?90000:25000)});
   const d=await r.json().catch(()=>({}));
   if(r.status===401){keep(null);show()}
   if(!r.ok)throw Object.assign(Error(d.error||'http'),{kind:d.error,http:d.http,len:d.len});
@@ -288,7 +282,6 @@ function draw(){
   $('#styles').querySelectorAll('button').forEach(b=>b.onclick=()=>send('style',b.dataset.s,'Стиль следующих роликов: '+SN[b.dataset.s]));
   $('#wishes').innerHTML=(d.wishes||[]).map(w=>'• '+esc(w)).join('<br>')+((d.wishes||[]).length?'<br><button type="button" class="btn" id="wc" style="margin-top:8px">Очистить пожелания</button>':'');
   if($('#wc'))$('#wc').onclick=()=>send('wishclear','','Пожелания очищены');
-  $('#aif').hidden=!!d.ai;$('#aibox').hidden=!d.ai;
   if(d.pending)$('#upd').textContent='Выполняю ваши команды: '+d.pending}
 function pop(title,html){$('#dt').textContent=title;$('#db').innerHTML=html;if(!dlg.open)dlg.showModal();dlg.scrollTop=0}
 async function load(){if(!S)return;try{D=await api('state');$('#warn').hidden=true;$('#keyf').hidden=true;draw()}catch(e){if(S){$('#keyf').hidden=!['nokey','github'].includes(e.kind);$('#warn').hidden=false;$('#warn').textContent=WHY[e.kind]||'Нет связи с программой. Нажмите ↻.';$('#upd').textContent='нет данных'}}}
@@ -324,12 +317,24 @@ function talk(){$('#chat').innerHTML=H.map((m,n)=>`<div class="msg ${m.role==='u
   $('#chat').querySelectorAll('[data-a]').forEach(b=>b.onclick=async()=>{const x=H[b.dataset.m].actions[b.dataset.a];const what=({mode:'Сменить режим',pub:'Выпустить в Instagram ролик',rej:'Отклонить ролик',redo:'Переделать ролик',link:'Сделать ролик из',comp:'Добавить в анализ',style:'Стиль картин',wish:'Пожелание',wishclear:'Очистить пожелания',make:'Запустить производство',growth:'Обновить статистику'})[x.cmd];if(!confirm(what+' '+x.arg+'?'))return;b.disabled=true;if(await send(x.cmd,x.arg,'Принято')){x.done=true;save()}else b.disabled=false})}
 function save(){H=H.slice(-40);try{localStorage.eslarmaChat=JSON.stringify(H)}catch{}talk()}
 let busy=false;
-async function ask(q){q=q.trim();if(!q||busy)return;busy=true;const hist=H.slice(-8).map(({role,content})=>({role,content}));H.push({role:'user',content:q},{role:'assistant',content:'Думаю…'});talk();$('#chat').lastElementChild.scrollIntoView({block:'end'});
-  try{const d=await api('ask',q,{history:hist});H[H.length-1]={role:'assistant',content:d.reply||'…',actions:d.actions||[]};$('#q').value=''}catch(e){H.pop();H.pop();fail(e)}
+function quick(q){const d=D;if(!d)return null;const by=s=>d.items.filter(i=>s.includes(i.status)),R=(d.reels||[]).filter(x=>x.views!=null),nm=i=>i.id+(i.hook?' «'+i.hook+'»':'');
+  if(q===QS[0]){const p=d.runs.find(x=>x.name==='produce'&&x.status!=='completed'),c=by(['in_progress'])[0];return{content:[p?'Сейчас делается ролик'+(c?' '+nm(c):'')+'.':'Сейчас ничего не делается.','Готовы к выходу: '+by(['ready','approved']).length+'. Ждут вас: '+by(['awaiting_approval']).length+'. Исходных видео: '+by(['downloaded','new','retry']).length+'.','Режим: '+(d.mode==='auto'?'автоматически':'с одобрением')+'. Слоты: '+(d.slots||[]).join(', ')+'.'].join('\n'),actions:p?[]:[{cmd:'make',arg:'',label:'Запустить производство'}]}}
+  if(q===QS[1]){const N={1:'картинки не совпали со словами',2:'непонятные картинки',3:'перспектива',4:'люди',5:'стиль',6:'движение',7:'субтитры',8:'звук',9:'подпись'};const b=by(['needs_owner','downloaded']).filter(i=>i.qa&&Object.values(i.qa).includes(false)).slice(0,5);return{content:b.length?b.map(i=>nm(i)+': '+Object.entries(i.qa).filter(x=>x[1]===false).map(x=>N[x[0]]||x[0]).join(', ')+(i.status==='needs_owner'?' — отложен':' — переделаю сам')).join('\n'):'Сейчас нет роликов, которые не прошли проверку.',actions:b.filter(i=>i.status==='needs_owner'&&!i.started).slice(0,3).map(i=>({cmd:'redo',arg:i.id,label:'Переделать '+i.id}))}}
+  if(q===QS[2]&&R.length)return{content:[...R].sort((a,b)=>b.views-a.views).slice(0,5).map((x,n)=>(n+1)+'. '+(x.hook||'Ролик').replace(/\*/g,'')+' — '+fmt(x.views)+' просм., '+fmt(x.shares)+' репостов').join('\n'),actions:[]};
+  if(q===QS[4])return{content:'Выберите стиль. Подействует со следующих роликов.',actions:[['oil','Масло'],['gouache','Гуашь'],['miniature','Восточная миниатюра'],['cinematic','Кино'],['pencil','Карандаш'],['watercolor','Акварель']].filter(x=>x[0]!==d.style).map(([arg,label])=>({cmd:'style',arg,label}))};
+  const m=q.match(/https?:\/\/(www\.)?instagram\.com\/\S+/i);if(m)return{content:'Что сделать с этой ссылкой?',actions:[{cmd:'link',arg:m[0],label:'Это речь домлы: сделать ролик'},{cmd:'comp',arg:m[0],label:'Это конкурент: в анализ'}]};
+  return null}
+async function ask(q){q=q.trim();if(!q||busy)return;busy=true;const hist=H.slice(-8).map(({role,content})=>({role,content}));H.push({role:'user',content:q});$('#q').value='';
+  const a=quick(q);if(a){H.push({role:'assistant',...a});busy=false;save();$('#chat').lastElementChild.scrollIntoView({block:'end'});return}
+  H.push({role:'assistant',content:'Думаю, 1–2 минуты. Можно уйти на другой экран.'});talk();$('#chat').lastElementChild.scrollIntoView({block:'end'});
+  let out=null;
+  try{const{id}=await api('ask',q,{history:hist,fn:'eslarma-ask'});
+    for(let n=1;n<=40&&!out;n++){await new Promise(z=>setTimeout(z,8000));try{const x=await api('answer',id,{fn:'eslarma-ask',again:n===15});if(!x.wait)out=x}catch(e){if(!S)break}}
+    H[H.length-1]={role:'assistant',content:out?out.reply:'Ответ не пришёл. Спросите ещё раз через несколько минут.',actions:out?out.actions:[]}
+  }catch(e){H[H.length-1]={role:'assistant',content:WHY[e.kind]||'Не получилось отправить вопрос. Попробуйте ещё раз.'}}
   busy=false;save();if($('#chat').lastElementChild)$('#chat').lastElementChild.scrollIntoView({block:'end'})}
 $('#askf').onsubmit=e=>{e.preventDefault();ask($('#q').value)};
 $('#q').onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();ask($('#q').value)}};
-$('#aif').onsubmit=async e=>{e.preventDefault();const m=$('#aiMsg');m.textContent='Проверяю…';try{await api('setai',$('#aikey').value.trim());$('#aikey').value='';m.textContent='';toast('ИИ подключён');load()}catch(x){m.textContent=({aiformat:'Это не похоже на ключ.',aikey:'Этот ключ не принимают. Создайте новый и вставьте целиком.'})[x.kind]||'Не получилось, попробуйте ещё раз.'}};
 $('#compf').onsubmit=async e=>{e.preventDefault();const u=$('#curl').value.trim();if(!/^https?:\/\/(www\.)?instagram\.com\/\S+/i.test(u))return toast('Нужна ссылка instagram.com');if(await send('comp',u,'Добавлено. Появится после «Обновить статистику»'))$('#curl').value=''};
 $('#wishf').onsubmit=async e=>{e.preventDefault();const w=$('#wish').value.trim();if(w.length>2&&await send('wish',w,'Учту в следующих роликах'))$('#wish').value=''};
 $('#refresh').onclick=()=>send('growth','','Собираю статистику, 2–3 минуты');
