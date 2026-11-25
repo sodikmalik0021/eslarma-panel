@@ -76,7 +76,7 @@ h3{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;le
 .bar i{display:block;height:100%;background:var(--grad);border-radius:99px}
 .empty{padding:28px 16px;text-align:center;color:var(--muted)}
 nav{position:fixed;left:0;right:0;bottom:0;z-index:9;background:var(--nav);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
-nav .wrap{display:grid;grid-template-columns:repeat(4,1fr)}
+nav .wrap{display:grid;grid-template-columns:repeat(5,1fr)}
 nav button{all:unset;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 0 7px;font-size:11px;font-weight:600;color:var(--muted);min-height:48px}
 nav button svg{width:24px;height:24px}
 nav button.on{color:var(--text)}
@@ -100,6 +100,14 @@ button.row:focus-visible,.seg button:focus-visible,nav button:focus-visible{outl
 dialog{border:1px solid var(--line2);border-radius:22px;background:var(--surface);color:var(--text);width:min(480px,94vw);max-height:92dvh;padding:16px;overflow:auto}dialog::backdrop{background:rgba(0,0,0,.6)}
 .dh{display:flex;gap:12px;align-items:center;margin-bottom:12px}.dh b{flex:1}.acts{display:grid;gap:8px;margin-top:12px}
 video{width:100%;max-height:60dvh;border-radius:16px;background:#000;display:block}
+.kb{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.kb button{all:unset;box-sizing:border-box;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:14px;min-height:96px}
+.kb button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}.kb .v{display:block;font-size:24px;font-weight:800;letter-spacing:-.02em}.kb .k{display:block;font-size:14px;color:var(--muted2);font-weight:600}.kb .h{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.help{font-size:13px;color:var(--muted);padding:6px 4px 0}
+.chat{display:grid;gap:10px;margin-bottom:12px}.msg{padding:12px 14px;border-radius:18px;max-width:88%;white-space:pre-wrap;overflow-wrap:anywhere}.msg.u{justify-self:end;background:var(--grad);color:#fff}.msg.a{justify-self:start;background:var(--surface);border:1px solid var(--line)}
+.msg .btn{margin-top:8px}.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.chips button{font:inherit;font-size:14px;border:1px solid var(--line2);background:var(--surface);color:var(--text);border-radius:99px;padding:10px 14px;min-height:44px;cursor:pointer}.chips button.on{background:var(--grad);border-color:transparent;color:#fff}
+textarea{font:inherit;width:100%;padding:13px 14px;border-radius:14px;border:1px solid var(--line2);background:var(--surface2);color:var(--text);min-height:56px;resize:vertical}
+.spark{width:100%;height:120px;display:block}
 #toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:var(--text);color:var(--bg);padding:12px 18px;border-radius:14px;font-weight:600;opacity:0;pointer-events:none;transition:.2s;z-index:20;max-width:90vw}#toast.on{opacity:1;transform:translate(-50%,0)}
 </style>
 </head>
@@ -131,10 +139,11 @@ video{width:100%;max-height:60dvh;border-radius:16px;background:#000;display:blo
       <div class="lbl" id="nowSub"></div>
       <div class="slots" id="slots"></div>
     </div>
-    <div class="grid" id="kpi"></div>
+    <div class="kb" id="kpi" style="margin-top:10px"></div><p class="help">Нажмите на цифру, чтобы увидеть список.</p>
     <h3>Ждут вашего решения</h3>
     <div class="card list" id="wait"></div>
-    <h3>Новое видео</h3>
+    <h3>Новое видео домлы</h3>
+    <p class="help" style="padding:0 4px 8px">Вставьте ссылку на ролик с речью домлы. Программа возьмёт из него голос и сама сделает новый ролик: картины, движение, субтитры.</p>
     <form class="card add" id="add">
       <input id="url" type="url" inputmode="url" placeholder="Ссылка на ролик Instagram" aria-label="Ссылка на ролик Instagram" required>
       <button class="btn main" type="submit">Добавить</button>
@@ -145,11 +154,29 @@ video{width:100%;max-height:60dvh;border-radius:16px;background:#000;display:blo
 
   <section class="view" id="v-queue"><h2>Очередь</h2><div class="card list" id="queue"></div></section>
 
+  <section class="view" id="v-ai">
+    <h2>AI-агент</h2>
+    <form class="card add" id="aif" hidden>
+      <b>Подключите ИИ, один раз</b>
+      <span class="help" style="padding:0">Нужен бесплатный ключ: <a href="https://console.groq.com/keys" target="_blank" rel="noopener">console.groq.com/keys</a> → войти → Create API Key → скопировать (начинается с gsk_) → вставить сюда. С этим же ключом программа лучше понимает смысл речи.</span>
+      <input id="aikey" type="password" autocomplete="off" aria-label="Ключ ИИ" required>
+      <button class="btn main" type="submit">Сохранить и проверить</button><p class="help" id="aiMsg" role="alert" style="padding:0"></p>
+    </form>
+    <div id="aibox" hidden>
+      <div class="chips" id="qs"></div>
+      <div class="chat" id="chat" aria-live="polite"></div>
+      <form class="card add" id="askf"><textarea id="q" rows="2" placeholder="Спросите о роликах, Instagram, стиле или пришлите ссылку" aria-label="Вопрос агенту" required></textarea><button class="btn main" type="submit">Отправить</button></form>
+      <p class="help">Агент отвечает по данным программы. Менять что-либо он может только после вашей кнопки.</p>
+    </div>
+  </section>
+
   <section class="view" id="v-grow">
     <h2>Рост</h2>
-    <h3>Темы</h3><div class="card list" id="topics"></div>
-    <h3>Конкуренты</h3><div class="card list" id="comp"></div>
-    <h3>Выводы</h3><div class="card list" id="learned"></div>
+    <div class="kb" id="gk"></div>
+    <p class="help" id="gnote"></p>
+    <button class="btn" id="refresh" style="margin-top:10px">Обновить статистику</button>
+    <h3>Ролик конкурента</h3>
+    <form class="card add" id="compf"><input id="curl" type="url" inputmode="url" placeholder="Ссылка на ролик конкурента" aria-label="Ссылка на ролик конкурента" required><button class="btn main" type="submit">Добавить в анализ</button></form>
   </section>
 
   <section class="view" id="v-mode">
@@ -159,6 +186,10 @@ video{width:100%;max-height:60dvh;border-radius:16px;background:#000;display:blo
       <button id="m-approve">С одобрением<small>сначала вам</small></button>
     </div>
     <p class="note">Режим меняется за 1–2 минуты.</p>
+    <h3>Стиль картин</h3><div class="chips" id="styles"></div>
+    <h3>Пожелания к картинам</h3>
+    <form class="card add" id="wishf"><input id="wish" maxlength="200" placeholder="Например: больше природы, меньше людей" aria-label="Пожелание"><button class="btn" type="submit">Добавить</button><div class="help" id="wishes" style="padding:0"></div></form>
+    <h3>Производство</h3>
     <button class="btn" id="make">Запустить производство сейчас</button>
     <h3>Работа программы</h3><div class="card list" id="runs"></div>
     <h3></h3><button class="btn" id="out">Выйти</button>
@@ -172,6 +203,7 @@ video{width:100%;max-height:60dvh;border-radius:16px;background:#000;display:blo
 <nav hidden><div class="wrap">
   <button class="on" data-v="home"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Сейчас</button>
   <button data-v="queue"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="m10 9 5 3-5 3z"/></svg>Очередь</button>
+  <button data-v="ai"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/><path d="M9 12h.01M13 12h.01M17 12h.01"/></svg>AI-агент</button>
   <button data-v="grow"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>Рост</button>
   <button data-v="mode"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>Управление</button>
 </div></nav>
@@ -189,20 +221,20 @@ let S=null,D=null;
 try{S=JSON.parse(localStorage.eslarma||'null')}catch{}
 const keep=s=>{S=s&&{a:s.access_token,r:s.refresh_token,e:Date.now()+s.expires_in*1000};S?localStorage.eslarma=JSON.stringify(S):localStorage.removeItem('eslarma')};
 async function auth(type,body){const r=await fetch(U+'/auth/v1/token?grant_type='+type,{method:'POST',headers:{apikey:K,'Content-Type':'application/json'},body:JSON.stringify(body)});if(!r.ok)throw Object.assign(Error('auth'),{code:r.status});keep(await r.json())}
-async function api(cmd,arg){
+async function api(cmd,arg,more){
   if(S&&S.e-Date.now()<60000){try{await auth('refresh_token',{refresh_token:S.r})}catch(e){if(e.code>=400&&e.code<500){keep(null);show()}throw e}}
-  const r=await fetch(U+'/functions/v1/eslarma',{method:'POST',headers:{apikey:K,Authorization:'Bearer '+S.a,'Content-Type':'application/json'},body:JSON.stringify({cmd,arg})});
+  const r=await fetch(U+'/functions/v1/eslarma',{method:'POST',headers:{apikey:K,Authorization:'Bearer '+S.a,'Content-Type':'application/json'},body:JSON.stringify({cmd,arg,...more})});
   const d=await r.json().catch(()=>({}));
   if(r.status===401){keep(null);show()}
   if(!r.ok)throw Object.assign(Error(d.error||'http'),{kind:d.error,http:d.http,len:d.len});
   return d}
 let tt;const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),4000)};
-const WHY={nokey:'Сайт готов, но осталось вставить ключ GitHub ниже.',forbidden:'Этот вход не хозяина программы.',github:'GitHub не ответил. Попробуйте позже или проверьте ключ.',novideo:'Видео этого ролика не найдено.'};
+const WHY={nokey:'Сайт готов, но осталось вставить ключ GitHub ниже.',forbidden:'Этот вход не хозяина программы.',github:'GitHub не ответил. Попробуйте позже или проверьте ключ.',ghdown:'GitHub сейчас сбоит. Попробуйте через несколько минут.',noai:'Сначала подключите ИИ.',aikey:'Ключ ИИ не принимают, вставьте новый.',aibusy:'ИИ сейчас занят, попробуйте через минуту.',novideo:'Видео этого ролика не найдено.'};
 const fail=e=>toast(WHY[e.kind]||'Не получилось. Проверьте интернет и попробуйте ещё раз.');
 function show(){$('#login').hidden=!!S;$('#app').hidden=!S;$('nav').hidden=!S;$('#reload').hidden=!S;if(!S){$('#warn').hidden=true;$('#keyf').hidden=true;$('#upd').textContent='только для владельца'}}
 const list=(el,html,empty)=>{$(el).innerHTML=html||`<div class="empty">${empty}</div>`};
 function row(i){
-  const s=i.stats,open=['awaiting_approval','ready','needs_owner','rejected'].includes(i.status);
+  const s=i.stats||((D||{}).reels||[]).find(x=>x.permalink&&x.permalink===i.permalink),open=['awaiting_approval','ready','needs_owner','rejected'].includes(i.status);
   const m=s?`<div class="metrics"><span>👁 <b>${fmt(s.views)}</b></span><span>↗ <b>${fmt(s.shares)}</b></span><span>🔖 <b>${fmt(s.saved)}</b></span><span>❤ <b>${fmt(s.likes)}</b></span></div>`:'';
   const pub=i.status==='published'&&i.permalink;
   const tag=pub?'a':open?'button':'div';
@@ -217,16 +249,46 @@ function draw(){
   $('#nowSub').textContent=run?'начало: '+date(run.at):(by(['downloaded']).length?'':'нет исходных видео — добавьте ссылки');
   $('#slots').innerHTML=(d.slots||[]).map(s=>`<div class="slot">${esc(s)}</div>`).join('');
   const pub=by(['published']).sort((a,b)=>String(b.published_at).localeCompare(String(a.published_at)));
-  $('#kpi').innerHTML=[[by(['ready','approved']).length,'готовы к выходу'],[by(['awaiting_approval']).length,'ждут вас'],[by(['downloaded','new','retry']).length,'исходных видео'],[pub.length,'вышло']].map(([v,k])=>`<div class="card stat"><div class="v">${v}</div><div class="k">${k}</div></div>`).join('');
-  list('#wait',by(['awaiting_approval']).map(row).join(''),'Пока нечего решать');
+  const K=[['ready','готовы к выходу','выйдут в ближайший слот',by(['ready','approved'])],['wait','ждут вас','в режиме «с одобрением»',by(['awaiting_approval'])],['src','исходных видео','из них сделаем ролики',by(['downloaded','new','retry'])],['pub','вышло','уже в Instagram',pub]];
+  $('#kpi').innerHTML=K.map(([id,k,h,l])=>`<button data-k="${id}"><span class="v">${l.length}</span><span class="k">${k}</span><span class="h">${h}</span></button>`).join('');
+  $('#kpi').querySelectorAll('button').forEach((b,n)=>b.onclick=()=>pop(K[n][1],K[n][3].map(row).join('')||'<div class="empty">Пусто</div>'));
+  list('#wait',by(['awaiting_approval']).map(row).join(''),d.mode==='auto'?'Режим «Автоматически»: ролики выходят сами':'Готовый ролик появится здесь: посмотреть и выпустить');
   list('#recent',pub.slice(0,5).map(row).join(''),'Пока нет вышедших');
   list('#queue',[...by(['in_progress']),...by(['awaiting_approval','approved','ready']),...by(['downloaded','new','retry']),...by(['needs_owner','rejected','failed']),...pub].map(row).join(''),'Очередь пуста');
   $('#m-auto').classList.toggle('on',d.mode==='auto');$('#m-approve').classList.toggle('on',d.mode==='approve');
   list('#runs',d.runs.map(r=>`<div class="row"><span class="main"><span class="t">${({produce:'Производство ролика',beat:'Будильник'})[r.name]||esc(r.name)}</span><span class="m">${date(r.at)}</span></span><span class="pill ${r.status!=='completed'?'blue':r.conclusion==='success'?'ok':'bad'}">${r.status!=='completed'?'идёт':r.conclusion==='success'?'закончено':r.conclusion==='cancelled'?'остановлено':'ошибка'}</span></div>`).join(''),'Нет данных');
-  const tp=(d.topics||[]).map(t=>({...t,v:+t.median_views_24h||0})).sort((a,b)=>b.v-a.v),mx=Math.max(1,...tp.map(t=>t.v));
-  list('#topics',tp.map(t=>`<div class="row"><div class="main"><div class="t">${esc(t.topic)}</div><div class="m">${esc(t.reels)} рол. · медиана ${fmt(t.v)} просм. · репосты ${esc(t.median_shares)}</div><div class="bar"><i style="width:${Math.round(t.v/mx*100)}%"></i></div></div></div>`).join(''),'Нет данных');
-  list('#comp',((d.competitors||{}).top||[]).slice(0,15).map(x=>`<a class="row" href="${link(x.url)}" target="_blank" rel="noopener"><div class="main"><div class="t">${esc(x.hook||x.caption||x.url)}</div><div class="m">❤ ${fmt(x.likes)} · 💬 ${fmt(x.comments)}</div></div><span class="chev">›</span></a>`).join(''),'Анализ конкурентов ещё не запускался');
-  list('#learned',((d.learned||{}).prompt_notes||[]).map(n=>`<div class="row"><div class="main"><div class="t" style="white-space:normal">${esc(n)}</div></div></div>`).join(''),'Выводов пока нет')}
+  const a=d.account||{},R=(d.reels||[]).filter(x=>x.views!=null),sum=k=>R.reduce((s,x)=>s+(+x[k]||0),0);
+  const g=[
+   ['Подписчики',fmt(a.followers),'всего',()=>{const h=(a.history||[]).filter(x=>x.followers!=null),f=h[0],l=h[h.length-1];return spark(h.map(x=>x.followers))+info([['Сейчас',fmt(a.followers)],['Подписок',fmt(a.follows)],['Публикаций',fmt(a.posts)],h.length>1?['Прирост с '+esc(f.day),(l.followers-f.followers>=0?'+':'')+fmt(l.followers-f.followers)]:['Прирост','появится через день']])}],
+   ['Просмотры',R.length?fmt(sum('views')):'—','все ролики',()=>spark([...R].reverse().map(x=>x.views))+top('views','просмотров')],
+   ['Охват',R.length?fmt(sum('reach')):'—','сколько людей видело',()=>top('reach','человек')],
+   ['Репосты',R.length?fmt(sum('shares')):'—','отправили друзьям',()=>top('shares','репостов')],
+   ['Сохранения',R.length?fmt(sum('saved')):'—','сохранили себе',()=>top('saved','сохранений')],
+   ['Лайки',R.length?fmt(sum('likes')):'—','и комментарии: '+fmt(sum('comments')),()=>top('likes','лайков')],
+   ['Досмотр',R.length?(sum('avg_watch')/R.length).toFixed(1)+' с':'—','в среднем смотрят',()=>top('avg_watch','сек.')],
+   ['Лучшие ролики',R.length?R.length:'—','по репостам и просмотрам',()=>best()],
+   ['Темы',(d.topics||[]).length||'—','что смотрят лучше',()=>topics()],
+   ['Конкуренты',((d.competitors||{}).top||[]).length||'—','ролики других',()=>comps()],
+   ['Выводы',((d.learned||{}).prompt_notes||[]).length||'—','что учесть дальше',()=>((d.learned||{}).prompt_notes||[]).map(n=>`<div class="row"><span class="main"><span class="t" style="white-space:normal">${esc(n)}</span></span></div>`).join('')||'<div class="empty">Появятся после анализа. Нажмите «Обновить статистику».</div>'],
+   ['Публикации',pub.length,'вышедшие ролики',()=>pub.map(row).join('')]];
+  $('#gk').innerHTML=g.map(x=>`<button><span class="v">${x[1]}</span><span class="k">${x[0]}</span><span class="h">${x[2]}</span></button>`).join('');
+  $('#gk').querySelectorAll('button').forEach((b,n)=>b.onclick=()=>pop(g[n][0],g[n][3]()));
+  $('#gnote').textContent=a.updated?'Данные Instagram от '+date(a.updated):'Статистика ещё собирается.';
+  const reelRow=(x,v)=>`<a class="row" href="${link(x.permalink)}" target="_blank" rel="noopener"><span class="main"><span class="t">${esc(x.hook||'Ролик')}</span><span class="m">${date(x.timestamp)}</span></span><b>${v}</b><span class="chev">›</span></a>`;
+  function top(k,n){return [...R].sort((p,q)=>(+q[k]||0)-(+p[k]||0)).slice(0,20).map(x=>reelRow(x,fmt(x[k])+' '+n)).join('')||'<div class="empty">Нет данных</div>'}
+  function best(){return [...R].sort((p,q)=>((q.shares||0)*20+(q.saved||0)*10+(q.views||0))-((p.shares||0)*20+(p.saved||0)*10+(p.views||0))).slice(0,10).map(x=>reelRow(x,fmt(x.views))).join('')||'<div class="empty">Нет данных</div>'}
+  function info(l){return l.map(([k,v])=>`<div class="row"><span class="main"><span class="t">${k}</span></span><b>${v}</b></div>`).join('')}
+  function spark(v){v=v.map(Number).filter(x=>!isNaN(x));if(v.length<2)return'';const lo=Math.min(...v),hi=Math.max(...v),p=v.map((x,i)=>`${(i/(v.length-1)*300).toFixed(1)},${(110-(x-lo)/(hi-lo||1)*100).toFixed(1)}`).join(' ');return `<svg class="spark" viewBox="0 0 300 120" preserveAspectRatio="none" role="img" aria-label="График от ${fmt(v[0])} до ${fmt(v[v.length-1])}"><polyline points="${p}" fill="none" stroke="#e1306c" stroke-width="2.5" vector-effect="non-scaling-stroke"/></svg><p class="help">слева старые, справа новые · минимум ${fmt(lo)}, максимум ${fmt(hi)}</p>`}
+  function topics(){const tp=(d.topics||[]).map(x=>({...x,v:+x.median_views_24h||0})).sort((p,q)=>q.v-p.v),mx=Math.max(1,...tp.map(x=>x.v));return tp.map(x=>`<div class="row"><div class="main"><div class="t">${esc(x.topic)}</div><div class="m">${esc(x.reels)} рол. · обычно ${fmt(x.v)} просм. · репостов ${esc(x.median_shares)}</div><div class="bar"><i style="width:${Math.round(x.v/mx*100)}%"></i></div></div></div>`).join('')||'<div class="empty">Нет данных</div>'}
+  function comps(){const c=d.competitors||{};return ((c.top||[]).slice(0,40).map(x=>`<a class="row" href="${link(x.url)}" target="_blank" rel="noopener"><span class="main"><span class="t">${esc(x.hook||x.url)}</span><span class="m">${esc(x.author||'')} ❤ ${fmt(x.likes)} · 💬 ${fmt(x.comments)}${x.views?' · 👁 '+fmt(x.views):''}</span></span><span class="chev">›</span></a>`).join('')||`<div class="empty">${esc(c.note||'Пришлите ссылки на ролики конкурентов ниже на экране «Рост».')}</div>`)}
+  const SN={watercolor:'Акварель',oil:'Масло',gouache:'Гуашь',miniature:'Восточная миниатюра',cinematic:'Кино',pencil:'Карандаш'};
+  $('#styles').innerHTML=Object.entries(SN).map(([k,v])=>`<button class="${d.style===k?'on':''}" aria-pressed="${d.style===k}" data-s="${k}">${v}</button>`).join('');
+  $('#styles').querySelectorAll('button').forEach(b=>b.onclick=()=>send('style',b.dataset.s,'Стиль следующих роликов: '+SN[b.dataset.s]));
+  $('#wishes').innerHTML=(d.wishes||[]).map(w=>'• '+esc(w)).join('<br>')+((d.wishes||[]).length?'<br><button type="button" class="btn" id="wc" style="margin-top:8px">Очистить пожелания</button>':'');
+  if($('#wc'))$('#wc').onclick=()=>send('wishclear','','Пожелания очищены');
+  $('#aif').hidden=!!d.ai;$('#aibox').hidden=!d.ai;
+  if(d.pending)$('#upd').textContent='Выполняю ваши команды: '+d.pending}
+function pop(title,html){$('#dt').textContent=title;$('#db').innerHTML=html;if(!dlg.open)dlg.showModal();dlg.scrollTop=0}
 async function load(){if(!S)return;try{D=await api('state');$('#warn').hidden=true;$('#keyf').hidden=true;draw()}catch(e){if(S){$('#keyf').hidden=!['nokey','github'].includes(e.kind);$('#warn').hidden=false;$('#warn').textContent=WHY[e.kind]||'Нет связи с программой. Нажмите ↻.';$('#upd').textContent='нет данных'}}}
 async function send(cmd,arg,msg){try{await api(cmd,arg);toast(msg);setTimeout(load,90000);return true}catch(e){fail(e);return false}}
 const dlg=$('#dlg');let blob;
@@ -252,6 +314,24 @@ async function open(id){
     const N={1:'Картинки = слова',2:'Понятность',3:'Перспектива',4:'Люди',5:'Стиль',6:'Движение',7:'Субтитры',8:'Звук',9:'Подпись'};
     $('#qa').innerHTML=(it.map(([n,v])=>`<div>${v.ok?'✅':'❌'} ${esc(N[n]||v.name)}</div>`).join('')||'Проверки нет')+(q.plan?.caption?`<h3>Подпись</h3><div style="white-space:pre-wrap">${esc(q.plan.caption)}</div>`:'')
   }catch(e){if($('#qa'))$('#qa').textContent=''}}
+let H=[];try{H=JSON.parse(localStorage.eslarmaChat||'[]')}catch{}
+const QS=['Как дела у роликов?','Почему ролик не прошёл проверку?','Какие ролики смотрят лучше?','Что посоветуешь для роста?','Поменяй стиль картин'];
+$('#qs').innerHTML=QS.map(x=>`<button type="button">${x}</button>`).join('');
+$('#qs').querySelectorAll('button').forEach(b=>b.onclick=()=>ask(b.textContent));
+function talk(){$('#chat').innerHTML=H.map((m,n)=>`<div class="msg ${m.role==='user'?'u':'a'}">${esc(m.content)}${(m.actions||[]).map((x,k)=>`<button class="btn" data-m="${n}" data-a="${k}" ${x.done?'disabled':''}>${esc(x.label)}${x.done?' ✓':''}</button>`).join('')}</div>`).join('');
+  $('#chat').querySelectorAll('[data-a]').forEach(b=>b.onclick=async()=>{const x=H[b.dataset.m].actions[b.dataset.a];const what=({mode:'Сменить режим',pub:'Выпустить в Instagram ролик',rej:'Отклонить ролик',redo:'Переделать ролик',link:'Сделать ролик из',comp:'Добавить в анализ',style:'Стиль картин',wish:'Пожелание',wishclear:'Очистить пожелания',make:'Запустить производство',growth:'Обновить статистику'})[x.cmd];if(!confirm(what+' '+x.arg+'?'))return;b.disabled=true;if(await send(x.cmd,x.arg,'Принято')){x.done=true;save()}else b.disabled=false})}
+function save(){H=H.slice(-40);try{localStorage.eslarmaChat=JSON.stringify(H)}catch{}talk()}
+let busy=false;
+async function ask(q){q=q.trim();if(!q||busy)return;busy=true;const hist=H.slice(-8).map(({role,content})=>({role,content}));H.push({role:'user',content:q},{role:'assistant',content:'Думаю…'});talk();$('#chat').lastElementChild.scrollIntoView({block:'end'});
+  try{const d=await api('ask',q,{history:hist});H[H.length-1]={role:'assistant',content:d.reply||'…',actions:d.actions||[]};$('#q').value=''}catch(e){H.pop();H.pop();fail(e)}
+  busy=false;save();if($('#chat').lastElementChild)$('#chat').lastElementChild.scrollIntoView({block:'end'})}
+$('#askf').onsubmit=e=>{e.preventDefault();ask($('#q').value)};
+$('#q').onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();ask($('#q').value)}};
+$('#aif').onsubmit=async e=>{e.preventDefault();const m=$('#aiMsg');m.textContent='Проверяю…';try{await api('setai',$('#aikey').value.trim());$('#aikey').value='';m.textContent='';toast('ИИ подключён');load()}catch(x){m.textContent=({aiformat:'Это не похоже на ключ.',aikey:'Этот ключ не принимают. Создайте новый и вставьте целиком.'})[x.kind]||'Не получилось, попробуйте ещё раз.'}};
+$('#compf').onsubmit=async e=>{e.preventDefault();const u=$('#curl').value.trim();if(!/^https?:\/\/(www\.)?instagram\.com\/\S+/i.test(u))return toast('Нужна ссылка instagram.com');if(await send('comp',u,'Добавлено. Появится после «Обновить статистику»'))$('#curl').value=''};
+$('#wishf').onsubmit=async e=>{e.preventDefault();const w=$('#wish').value.trim();if(w.length>2&&await send('wish',w,'Учту в следующих роликах'))$('#wish').value=''};
+$('#refresh').onclick=()=>send('growth','','Собираю статистику, 2–3 минуты');
+talk();
 document.addEventListener('click',e=>{const b=e.target.closest('[data-id]');if(b)open(b.dataset.id)});
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id==='v-'+b.dataset.v));scrollTo({top:0})});
 $('#login').onsubmit=async e=>{e.preventDefault();$('#loginMsg').textContent='';try{await auth('password',{email:$('#email').value.trim(),password:$('#pass').value});$('#pass').value='';show();load()}catch(x){$('#loginMsg').textContent=x.code===400?'Неверная почта или пароль.':'Не получилось войти, попробуйте ещё раз.'}};
