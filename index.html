@@ -119,7 +119,7 @@ textarea{font:inherit;width:100%;padding:13px 14px;border-radius:14px;border:1px
 #toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:var(--text);color:var(--bg);padding:12px 18px;border-radius:14px;font-weight:600;opacity:0;pointer-events:none;transition:.2s;z-index:20;max-width:90vw}#toast.on{opacity:1;transform:translate(-50%,0)}
 </style>
 </head>
-<body data-build="1795628299">
+<body data-build="1795628677">
 <svg width="0" height="0" style="position:absolute"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#6a2cf5"/><stop offset=".5" stop-color="#e1306c"/><stop offset="1" stop-color="#f77737"/></linearGradient></defs></svg>
 <header><div class="wrap"><img class="logo" src="mark.png?3" alt="" width="42" height="42"><div style="flex:1"><h1>Eslarma</h1><div class="sub" id="upd">загрузка…</div></div><button class="btn small" id="reload" aria-label="Обновить" hidden>↻</button></div></header>
 
@@ -346,7 +346,7 @@ async function ask(q){q=q.trim();if(!q||busy)return;busy=true;const hist=H.slice
   if(D&&D.ai){try{const d=await api('ask',q,{history:hist});H[H.length-1]={role:'assistant',content:d.reply||'…',actions:d.actions||[]};await act(H[H.length-1]);busy=false;save();return}catch{}}
   try{const{id}=await api('ask',q,{history:hist,fn:'eslarma-ask'});
     for(let n=1;n<=40&&!out;n++){await new Promise(z=>setTimeout(z,8000));try{const x=await api('answer',id,{fn:'eslarma-ask',again:n===15});if(!x.wait)out=x}catch(e){if(!S)break}}
-    H[H.length-1]={role:'assistant',content:out?out.reply:'Ответ не пришёл. Спросите ещё раз через несколько минут.',actions:out?out.actions:[]};if(out)await act(H[H.length-1])
+    H[H.length-1]={role:'assistant',content:out?out.reply:'Ответ не пришёл. Спросите ещё раз через несколько минут.',actions:out?out.actions:[],vid:out?id:null};if(out)await act(H[H.length-1])
   }catch(e){H[H.length-1]={role:'assistant',content:WHY[e.kind]||'Не получилось отправить вопрос. Попробуйте ещё раз.'}}
   busy=false;save();if($('#chat').lastElementChild)$('#chat').lastElementChild.scrollIntoView({block:'end'})}
 let speaking=null;const au=new Audio();let unlocked=false;
@@ -356,18 +356,18 @@ function voices(){return new Promise(z=>{const y=window.speechSynthesis;if(!y)re
 async function browserSay(x){const y=window.speechSynthesis;if(!y)throw Error();const l=/[а-яё]/i.test(x)?'ru':'uz',all=await voices(),v=all.filter(z=>z.lang.toLowerCase().startsWith(l)),W=/natural|svetlana|dariya|milena|katya|google|irina|madina|female/i,best=v.find(z=>/natural|svetlana|dariya/i.test(z.name))||v.find(z=>W.test(z.name))||v[0];
   const parts=x.match(/[^.!?\n]{1,180}[.!?\n]*|\S{1,180}/g)||[x];y.cancel();await new Promise(z=>setTimeout(z,80));
   for(const p of parts){await new Promise((z,no)=>{const u=new SpeechSynthesisUtterance(p);u.lang=l==='ru'?'ru-RU':'uz-UZ';if(best)u.voice=best;u.onend=z;u.onerror=e=>e.error==='interrupted'||e.error==='canceled'?no(Error('stop')):no(Error('voice'));y.speak(u);window._u=u})}}
-async function sayText(x,id){hush();speaking=id;x=x.replace(/https?:\S+/g,'').trim();
+async function sayText(x,id,vid){hush();speaking=id;if(vid){try{const q=await raw('','',{id:vid},'eslarma-audio');if(q.ok){const b=URL.createObjectURL(await q.blob());if(speaking!==id)return;au.src=b;await au.play();await new Promise(z=>{au.onended=z;au.onpause=z});URL.revokeObjectURL(b);return}}catch{}if(speaking!==id)return}x=x.replace(/https?:\S+/g,'').trim();
   if(D&&D.ai){try{const q=await raw('say',x);if(q.ok&&(q.headers.get('content-type')||'').includes('audio')){const b=URL.createObjectURL(await q.blob());if(speaking!==id)return;au.src=b;await au.play();await new Promise(z=>{au.onended=z;au.onpause=z});URL.revokeObjectURL(b);return}}catch{}}
   if(speaking!==id)return;await browserSay(x)}
-async function raw(cmd,arg,more){if(S.e-Date.now()<60000)await auth('refresh_token',{refresh_token:S.r});return fetch(U+'/functions/v1/eslarma-voice',{method:'POST',headers:{apikey:K,Authorization:'Bearer '+S.a,'Content-Type':'application/json'},body:JSON.stringify({cmd,arg,...more}),signal:AbortSignal.timeout(60000)})}
-$('#chat').addEventListener('click',async e=>{const b=e.target.closest('[data-say]');if(!b)return;unlock();if(speaking===b.dataset.say){hush();return}const id=b.dataset.say;const go=sayText(H[id].content,id);b.classList.add('on');try{await go}catch(x){if(x.message!=='stop')toast('На этом устройстве нет голоса. Подключите голос в «!» у AI-агента')}b.classList.remove('on');if(speaking===id)speaking=null});
+async function raw(cmd,arg,more,fn){if(S.e-Date.now()<60000)await auth('refresh_token',{refresh_token:S.r});return fetch(U+'/functions/v1/'+(fn||'eslarma-voice'),{method:'POST',headers:{apikey:K,Authorization:'Bearer '+S.a,'Content-Type':'application/json'},body:JSON.stringify({cmd,arg,...more}),signal:AbortSignal.timeout(60000)})}
+$('#chat').addEventListener('click',async e=>{const b=e.target.closest('[data-say]');if(!b)return;unlock();if(speaking===b.dataset.say){hush();return}const id=b.dataset.say;const go=sayText(H[id].content,id,H[id].vid);b.classList.add('on');try{await go}catch(x){if(x.message!=='stop')toast('На этом устройстве нет голоса. Подключите голос в «!» у AI-агента')}b.classList.remove('on');if(speaking===id)speaking=null});
 // ---------- voice chat: talk - answer - talk again
 const vc=$('#vc');let V=null;
 const vs=(s,x)=>{$('#vs').textContent=s;if(x!==undefined)$('#vt').textContent=x};
-function vclose(){if(V){V.stop=true;try{V.mr?.state==='recording'&&V.mr.stop()}catch{}V.st?.getTracks().forEach(z=>z.stop());V.ac?.close().catch(()=>{});V=null}hush();if(vc.open)vc.close()}
+function vclose(){if(V){V.stop=true;try{V.sr?.abort()}catch{}try{V.mr?.state==='recording'&&V.mr.stop()}catch{}V.st?.getTracks().forEach(z=>z.stop());V.ac?.close().catch(()=>{});V=null}hush();if(vc.open)vc.close()}
 $('#vx').onclick=vclose;vc.oncancel=vclose;
-$('#orb').onclick=()=>{if(!V)return;if(V.mr?.state==='recording')V.mr.stop();else if(speaking!==null)hush()};
-$('#talk').onclick=async()=>{unlock();if(!D?.ai){aiKey();return}
+$('#orb').onclick=()=>{if(!V)return;if(V.sr&&speaking===null){try{V.sr.stop()}catch{}}else if(V.mr?.state==='recording')V.mr.stop();else if(speaking!==null)hush()};
+$('#talk').onclick=async()=>{unlock();if(!D?.ai){if(!SR){aiKey();return}vc.showModal();const me=V={stop:false};while(V===me&&!me.stop){try{await turnSR(me)}catch(e){if(V!==me)return;vs(e.kind==='mic'?'Разрешите микрофон в настройках':WHY[e.kind]||'Не получилось, попробуем ещё раз');if(e.kind==='mic')return;await new Promise(z=>setTimeout(z,2500))}}return}
   vc.showModal();vs('Включаю микрофон…','');
   try{const st=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}}),ac=new (window.AudioContext||window.webkitAudioContext)();await ac.resume();const an=ac.createAnalyser();an.fftSize=512;ac.createMediaStreamSource(st).connect(an);V={st,ac,an,stop:false}}catch{vs('Разрешите микрофон в настройках телефона','');return}
   const me=V;while(V===me&&!me.stop){try{await turn(me)}catch(e){if(V!==me)return;vs(WHY[e.kind]||'Не получилось, попробуем ещё раз');await new Promise(z=>setTimeout(z,2500))}}};
@@ -378,6 +378,10 @@ async function turn(v){const type=['audio/webm;codecs=opus','audio/mp4','audio/o
   vs('Распознаю…');const blob=new Blob(ch,{type:mr.mimeType||type});const b64=await new Promise(z=>{const f=new FileReader();f.onload=()=>z(String(f.result).split(',')[1]);f.readAsDataURL(blob)});
   const q=await raw('hear',b64,{mime:(mr.mimeType||type||'audio/mp4')}),d=await q.json();if(!q.ok)throw Object.assign(Error(),{kind:d.error});if(v.stop||!d.text.trim())return;
   vs('Думаю…',d.text);const a=await think(d.text);if(v.stop)return;vs('Отвечаю',a.content);try{await sayText(a.content,'vc')}catch{}speaking=null}
+async function turnSR(v){vs('Слушаю… говорите');const text=await new Promise((z,no)=>{const c=new SR();v.sr=c;let x='';c.lang='ru-RU';c.interimResults=true;c.onresult=e=>{x=[...e.results].map(k=>k[0].transcript).join(' ');$('#vt').textContent=x;$('#orb').style.setProperty('--lv',1.08)};c.onerror=e=>['not-allowed','service-not-allowed'].includes(e.error)?no(Object.assign(Error(),{kind:'mic'})):0;c.onend=()=>{$('#orb').style.setProperty('--lv',1);z(x.trim())};c.start()});
+  if(v.stop)return;if(!text){await new Promise(z=>setTimeout(z,400));return}
+  vs('Думаю…',text);const n=H.length;H.push({role:'user',content:text});let m=quick(text);if(m)m={role:'assistant',...m};else{vs('Думаю, около минуты…');const{id}=await api('ask',text,{history:H.slice(-8,-1).map(({role,content})=>({role,content})),fn:'eslarma-ask'});let o=null;for(let k=1;k<=40&&!o&&!v.stop;k++){await new Promise(z=>setTimeout(z,6000));try{const x=await api('answer',id,{fn:'eslarma-ask',again:k===20});if(!x.wait)o=x}catch{}}m={role:'assistant',content:o?o.reply:'Ответ не пришёл, спросите ещё раз.',actions:o?o.actions:[],vid:o?id:null}}
+  H.push(m);save();await act(m);save();if(v.stop)return;vs('Отвечаю',m.content);try{await sayText(m.content,'vc',m.vid)}catch{}speaking=null}
 async function think(q){const hist=H.slice(-8).map(({role,content})=>({role,content}));H.push({role:'user',content:q});let a=quick(q);if(!a){const d=await api('ask',q,{history:hist});a={content:d.reply||'…',actions:d.actions||[]}}const m={role:'assistant',...a};H.push(m);save();await act(m);save();return m}
 function aiKey(){pop('Голос и быстрый агент',`<form class="card add" id="aif"><span>Нужен бесплатный ключ Google, один раз: <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> → Create API key → скопировать → вставить сюда.</span><input id="aikey" type="password" autocomplete="off" aria-label="Ключ ИИ" required><button class="btn main" type="submit">Сохранить и проверить</button><p class="help" id="aiMsg" role="alert" style="padding:0"></p></form>`);
   $('#aif').onsubmit=async e=>{e.preventDefault();const m=$('#aiMsg');m.textContent='Проверяю…';try{await api('setai',$('#aikey').value.trim());toast('Голос подключён');shut();load()}catch(x){m.textContent=({aiformat:'Это не похоже на ключ.',aikey:'Этот ключ не принимают. Вставьте целиком.'})[x.kind]||'Не получилось, попробуйте ещё раз.'}}}
