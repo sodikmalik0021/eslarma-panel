@@ -108,10 +108,11 @@ video{width:100%;max-height:60dvh;border-radius:16px;background:#000;display:blo
 .msg .btn{margin-top:8px}.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.chips button{font:inherit;font-size:14px;border:1px solid var(--line2);background:var(--surface);color:var(--text);border-radius:99px;padding:10px 14px;min-height:44px;cursor:pointer}.chips button.on{background:var(--grad);border-color:transparent;color:#fff}
 textarea{font:inherit;width:100%;padding:13px 14px;border-radius:14px;border:1px solid var(--line2);background:var(--surface2);color:var(--text);min-height:56px;resize:vertical}
 .spark{width:100%;height:120px;display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
 #toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:var(--text);color:var(--bg);padding:12px 18px;border-radius:14px;font-weight:600;opacity:0;pointer-events:none;transition:.2s;z-index:20;max-width:90vw}#toast.on{opacity:1;transform:translate(-50%,0)}
 </style>
 </head>
-<body>
+<body data-build="1795626107">
 <svg width="0" height="0" style="position:absolute"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#6a2cf5"/><stop offset=".5" stop-color="#e1306c"/><stop offset="1" stop-color="#f77737"/></linearGradient></defs></svg>
 <header><div class="wrap"><div class="logo">e</div><div style="flex:1"><h1>Eslarma</h1><div class="sub" id="upd">загрузка…</div></div><button class="btn small" id="reload" aria-label="Обновить" hidden>↻</button></div></header>
 
@@ -160,7 +161,7 @@ textarea{font:inherit;width:100%;padding:13px 14px;border-radius:14px;border:1px
       <div class="chips" id="qs"></div>
       <div class="chat" id="chat" aria-live="polite"></div>
       <form class="card add" id="askf"><textarea id="q" rows="2" placeholder="Спросите о роликах, Instagram, стиле или пришлите ссылку" aria-label="Вопрос агенту" required></textarea><button class="btn main" type="submit">Отправить</button></form>
-      <p class="help">На кнопки сверху и ссылки агент отвечает сразу, на свои вопросы — за 1–2 минуты. Менять что-либо он может только после вашей кнопки.</p>
+      <p class="help">На кнопки сверху и ссылки агент отвечает сразу, на свои вопросы — за 1–2 минуты. Что попросите, выполняет сам; выпустить, отклонить ролик или сменить режим — после вашей кнопки.</p>
     </div>
   </section>
 
@@ -284,7 +285,7 @@ function draw(){
   if($('#wc'))$('#wc').onclick=()=>send('wishclear','','Пожелания очищены');
   if(d.pending)$('#upd').textContent='Выполняю ваши команды: '+d.pending}
 function pop(title,html){$('#dt').textContent=title;$('#db').innerHTML=html;if(!dlg.open)dlg.showModal();dlg.scrollTop=0}
-async function load(){if(!S)return;try{D=await api('state');$('#warn').hidden=true;$('#keyf').hidden=true;draw()}catch(e){if(S){$('#keyf').hidden=!['nokey','github'].includes(e.kind);$('#warn').hidden=false;$('#warn').textContent=WHY[e.kind]||'Нет связи с программой. Нажмите ↻.';$('#upd').textContent='нет данных'}}}
+async function load(){if(!S)return;try{D=await api('state');$('#warn').hidden=true;$('#keyf').hidden=true;draw();return true}catch(e){if(S){$('#keyf').hidden=!['nokey','github'].includes(e.kind);$('#warn').hidden=false;$('#warn').textContent=WHY[e.kind]||'Нет связи с программой. Нажмите ↻.';$('#upd').textContent='нет данных'}}}
 async function send(cmd,arg,msg){try{await api(cmd,arg);toast(msg);setTimeout(load,90000);return true}catch(e){fail(e);return false}}
 const dlg=$('#dlg');let blob;
 const shut=()=>{dlg.close();$('#db').innerHTML='';if(blob)URL.revokeObjectURL(blob);blob=null};
@@ -310,6 +311,8 @@ async function open(id){
     $('#qa').innerHTML=(it.map(([n,v])=>`<div>${v.ok?'✅':'❌'} ${esc(N[n]||v.name)}</div>`).join('')||'Проверки нет')+(q.plan?.caption?`<h3>Подпись</h3><div style="white-space:pre-wrap">${esc(q.plan.caption)}</div>`:'')
   }catch(e){if($('#qa'))$('#qa').textContent=''}}
 let H=[];try{H=JSON.parse(localStorage.eslarmaChat||'[]')}catch{}
+const AUTO=['style','wish','wishclear','link','comp','redo','make','growth'];
+async function act(m){for(const x of m.actions||[])if(AUTO.includes(x.cmd)&&!x.done&&await send(x.cmd,x.arg,'Выполняю: '+x.label))x.done=true}
 const QS=['Как дела у роликов?','Почему ролик не прошёл проверку?','Какие ролики смотрят лучше?','Что посоветуешь для роста?','Поменяй стиль картин'];
 $('#qs').innerHTML=QS.map(x=>`<button type="button">${x}</button>`).join('');
 $('#qs').querySelectorAll('button').forEach(b=>b.onclick=()=>ask(b.textContent));
@@ -330,7 +333,7 @@ async function ask(q){q=q.trim();if(!q||busy)return;busy=true;const hist=H.slice
   let out=null;
   try{const{id}=await api('ask',q,{history:hist,fn:'eslarma-ask'});
     for(let n=1;n<=40&&!out;n++){await new Promise(z=>setTimeout(z,8000));try{const x=await api('answer',id,{fn:'eslarma-ask',again:n===15});if(!x.wait)out=x}catch(e){if(!S)break}}
-    H[H.length-1]={role:'assistant',content:out?out.reply:'Ответ не пришёл. Спросите ещё раз через несколько минут.',actions:out?out.actions:[]}
+    H[H.length-1]={role:'assistant',content:out?out.reply:'Ответ не пришёл. Спросите ещё раз через несколько минут.',actions:out?out.actions:[]};if(out)await act(H[H.length-1])
   }catch(e){H[H.length-1]={role:'assistant',content:WHY[e.kind]||'Не получилось отправить вопрос. Попробуйте ещё раз.'}}
   busy=false;save();if($('#chat').lastElementChild)$('#chat').lastElementChild.scrollIntoView({block:'end'})}
 $('#askf').onsubmit=e=>{e.preventDefault();ask($('#q').value)};
@@ -350,7 +353,9 @@ $('#make').onclick=()=>send('make','','Запускаю');
 const me=async(m,b)=>{if(S.e-Date.now()<60000)await auth('refresh_token',{refresh_token:S.r});return fetch(U+'/auth/v1/user',{method:m,headers:{apikey:K,Authorization:'Bearer '+S.a,'Content-Type':'application/json'},body:b&&JSON.stringify(b)})};
 $('nav [data-v=mode]').addEventListener('click',async()=>{try{const u=await(await me('GET')).json();$('#who').textContent=u.email?'Почта для входа: '+u.email:''}catch{}});
 $('#pwf').onsubmit=async e=>{e.preventDefault();const m=$('#pwMsg');m.textContent='Сохраняю…';try{const q=await me('PUT',{password:$('#np').value}),d=await q.json().catch(()=>({}));if(q.ok){$('#np').value='';m.textContent='Готово. Новый пароль сохранён.'}else m.textContent=({same_password:'Это ваш прежний пароль, можно входить с ним.',weak_password:'Слишком простой пароль, сделайте длиннее.',reauthentication_needed:'Supabase просит войти заново.'})[d.error_code||d.code]||'Не получилось, попробуйте ещё раз.'}catch{m.textContent='Нет связи, попробуйте ещё раз.'}};
-$('#reload').onclick=load;$('#out').onclick=()=>{keep(null);show()};
+$('#reload').onclick=async()=>{const b=$('#reload');b.disabled=true;b.style.animation='spin .8s linear infinite';toast('Обновляю…');
+  try{const h=await(await fetch('index.html?'+Date.now(),{cache:'no-store'})).text();const v=s=>(s.match(/data-build="([^"]+)"/)||[])[1];if(v(h)&&v(h)!==document.body.dataset.build){const g=await navigator.serviceWorker?.getRegistration();await g?.update();location.replace(location.pathname+'?'+Date.now());return}}catch{}
+  const ok=await load();b.disabled=false;b.style.animation='';toast(ok?'Данные обновлены':'Не получилось обновить, нет связи')};$('#out').onclick=()=>{keep(null);show()};
 show();load();setInterval(()=>{if(!document.hidden)load()},60000);
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
