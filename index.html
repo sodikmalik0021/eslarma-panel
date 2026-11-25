@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Eslarma — панель</title>
+<title>Eslarma — студия</title>
 <meta name="theme-color" content="#0b0b10" id="metaTheme">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -86,106 +86,175 @@ nav button.on svg{stroke:url(#g)}
 @media (prefers-reduced-motion:reduce){.view{animation:none}}
 @media (min-width:700px){.grid{grid-template-columns:repeat(4,1fr)}}
 a{color:var(--blue)}
+[hidden]{display:none!important}
+.btn{font:inherit;font-weight:700;border:1px solid var(--line2);background:var(--surface2);color:var(--text);border-radius:14px;padding:13px 18px;min-height:48px;cursor:pointer;width:100%}
+.btn.main{background:var(--grad);border:0;color:#fff}.btn.bad{color:var(--bad)}.btn.small{width:48px;padding:0}.btn:disabled{opacity:.6}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+input{font:inherit;width:100%;padding:13px 14px;border-radius:14px;border:1px solid var(--line2);background:var(--surface2);color:var(--text);min-height:48px;margin-top:6px}
+#login{padding:4px 18px 18px;margin-top:24px;display:grid;gap:14px}.add{padding:14px;display:grid;gap:10px}.add input{margin:0}
+.warnbox{padding:16px;margin-top:16px;border-color:var(--warn)}
+button.row{all:unset;box-sizing:border-box;width:100%;cursor:pointer;display:flex;gap:12px;align-items:center;padding:14px 16px;border-top:1px solid var(--line);min-height:56px}button.row:first-child{border-top:0}
+.row .main>span{display:block}
+.seg button{all:unset;box-sizing:border-box;cursor:pointer;text-align:center;padding:14px 8px;border-radius:12px;font-weight:700;color:var(--muted2);min-height:48px}.seg button.on{background:var(--surface);color:var(--text);box-shadow:var(--shadow)}
+button.row:focus-visible,.seg button:focus-visible,nav button:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
+dialog{border:1px solid var(--line2);border-radius:22px;background:var(--surface);color:var(--text);width:min(480px,94vw);max-height:92dvh;padding:16px;overflow:auto}dialog::backdrop{background:rgba(0,0,0,.6)}
+.dh{display:flex;gap:12px;align-items:center;margin-bottom:12px}.dh b{flex:1}.acts{display:grid;gap:8px;margin-top:12px}
+video{width:100%;max-height:60dvh;border-radius:16px;background:#000;display:block}
+#toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:var(--text);color:var(--bg);padding:12px 18px;border-radius:14px;font-weight:600;opacity:0;pointer-events:none;transition:.2s;z-index:20;max-width:90vw}#toast.on{opacity:1;transform:translate(-50%,0)}
 </style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#6a2cf5"/><stop offset=".5" stop-color="#e1306c"/><stop offset="1" stop-color="#f77737"/></linearGradient></defs></svg>
-<header><div class="wrap"><div class="logo">e</div><div><h1>Eslarma</h1><div class="sub" id="upd">загрузка…</div></div></div></header>
+<header><div class="wrap"><div class="logo">e</div><div style="flex:1"><h1>Eslarma</h1><div class="sub" id="upd">загрузка…</div></div><button class="btn small" id="reload" aria-label="Обновить" hidden>↻</button></div></header>
 
 <main class="wrap">
+  <form id="login" class="card" hidden>
+    <h2>Вход</h2>
+    <label>Почта<input id="email" type="email" autocomplete="username" required></label>
+    <label>Пароль<input id="pass" type="password" autocomplete="current-password" required></label>
+    <button class="btn main" type="submit">Войти</button>
+    <p class="note" id="loginMsg" role="alert"></p>
+  </form>
+  <div id="warn" class="card warnbox" role="alert" hidden></div>
+  <div id="app" hidden>
   <section class="view on" id="v-home">
-    <h2>Обзор</h2>
+    <h2>Сейчас</h2>
     <div class="card hero">
-      <div class="lbl">Режим публикации</div>
-      <div class="big" id="modeBig">—</div>
+      <div class="lbl">Что делает программа</div>
+      <div class="big" id="now">—</div>
+      <div class="lbl" id="nowSub"></div>
       <div class="slots" id="slots"></div>
     </div>
     <div class="grid" id="kpi"></div>
+    <h3>Ждут вашего решения</h3>
+    <div class="card list" id="wait"></div>
+    <h3>Новое видео</h3>
+    <form class="card add" id="add">
+      <input id="url" type="url" inputmode="url" placeholder="Ссылка на ролик Instagram" aria-label="Ссылка на ролик Instagram" required>
+      <button class="btn main" type="submit">Добавить</button>
+    </form>
     <h3>Последние ролики</h3>
     <div class="card list" id="recent"></div>
   </section>
 
-  <section class="view" id="v-queue">
-    <h2>Очередь</h2>
-    <div class="card list" id="queue"></div>
-  </section>
+  <section class="view" id="v-queue"><h2>Очередь</h2><div class="card list" id="queue"></div></section>
 
   <section class="view" id="v-grow">
     <h2>Рост</h2>
-    <h3>Темы</h3>
-    <div class="card list" id="topics"></div>
-    <h3>Конкуренты</h3>
-    <div class="card list" id="comp"></div>
-    <h3>Выводы</h3>
-    <div class="card list" id="learned"></div>
+    <h3>Темы</h3><div class="card list" id="topics"></div>
+    <h3>Конкуренты</h3><div class="card list" id="comp"></div>
+    <h3>Выводы</h3><div class="card list" id="learned"></div>
   </section>
 
   <section class="view" id="v-mode">
-    <h2>Режим</h2>
-    <div class="seg" id="seg">
-      <a id="m-auto" href="https://t.me/eslarma_helper_bot?start=mode_auto">Автоматически<small>публикует сам</small></a>
-      <a id="m-approve" href="https://t.me/eslarma_helper_bot?start=mode_approve">С одобрением<small>сначала вам в Telegram</small></a>
+    <h2>Управление</h2>
+    <div class="seg">
+      <button id="m-auto">Автоматически<small>публикует сам</small></button>
+      <button id="m-approve">С одобрением<small>сначала вам</small></button>
     </div>
-    <p class="note">Нажатие открывает бота в Telegram — там нажмите «Start». Режим меняется в течение 30 минут, здесь он обновится после следующего обновления данных.</p>
-    <h3>Правила безопасности</h3>
-    <div class="card list">
-      <div class="row"><div class="main"><div class="t">Проверка по 9 пунктам</div><div class="m">Ролик с хотя бы одной ошибкой не публикуется — вам приходит сообщение.</div></div></div>
-      <div class="row"><div class="main"><div class="t">Слоты: 09:00 · 15:00 · 21:00</div><div class="m">По Бишкеку, один ролик за раз.</div></div></div>
-      <div class="row"><div class="main"><div class="t">Опубликованное не трогается</div><div class="m">Программа никогда не удаляет и не публикует повторно.</div></div></div>
-    </div>
+    <p class="note">Режим меняется за 1–2 минуты.</p>
+    <button class="btn" id="make">Запустить производство сейчас</button>
+    <h3>Работа программы</h3><div class="card list" id="runs"></div>
+    <h3></h3><button class="btn" id="out">Выйти</button>
   </section>
+  </div>
 </main>
 
-<nav><div class="wrap">
-  <button class="on" data-v="home" aria-label="Обзор"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Обзор</button>
-  <button data-v="queue" aria-label="Очередь"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="m10 9 5 3-5 3z"/></svg>Очередь</button>
-  <button data-v="grow" aria-label="Рост"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>Рост</button>
-  <button data-v="mode" aria-label="Режим"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Режим</button>
+<dialog id="dlg"><div class="dh"><b id="dt"></b><button class="btn small" id="dx" aria-label="Закрыть">✕</button></div><div id="db"></div></dialog>
+<div id="toast" role="status"></div>
+
+<nav hidden><div class="wrap">
+  <button class="on" data-v="home"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Сейчас</button>
+  <button data-v="queue"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="m10 9 5 3-5 3z"/></svg>Очередь</button>
+  <button data-v="grow"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>Рост</button>
+  <button data-v="mode"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>Управление</button>
 </div></nav>
 
-<script>
+<script type="module">
+const U='https://akwwwlifaohkrtdnrekc.supabase.co',K='sb_publishable_B5Os-lN4DIr-boNf_4Jl6w_Ftvni6ji';
 const $=s=>document.querySelector(s);
-const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const link=u=>/^https:\/\//.test(u||'')?esc(u):'#';
 const fmt=n=>n==null?'—':Number(n).toLocaleString('ru-RU');
-const date=s=>{if(!s)return'';const d=new Date(s);return isNaN(d)?esc(s):d.toLocaleString('ru-RU',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Asia/Bishkek'})};
-const cls={published:'ok',rejected:'bad',needs_owner:'bad',failed:'bad',awaiting_approval:'warn',in_progress:'blue',approved:'blue'};
-document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
-  document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));
-  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id==='v-'+b.dataset.v));
-  scrollTo({top:0});
-});
-function row(i,n){
-  const s=i.stats;
-  const m=s?`<div class="metrics"><span>👁 <b>${fmt(s.views)}</b></span><span>↗ <b>${fmt(s.shares)}</b></span><span>🔖 <b>${fmt(s.saved)}</b></span><span>❤ <b>${fmt(s.likes)}</b></span></div>`:'';
-  const tag=i.permalink?'a':'div';
-  return `<${tag} class="row" ${i.permalink?`href="${esc(i.permalink)}" target="_blank" rel="noopener"`:''}>
-    <div class="num">${esc(i.id)}</div>
-    <div class="main"><div class="t">${esc(i.hook||'Без заголовка')}</div>
-    <div class="m">${esc(i.topic||'')}${i.topic&&i.published_at?' · ':''}${date(i.published_at)}</div>${m}</div>
-    <span class="pill ${cls[i.status]||''}">${esc(i.status_ru)}</span>${i.permalink?'<span class="chev">›</span>':''}</${tag}>`;
-}
+const date=s=>{const d=new Date(s);return !s||isNaN(d)?'':d.toLocaleString('ru-RU',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Asia/Bishkek'})};
+const RU={new:'скачивается',retry:'скачивается',downloaded:'в очереди',in_progress:'делается',awaiting_approval:'ждёт вас',ready:'готов',approved:'публикуется',rejected:'отклонён',needs_owner:'не прошёл',published:'вышел',failed:'ошибка'};
+const CLS={published:'ok',ready:'ok',rejected:'bad',needs_owner:'bad',failed:'bad',awaiting_approval:'warn',in_progress:'blue',approved:'blue'};
+let S=null,D=null;
+try{S=JSON.parse(localStorage.eslarma||'null')}catch{}
+const keep=s=>{S=s&&{a:s.access_token,r:s.refresh_token,e:Date.now()+s.expires_in*1000};S?localStorage.eslarma=JSON.stringify(S):localStorage.removeItem('eslarma')};
+async function auth(type,body){const r=await fetch(U+'/auth/v1/token?grant_type='+type,{method:'POST',headers:{apikey:K,'Content-Type':'application/json'},body:JSON.stringify(body)});if(!r.ok)throw Object.assign(Error('auth'),{code:r.status});keep(await r.json())}
+async function api(cmd,arg){
+  if(S&&S.e-Date.now()<60000){try{await auth('refresh_token',{refresh_token:S.r})}catch(e){if(e.code>=400&&e.code<500){keep(null);show()}throw e}}
+  const r=await fetch(U+'/functions/v1/eslarma',{method:'POST',headers:{apikey:K,Authorization:'Bearer '+S.a,'Content-Type':'application/json'},body:JSON.stringify({cmd,arg})});
+  const d=await r.json().catch(()=>({}));
+  if(r.status===401){keep(null);show()}
+  if(!r.ok)throw Object.assign(Error(d.error||'http'),{kind:d.error});
+  return d}
+let tt;const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),4000)};
+const WHY={nokey:'Сайт готов, но ключ GitHub ещё не вставлен в Supabase.',forbidden:'Этот вход не хозяина программы.',github:'GitHub не ответил. Попробуйте позже или проверьте ключ.',novideo:'Видео этого ролика не найдено.'};
+const fail=e=>toast(WHY[e.kind]||'Не получилось. Проверьте интернет и попробуйте ещё раз.');
+function show(){$('#login').hidden=!!S;$('#app').hidden=!S;$('nav').hidden=!S;$('#reload').hidden=!S;if(!S){$('#warn').hidden=true;$('#upd').textContent='только для владельца'}}
 const list=(el,html,empty)=>{$(el).innerHTML=html||`<div class="empty">${empty}</div>`};
-fetch('data.json?'+Date.now()).then(r=>r.json()).then(d=>{
-  $('#upd').textContent='Обновлено '+date(d.updated);
-  const auto=d.mode!=='approve';
-  $('#modeBig').textContent=auto?'Автоматически':'С одобрением';
-  $('#slots').innerHTML=d.slots.map(s=>`<div class="slot">${s}</div>`).join('');
-  $('#m-auto').classList.toggle('on',auto);$('#m-approve').classList.toggle('on',!auto);
-  const pub=d.items.filter(i=>i.status==='published');
-  const wait=d.items.filter(i=>['downloaded','new','retry','approved','awaiting_approval','in_progress'].includes(i.status));
-  const views=pub.reduce((a,i)=>a+((i.stats||{}).views||0),0);
-  const shares=pub.reduce((a,i)=>a+((i.stats||{}).shares||0),0);
-  $('#kpi').innerHTML=[[pub.length,'опубликовано'],[wait.length,'в очереди'],[fmt(views),'просмотров'],[fmt(shares),'репостов']]
-    .map(([v,k])=>`<div class="card stat"><div class="v">${v}</div><div class="k">${k}</div></div>`).join('');
-  const byDate=[...pub].sort((a,b)=>String(b.published_at).localeCompare(String(a.published_at)));
-  list('#recent',byDate.slice(0,5).map(row).join(''),'Пока нет опубликованных');
-  list('#queue',[...wait,...d.items.filter(i=>['needs_owner','rejected','failed'].includes(i.status)),...byDate].map(row).join(''),'Очередь пуста');
-  const tp=(d.topics||[]).map(t=>({...t,v:+t.median_views_24h||0})).sort((a,b)=>b.v-a.v);const mx=Math.max(1,...tp.map(t=>t.v));
+function row(i){
+  const s=i.stats,open=['awaiting_approval','ready','needs_owner','rejected'].includes(i.status);
+  const m=s?`<div class="metrics"><span>👁 <b>${fmt(s.views)}</b></span><span>↗ <b>${fmt(s.shares)}</b></span><span>🔖 <b>${fmt(s.saved)}</b></span><span>❤ <b>${fmt(s.likes)}</b></span></div>`:'';
+  const pub=i.status==='published'&&i.permalink;
+  const tag=pub?'a':open?'button':'div';
+  return `<${tag} class="row" ${pub?`href="${link(i.permalink)}" target="_blank" rel="noopener"`:open?`data-id="${esc(i.id)}"`:''}>
+    <span class="num">${esc(i.id)}</span><span class="main"><span class="t">${esc(i.hook||'Без заголовка')}</span><span class="m">${date(i.published_at||i.received_at)}</span>${m}</span>
+    <span class="pill ${CLS[i.status]||''}">${esc(RU[i.status]||i.status)}</span>${pub||open?'<span class="chev">›</span>':''}</${tag}>`}
+function draw(){
+  const d=D,by=s=>d.items.filter(i=>s.includes(i.status));
+  $('#upd').textContent='Обновлено '+date(new Date());
+  const run=d.runs.find(r=>r.name==='produce'&&r.status!=='completed'),cur=by(['in_progress'])[0];
+  $('#now').textContent=run?(run.status==='in_progress'?'Делает ролик'+(cur?' '+cur.id:''):'Ролик в очереди'):'Отдыхает';
+  $('#nowSub').textContent=run?'начало: '+date(run.at):(by(['downloaded']).length?'':'нет исходных видео — добавьте ссылки');
+  $('#slots').innerHTML=(d.slots||[]).map(s=>`<div class="slot">${esc(s)}</div>`).join('');
+  const pub=by(['published']).sort((a,b)=>String(b.published_at).localeCompare(String(a.published_at)));
+  $('#kpi').innerHTML=[[by(['ready','approved']).length,'готовы к выходу'],[by(['awaiting_approval']).length,'ждут вас'],[by(['downloaded','new','retry']).length,'исходных видео'],[pub.length,'вышло']].map(([v,k])=>`<div class="card stat"><div class="v">${v}</div><div class="k">${k}</div></div>`).join('');
+  list('#wait',by(['awaiting_approval']).map(row).join(''),'Пока нечего решать');
+  list('#recent',pub.slice(0,5).map(row).join(''),'Пока нет вышедших');
+  list('#queue',[...by(['in_progress']),...by(['awaiting_approval','approved','ready']),...by(['downloaded','new','retry']),...by(['needs_owner','rejected','failed']),...pub].map(row).join(''),'Очередь пуста');
+  $('#m-auto').classList.toggle('on',d.mode==='auto');$('#m-approve').classList.toggle('on',d.mode==='approve');
+  list('#runs',d.runs.map(r=>`<div class="row"><span class="main"><span class="t">${({produce:'Производство ролика',beat:'Будильник'})[r.name]||esc(r.name)}</span><span class="m">${date(r.at)}</span></span><span class="pill ${r.status!=='completed'?'blue':r.conclusion==='success'?'ok':'bad'}">${r.status!=='completed'?'идёт':r.conclusion==='success'?'закончено':r.conclusion==='cancelled'?'остановлено':'ошибка'}</span></div>`).join(''),'Нет данных');
+  const tp=(d.topics||[]).map(t=>({...t,v:+t.median_views_24h||0})).sort((a,b)=>b.v-a.v),mx=Math.max(1,...tp.map(t=>t.v));
   list('#topics',tp.map(t=>`<div class="row"><div class="main"><div class="t">${esc(t.topic)}</div><div class="m">${esc(t.reels)} рол. · медиана ${fmt(t.v)} просм. · репосты ${esc(t.median_shares)}</div><div class="bar"><i style="width:${Math.round(t.v/mx*100)}%"></i></div></div></div>`).join(''),'Нет данных');
-  const c=(d.competitors||{}).top||[];
-  list('#comp',c.slice(0,15).map(x=>`<a class="row" href="${esc(x.url)}" target="_blank" rel="noopener"><div class="main"><div class="t">${esc(x.hook||x.caption||x.url)}</div><div class="m">#${esc(x.hashtag||'')} · ❤ ${fmt(x.likes)} · 💬 ${fmt(x.comments)}${x.views?' · 👁 '+fmt(x.views):''}</div></div><span class="chev">›</span></a>`).join(''),'Анализ конкурентов ещё не запускался');
-  list('#learned',((d.learned||{}).prompt_notes||[]).map(n=>`<div class="row"><div class="main"><div class="t" style="white-space:normal">${esc(n)}</div></div></div>`).join(''),'Выводов пока нет');
-}).catch(()=>{$('#upd').textContent='Нет данных'});
+  list('#comp',((d.competitors||{}).top||[]).slice(0,15).map(x=>`<a class="row" href="${link(x.url)}" target="_blank" rel="noopener"><div class="main"><div class="t">${esc(x.hook||x.caption||x.url)}</div><div class="m">❤ ${fmt(x.likes)} · 💬 ${fmt(x.comments)}</div></div><span class="chev">›</span></a>`).join(''),'Анализ конкурентов ещё не запускался');
+  list('#learned',((d.learned||{}).prompt_notes||[]).map(n=>`<div class="row"><div class="main"><div class="t" style="white-space:normal">${esc(n)}</div></div></div>`).join(''),'Выводов пока нет')}
+async function load(){if(!S)return;try{D=await api('state');$('#warn').hidden=true;draw()}catch(e){if(S){$('#warn').hidden=false;$('#warn').textContent=WHY[e.kind]||'Нет связи с программой. Нажмите ↻.';$('#upd').textContent='нет данных'}}}
+async function send(cmd,arg,msg){try{await api(cmd,arg);toast(msg);setTimeout(load,90000);return true}catch(e){fail(e);return false}}
+const dlg=$('#dlg');let blob;
+const shut=()=>{dlg.close();$('#db').innerHTML='';if(blob)URL.revokeObjectURL(blob);blob=null};
+$('#dx').onclick=shut;dlg.oncancel=shut;
+async function open(id){
+  const i=D.items.find(x=>x.id===id);if(!i)return;
+  $('#dt').textContent=id+' · '+(i.hook||'');
+  const can=i.status==='awaiting_approval'||i.status==='ready';
+  $('#db').innerHTML=`<div id="vid"><button class="btn main" id="play">▶ Посмотреть ролик</button></div><div class="acts">${can?'<button class="btn main" data-c="pub">Выпустить</button>':''}${i.started?'':'<button class="btn" data-c="redo">Переделать</button>'}${can?'<button class="btn bad" data-c="rej">Отклонить</button>':''}</div><div id="qa" class="note">Проверка…</div>`;
+  dlg.showModal();
+  $('#play').onclick=async()=>{const p=$('#play');p.disabled=true;try{
+    const v=await api('video',id),r=await fetch(v.url);if(!r.ok)throw Error();
+    const rd=r.body.getReader(),parts=[];let n=0;
+    for(;;){const{done,value}=await rd.read();if(done)break;parts.push(value);n+=value.length;p.textContent='Загрузка '+Math.round(n/v.size*100)+'%'}
+    if(!dlg.open||!p.isConnected)return;
+    blob=URL.createObjectURL(new Blob(parts,{type:'video/mp4'}));$('#vid').innerHTML=`<video controls autoplay playsinline src="${blob}"></video>`
+  }catch(e){fail(e);p.disabled=false;p.textContent='▶ Посмотреть ролик'}};
+  const T={pub:['Выпустить ролик в Instagram?','Принято, выйдет в течение нескольких минут'],redo:['Переделать ролик заново?','Вернул в производство'],rej:['Отклонить ролик?','Отклонён']};
+  dlg.querySelectorAll('[data-c]').forEach(b=>b.onclick=async()=>{if(confirm(T[b.dataset.c][0])){b.disabled=true;if(await send(b.dataset.c,id,T[b.dataset.c][1]))shut();else b.disabled=false}});
+  try{const q=await api('qa',id);if(!dlg.open||!$('#qa'))return;
+    const it=Object.entries(q.qa?.items||{});
+    const N={1:'Картинки = слова',2:'Понятность',3:'Перспектива',4:'Люди',5:'Стиль',6:'Движение',7:'Субтитры',8:'Звук',9:'Подпись'};
+    $('#qa').innerHTML=(it.map(([n,v])=>`<div>${v.ok?'✅':'❌'} ${esc(N[n]||v.name)}</div>`).join('')||'Проверки нет')+(q.plan?.caption?`<h3>Подпись</h3><div style="white-space:pre-wrap">${esc(q.plan.caption)}</div>`:'')
+  }catch(e){if($('#qa'))$('#qa').textContent=''}}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-id]');if(b)open(b.dataset.id)});
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id==='v-'+b.dataset.v));scrollTo({top:0})});
+$('#login').onsubmit=async e=>{e.preventDefault();$('#loginMsg').textContent='';try{await auth('password',{email:$('#email').value.trim(),password:$('#pass').value});$('#pass').value='';show();load()}catch(x){$('#loginMsg').textContent=x.code===400?'Неверная почта или пароль.':'Не получилось войти, попробуйте ещё раз.'}};
+$('#add').onsubmit=async e=>{e.preventDefault();const u=$('#url').value.trim();if(!/^https?:\/\/(www\.)?instagram\.com\/\S+/i.test(u))return toast('Нужна ссылка instagram.com');if(await send('link',u,'Ссылка принята'))$('#url').value=''};
+$('#m-auto').onclick=()=>confirm('Публиковать ролики без вашего одобрения?')&&send('mode','auto','Режим: автоматически');
+$('#m-approve').onclick=()=>send('mode','approve','Режим: с одобрением');
+$('#make').onclick=()=>send('make','','Запускаю');
+$('#reload').onclick=load;$('#out').onclick=()=>{keep(null);show()};
+show();load();setInterval(()=>{if(!document.hidden)load()},60000);
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
