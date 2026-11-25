@@ -192,7 +192,9 @@ textarea{font:inherit;width:100%;padding:13px 14px;border-radius:14px;border:1px
     <h3>Производство</h3>
     <button class="btn" id="make">Запустить производство сейчас</button>
     <h3>Работа программы</h3><div class="card list" id="runs"></div>
-    <h3></h3><button class="btn" id="out">Выйти</button>
+    <h3>Вход на сайт</h3>
+    <form class="card add" id="pwf"><div class="help" id="who" style="padding:0"></div><input id="np" type="text" minlength="8" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Новый пароль, от 8 знаков" aria-label="Новый пароль" required><button class="btn main" type="submit">Сменить пароль</button><p class="help" id="pwMsg" role="alert" style="padding:0">Запишите пароль: он понадобится для входа на телефоне.</p></form>
+    <button class="btn" id="out" style="margin-top:10px">Выйти</button>
   </section>
   </div>
 </main>
@@ -340,6 +342,9 @@ $('#keyf').onsubmit=async e=>{e.preventDefault();const m=$('#keyMsg');m.textCont
 $('#m-auto').onclick=()=>confirm('Публиковать ролики без вашего одобрения?')&&send('mode','auto','Режим: автоматически');
 $('#m-approve').onclick=()=>send('mode','approve','Режим: с одобрением');
 $('#make').onclick=()=>send('make','','Запускаю');
+const me=async(m,b)=>{if(S.e-Date.now()<60000)await auth('refresh_token',{refresh_token:S.r});return fetch(U+'/auth/v1/user',{method:m,headers:{apikey:K,Authorization:'Bearer '+S.a,'Content-Type':'application/json'},body:b&&JSON.stringify(b)})};
+$('nav [data-v=mode]').addEventListener('click',async()=>{try{const u=await(await me('GET')).json();$('#who').textContent=u.email?'Почта для входа: '+u.email:''}catch{}});
+$('#pwf').onsubmit=async e=>{e.preventDefault();const m=$('#pwMsg');m.textContent='Сохраняю…';try{const q=await me('PUT',{password:$('#np').value}),d=await q.json().catch(()=>({}));if(q.ok){$('#np').value='';m.textContent='Готово. Новый пароль сохранён.'}else m.textContent=({same_password:'Это ваш прежний пароль, можно входить с ним.',weak_password:'Слишком простой пароль, сделайте длиннее.',reauthentication_needed:'Supabase просит войти заново.'})[d.error_code||d.code]||'Не получилось, попробуйте ещё раз.'}catch{m.textContent='Нет связи, попробуйте ещё раз.'}};
 $('#reload').onclick=load;$('#out').onclick=()=>{keep(null);show()};
 show();load();setInterval(()=>{if(!document.hidden)load()},60000);
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
