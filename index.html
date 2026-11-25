@@ -119,7 +119,7 @@ textarea{font:inherit;width:100%;padding:13px 14px;border-radius:14px;border:1px
 #toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:var(--text);color:var(--bg);padding:12px 18px;border-radius:14px;font-weight:600;opacity:0;pointer-events:none;transition:.2s;z-index:20;max-width:90vw}#toast.on{opacity:1;transform:translate(-50%,0)}
 </style>
 </head>
-<body data-build="1795628677">
+<body data-build="1795629273">
 <svg width="0" height="0" style="position:absolute"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#6a2cf5"/><stop offset=".5" stop-color="#e1306c"/><stop offset="1" stop-color="#f77737"/></linearGradient></defs></svg>
 <header><div class="wrap"><img class="logo" src="mark.png?3" alt="" width="42" height="42"><div style="flex:1"><h1>Eslarma</h1><div class="sub" id="upd">загрузка…</div></div><button class="btn small" id="reload" aria-label="Обновить" hidden>↻</button></div></header>
 
@@ -252,8 +252,8 @@ function draw(){
   const d=D,by=s=>d.items.filter(i=>s.includes(i.status));
   $('#upd').textContent='Обновлено '+date(new Date());
   const run=d.runs.find(r=>r.name==='produce'&&r.status!=='completed'),cur=by(['in_progress'])[0];
-  $('#now').textContent=run?(run.status==='in_progress'?'Делает ролик'+(cur?' '+cur.id:''):'Ролик в очереди'):'Отдыхает';
-  $('#nowSub').textContent=run?'начало: '+date(run.at):(by(['downloaded']).length?'':'нет исходных видео — добавьте ссылки');
+  $('#now').textContent=run||cur?(!run||run.status==='in_progress'?'Делает ролик'+(cur?' '+cur.id:''):'Ролик в очереди'):'Отдыхает';
+  $('#nowSub').textContent=!run&&cur?'идёт производство':run?'начало: '+date(run.at):(by(['downloaded']).length?'':'нет исходных видео — добавьте ссылки');
   $('#slots').innerHTML=(d.slots||[]).map(s=>`<div class="slot">${esc(s)}</div>`).join('');
   const pub=by(['published']).sort((a,b)=>String(b.published_at).localeCompare(String(a.published_at)));
   const K=[['ready','готовы к выходу','выйдут в ближайший слот',by(['ready','approved'])],['wait','ждут вас','в режиме «с одобрением»',by(['awaiting_approval'])],['src','исходных видео','из них сделаем ролики',by(['downloaded','new','retry'])],['pub','вышло','уже в Instagram',pub]];
@@ -294,10 +294,11 @@ function draw(){
   $('#wishes').innerHTML=(d.wishes||[]).map(w=>'• '+esc(w)).join('<br>')+((d.wishes||[]).length?'<br><button type="button" class="btn" id="wc" style="margin-top:8px">Очистить пожелания</button>':'');
   if($('#wc'))$('#wc').onclick=()=>send('wishclear','','Пожелания очищены');
   comps2();
+  follow();
   if(d.pending)$('#upd').textContent='Выполняю ваши команды: '+d.pending}
 function pop(title,html){$('#dt').textContent=title;$('#db').innerHTML=html;if(!dlg.open)dlg.showModal();dlg.scrollTop=0}
 async function load(){if(!S)return;try{D=await api('state');$('#warn').hidden=true;$('#keyf').hidden=true;draw();return true}catch(e){if(S){$('#keyf').hidden=!['nokey','github'].includes(e.kind);$('#warn').hidden=false;$('#warn').textContent=WHY[e.kind]||'Нет связи с программой. Нажмите ↻.';$('#upd').textContent='нет данных'}}}
-async function send(cmd,arg,msg){try{await api(cmd,arg);toast(msg);setTimeout(load,90000);return true}catch(e){fail(e);return false}}
+async function send(cmd,arg,msg){try{await api(cmd,arg,cmd==='set'?{fn:'eslarma-dev'}:undefined);toast(msg);setTimeout(load,90000);return true}catch(e){fail(e);return false}}
 const dlg=$('#dlg');let blob;
 const shut=()=>{dlg.close();$('#db').innerHTML='';if(blob)URL.revokeObjectURL(blob);blob=null};
 $('#dx').onclick=shut;dlg.oncancel=shut;
@@ -322,21 +323,24 @@ async function open(id){
     $('#qa').innerHTML=(it.map(([n,v])=>`<div>${v.ok?'✅':'❌'} ${esc(N[n]||v.name)}</div>`).join('')||'Проверки нет')+(q.plan?.caption?`<h3>Подпись</h3><div style="white-space:pre-wrap">${esc(q.plan.caption)}</div>`:'')
   }catch(e){if($('#qa'))$('#qa').textContent=''}}
 let H=[];try{H=JSON.parse(localStorage.eslarmaChat||'[]')}catch{}
-const AUTO=['style','wish','wishclear','link','comp','redo','make','growth'];
-async function act(m){for(const x of m.actions||[])if(AUTO.includes(x.cmd)&&!x.done&&await send(x.cmd,x.arg,'Выполняю: '+x.label))x.done=true}
+const AUTO=['set','code','style','wish','wishclear','link','comp','redo','make','growth'];
+async function dev(x){try{if(x.cmd==='code'){const{id}=await api('code',x.arg,{fn:'eslarma-dev'});H.push({role:'assistant',content:'Готовлю изменение и проверяю код, 2–5 минут. Можно закрыть сайт, ответ сохранится.',pend:id});save();follow();return true}const d=await api(x.cmd,x.arg,{fn:'eslarma-dev'});H.push({role:'assistant',content:x.cmd==='apply'?'Применил. Подействует '+(d.repo==='eslarma-panel'?'на сайте через минуту: нажмите ↻.':'со следующего ролика.'):'Вернул как было.',actions:x.cmd==='apply'?[{cmd:'undo',arg:x.arg,label:'Вернуть как было'}]:[]});save();return true}catch(e){toast(({nopanel:'Ключу GitHub нужен доступ к eslarma-panel',changed:'Файл уже изменился, попросите изменение заново'})[e.kind]||WHY[e.kind]||'Не получилось');return false}}
+async function act(m){for(const x of m.actions||[])if(AUTO.includes(x.cmd)&&!x.done&&(x.cmd==='code'?await dev(x):await send(x.cmd,x.arg,'Выполняю: '+x.label)))x.done=true}
+let fol=false;async function follow(){if(fol)return;fol=true;try{for(let n=0;n<90;n++){const P=H.filter(m=>m.pend);if(!P.length||!S)break;for(const m of P){try{const x=await api('answer',m.pend,{fn:'eslarma-dev',again:n===25});if(!x.wait){const id=m.pend;delete m.pend;m.content=x.reply;m.actions=x.actions;m.vid=id;save();await act(m);save();m.cb?.(m)}}catch{}}await new Promise(z=>setTimeout(z,6000))}}finally{fol=false}}
 const QS=['Как дела у роликов?','Почему ролик не прошёл проверку?','Какие ролики смотрят лучше?','Что посоветуешь для роста?','Поменяй стиль картин'];
 $('#qs').innerHTML=QS.map(x=>`<button type="button">${x}</button>`).join('');
 $('#qs').querySelectorAll('button').forEach(b=>b.onclick=()=>ask(b.textContent));
 const SP='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>';
 function talk(){$('#chat').innerHTML=H.map((m,n)=>`<div class="msg ${m.role==='user'?'u':'a'}">${esc(m.content)}${m.role!=='user'&&'speechSynthesis' in window?`<div><button class="say" aria-label="Прочитать вслух" data-say="${n}">${SP}</button></div>`:''}${(m.actions||[]).map((x,k)=>`<button class="btn" data-m="${n}" data-a="${k}" ${x.done?'disabled':''}>${esc(x.label)}${x.done?' ✓':''}</button>`).join('')}</div>`).join('');
-  $('#chat').querySelectorAll('[data-a]').forEach(b=>b.onclick=async()=>{const x=H[b.dataset.m].actions[b.dataset.a];const what=({mode:'Сменить режим',pub:'Выпустить в Instagram ролик',rej:'Отклонить ролик',redo:'Переделать ролик',link:'Сделать ролик из',comp:'Добавить в анализ',style:'Стиль картин',wish:'Пожелание',wishclear:'Очистить пожелания',make:'Запустить производство',growth:'Обновить статистику'})[x.cmd];if(!confirm(what+' '+x.arg+'?'))return;b.disabled=true;if(await send(x.cmd,x.arg,'Принято')){x.done=true;save()}else b.disabled=false})}
-function save(){H=H.slice(-40);try{localStorage.eslarmaChat=JSON.stringify(H)}catch{}talk()}
+  $('#chat').querySelectorAll('[data-a]').forEach(b=>b.onclick=async()=>{const x=H[b.dataset.m].actions[b.dataset.a];const what=({mode:'Сменить режим',pub:'Выпустить в Instagram ролик',rej:'Отклонить ролик',redo:'Переделать ролик',link:'Сделать ролик из',comp:'Добавить в анализ',style:'Стиль картин',wish:'Пожелание',wishclear:'Очистить пожелания',make:'Запустить производство',growth:'Обновить статистику',apply:'Применить изменение программы',undo:'Вернуть программу как было',set:'Изменить настройку',code:'Изменить программу'})[x.cmd];if(!confirm(what+(['apply','undo'].includes(x.cmd)?'':' '+x.arg)+'?'))return;b.disabled=true;if(['code','apply','undo'].includes(x.cmd)?await dev(x):await send(x.cmd,x.arg,'Принято')){x.done=true;save()}else b.disabled=false})}
+function save(){H=H.slice(-40);try{localStorage.eslarmaChat=JSON.stringify(H,(k,v)=>k==='cb'?undefined:v)}catch{}talk()}
 let busy=false;
 function quick(q){const d=D;if(!d)return null;const by=s=>d.items.filter(i=>s.includes(i.status)),R=(d.reels||[]).filter(x=>x.views!=null),nm=i=>i.id+(i.hook?' «'+i.hook+'»':'');
-  if(q===QS[0]){const p=d.runs.find(x=>x.name==='produce'&&x.status!=='completed'),c=by(['in_progress'])[0];return{content:[p?'Сейчас делается ролик'+(c?' '+nm(c):'')+'.':'Сейчас ничего не делается.','Готовы к выходу: '+by(['ready','approved']).length+'. Ждут вас: '+by(['awaiting_approval']).length+'. Исходных видео: '+by(['downloaded','new','retry']).length+'.','Режим: '+(d.mode==='auto'?'автоматически':'с одобрением')+'. Слоты: '+(d.slots||[]).join(', ')+'.'].join('\n'),actions:p?[]:[{cmd:'make',arg:'',label:'Запустить производство'}]}}
+  if(q===QS[0]){const p=d.runs.find(x=>x.name==='produce'&&x.status!=='completed'),c=by(['in_progress'])[0];return{content:[p||c?'Сейчас делается ролик'+(c?' '+nm(c):'')+'.':'Сейчас ничего не делается.','Готовы к выходу: '+by(['ready','approved']).length+'. Ждут вас: '+by(['awaiting_approval']).length+'. Исходных видео: '+by(['downloaded','new','retry']).length+'.','Режим: '+(d.mode==='auto'?'автоматически':'с одобрением')+'. Слоты: '+(d.slots||[]).join(', ')+'.'].join('\n'),actions:p||c?[]:[{cmd:'make',arg:'',label:'Запустить производство'}]}}
   if(q===QS[1]){const N={1:'картинки не совпали со словами',2:'непонятные картинки',3:'перспектива',4:'люди',5:'стиль',6:'движение',7:'субтитры',8:'звук',9:'подпись'};const b=by(['needs_owner','downloaded']).filter(i=>i.qa&&Object.values(i.qa).includes(false)).slice(0,5);return{content:b.length?b.map(i=>nm(i)+': '+Object.entries(i.qa).filter(x=>x[1]===false).map(x=>N[x[0]]||x[0]).join(', ')+(i.status==='needs_owner'?' — отложен':' — переделаю сам')).join('\n'):'Сейчас нет роликов, которые не прошли проверку.',actions:b.filter(i=>i.status==='needs_owner'&&!i.started).slice(0,3).map(i=>({cmd:'redo',arg:i.id,label:'Переделать '+i.id}))}}
   if(q===QS[2]&&R.length)return{content:[...R].sort((a,b)=>b.views-a.views).slice(0,5).map((x,n)=>(n+1)+'. '+(x.hook||'Ролик').replace(/\*/g,'')+' — '+fmt(x.views)+' просм., '+fmt(x.shares)+' репостов').join('\n'),actions:[]};
   if(q===QS[4])return{content:'Выберите стиль. Подействует со следующих роликов.',actions:[['oil','Масло'],['gouache','Гуашь'],['miniature','Восточная миниатюра'],['cinematic','Кино'],['pencil','Карандаш'],['watercolor','Акварель']].filter(x=>x[0]!==d.style).map(([arg,label])=>({cmd:'style',arg,label}))};
+  if(/^(привет|салом|ассалому?\s*алейкум|ассалому?\s*алайкум|здравствуй(те)?|salom|assalomu alaykum)[\s,!.]*(как дела|что нового)?[?!.\s]*$/i.test(q)){const p=by(['in_progress'])[0];return{content:'Ва алейкум ассалам! '+(p?'Сейчас делается ролик'+(p.hook?' «'+p.hook+'»':' '+p.id)+'. ':'Сейчас ничего не делается. ')+'Исходных видео: '+by(['downloaded','new','retry']).length+', готовы к выходу: '+by(['ready','approved']).length+'. Подписчиков: '+fmt((d.account||{}).followers)+'. Чем помочь?',actions:[]}}
   const m=q.match(/https?:\/\/(www\.)?instagram\.com\/\S+/i);if(m)return{content:'Что сделать с этой ссылкой?',actions:[{cmd:'link',arg:m[0],label:'Это речь домлы: сделать ролик'},{cmd:'comp',arg:m[0],label:'Это конкурент: в анализ'}]};
   return null}
 async function ask(q){q=q.trim();if(!q||busy)return;busy=true;const hist=H.slice(-8).map(({role,content})=>({role,content}));H.push({role:'user',content:q});$('#q').value='';
@@ -344,10 +348,7 @@ async function ask(q){q=q.trim();if(!q||busy)return;busy=true;const hist=H.slice
   H.push({role:'assistant',content:'Думаю, 1–2 минуты. Можно уйти на другой экран.'});talk();$('#chat').lastElementChild.scrollIntoView({block:'end'});
   let out=null;
   if(D&&D.ai){try{const d=await api('ask',q,{history:hist});H[H.length-1]={role:'assistant',content:d.reply||'…',actions:d.actions||[]};await act(H[H.length-1]);busy=false;save();return}catch{}}
-  try{const{id}=await api('ask',q,{history:hist,fn:'eslarma-ask'});
-    for(let n=1;n<=40&&!out;n++){await new Promise(z=>setTimeout(z,8000));try{const x=await api('answer',id,{fn:'eslarma-ask',again:n===15});if(!x.wait)out=x}catch(e){if(!S)break}}
-    H[H.length-1]={role:'assistant',content:out?out.reply:'Ответ не пришёл. Спросите ещё раз через несколько минут.',actions:out?out.actions:[],vid:out?id:null};if(out)await act(H[H.length-1])
-  }catch(e){H[H.length-1]={role:'assistant',content:WHY[e.kind]||'Не получилось отправить вопрос. Попробуйте ещё раз.'}}
+  try{const{id}=await api('ask',q,{history:hist,fn:'eslarma-ask'});H[H.length-1]={role:'assistant',content:'Думаю, 1–2 минуты. Можно закрыть сайт, ответ сохранится.',pend:id};save();follow()}catch(e){H[H.length-1]={role:'assistant',content:WHY[e.kind]||'Не получилось отправить вопрос. Попробуйте ещё раз.'}}
   busy=false;save();if($('#chat').lastElementChild)$('#chat').lastElementChild.scrollIntoView({block:'end'})}
 let speaking=null;const au=new Audio();let unlocked=false;
 const unlock=()=>{if(unlocked)return;unlocked=true;au.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA=';au.play().catch(()=>{})};
@@ -380,7 +381,7 @@ async function turn(v){const type=['audio/webm;codecs=opus','audio/mp4','audio/o
   vs('Думаю…',d.text);const a=await think(d.text);if(v.stop)return;vs('Отвечаю',a.content);try{await sayText(a.content,'vc')}catch{}speaking=null}
 async function turnSR(v){vs('Слушаю… говорите');const text=await new Promise((z,no)=>{const c=new SR();v.sr=c;let x='';c.lang='ru-RU';c.interimResults=true;c.onresult=e=>{x=[...e.results].map(k=>k[0].transcript).join(' ');$('#vt').textContent=x;$('#orb').style.setProperty('--lv',1.08)};c.onerror=e=>['not-allowed','service-not-allowed'].includes(e.error)?no(Object.assign(Error(),{kind:'mic'})):0;c.onend=()=>{$('#orb').style.setProperty('--lv',1);z(x.trim())};c.start()});
   if(v.stop)return;if(!text){await new Promise(z=>setTimeout(z,400));return}
-  vs('Думаю…',text);const n=H.length;H.push({role:'user',content:text});let m=quick(text);if(m)m={role:'assistant',...m};else{vs('Думаю, около минуты…');const{id}=await api('ask',text,{history:H.slice(-8,-1).map(({role,content})=>({role,content})),fn:'eslarma-ask'});let o=null;for(let k=1;k<=40&&!o&&!v.stop;k++){await new Promise(z=>setTimeout(z,6000));try{const x=await api('answer',id,{fn:'eslarma-ask',again:k===20});if(!x.wait)o=x}catch{}}m={role:'assistant',content:o?o.reply:'Ответ не пришёл, спросите ещё раз.',actions:o?o.actions:[],vid:o?id:null}}
+  vs('Думаю…',text);const n=H.length;H.push({role:'user',content:text});let m=quick(text);if(m)m={role:'assistant',...m};else{vs('Думаю, около минуты…');const{id}=await api('ask',text,{history:H.slice(-8,-1).map(({role,content})=>({role,content})),fn:'eslarma-ask'});m={role:'assistant',content:'Думаю, около минуты…',pend:id};const got=new Promise(z=>{m.cb=z});H.push(m);save();follow();browserSay('Думаю, подождите минуту.').catch(()=>{});await Promise.race([got,new Promise(z=>{const c=setInterval(()=>{if(v.stop){clearInterval(c);z()}},500)})]);if(v.stop)return;vs('Отвечаю',m.content);try{await sayText(m.content,'vc',m.vid)}catch{}speaking=null;return}
   H.push(m);save();await act(m);save();if(v.stop)return;vs('Отвечаю',m.content);try{await sayText(m.content,'vc',m.vid)}catch{}speaking=null}
 async function think(q){const hist=H.slice(-8).map(({role,content})=>({role,content}));H.push({role:'user',content:q});let a=quick(q);if(!a){const d=await api('ask',q,{history:hist});a={content:d.reply||'…',actions:d.actions||[]}}const m={role:'assistant',...a};H.push(m);save();await act(m);save();return m}
 function aiKey(){pop('Голос и быстрый агент',`<form class="card add" id="aif"><span>Нужен бесплатный ключ Google, один раз: <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> → Create API key → скопировать → вставить сюда.</span><input id="aikey" type="password" autocomplete="off" aria-label="Ключ ИИ" required><button class="btn main" type="submit">Сохранить и проверить</button><p class="help" id="aiMsg" role="alert" style="padding:0"></p></form>`);
@@ -414,7 +415,7 @@ talk();
 const TIPS={now:['Сейчас','Готовы к выходу — выйдут в ближайший слот.\nЖдут вас — только в режиме «С одобрением».\nИсходных видео — речи домлы, из которых сделаем ролики.\nВышло — уже в Instagram.\nНажмите на цифру, чтобы увидеть список.'],
 new:['Новое видео домлы','Вставьте ссылку на ролик с речью домлы. Программа возьмёт голос и сама сделает новый ролик: картины, движение, субтитры, обложку.'],
 wait:['Ждут вашего решения','В режиме «С одобрением» готовый ролик появится здесь: посмотреть, выпустить, переделать или отклонить. В режиме «Автоматически» ролики выходят сами.'],
-ai:['AI-агент','На кнопки и ссылки отвечает сразу, на свои вопросы — за 1–2 минуты.\nСтиль, пожелания, ссылки, переделку выполняет сам. Выпустить, отклонить или сменить режим — после вашей кнопки.\nВолны — голосовой чат, микрофон — диктовать, динамик — прочитать вслух.\nМодель бесплатная, важное проверяйте.'],
+ai:['AI-агент','На кнопки и ссылки отвечает сразу, на свои вопросы — за 1–2 минуты.\nСтиль, пожелания, ссылки, переделку выполняет сам. Выпустить, отклонить или сменить режим — после вашей кнопки.\nВолны — голосовой чат, микрофон — диктовать, динамик — прочитать вслух.\nПопросите изменить программу: дизайн сайта, субтитры, картины, движение. Простое сделает сразу, для сложного подготовит код, проверит и даст кнопку «Применить». Любое изменение можно вернуть.\nМодель бесплатная, важное проверяйте.'],
 mode:['Управление','Автоматически — программа выпускает ролики сама. С одобрением — сначала вам. Режим меняется за 1–2 минуты.'],
 style:['Стиль картин','Подействует со следующих роликов.'],wish:['Пожелания','Например: больше природы, меньше людей. Программа учтёт до 6 последних пожеланий.'],
 grow:['Рост','Нажмите на любую кнопку: откроются подробности. Данные обновляются сами в 08:35 и 21:35.'],
