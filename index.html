@@ -6,8 +6,8 @@
 <title>Eslarma — студия</title>
 <meta name="theme-color" content="#0b0b10" id="metaTheme">
 <link rel="manifest" href="manifest.json">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?2">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?2">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?3">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?3">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -112,15 +112,16 @@ textarea{font:inherit;width:100%;padding:13px 14px;border-radius:14px;border:1px
 .num.cv{width:54px;height:72px;border-radius:12px;background-size:cover;background-position:center;overflow:hidden;position:relative}.num.cv img{width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0}
 .row .t{white-space:normal;display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 .tools{display:flex;gap:10px}.tools .btn{width:auto}.tools .btn.main{flex:1}.ic{width:52px!important;padding:0!important;flex:none;display:grid;place-items:center}.ic svg{width:22px;height:22px}.ic.rec{background:var(--bad);color:#fff;animation:pulse 1.2s infinite}@keyframes pulse{50%{opacity:.6}}@media (prefers-reduced-motion:reduce){.ic.rec{animation:none}}
-.say{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:13px;min-height:44px;margin-top:4px}.say svg{width:18px;height:18px}
+.say{all:unset;cursor:pointer;display:inline-grid;place-items:center;width:44px;height:44px;margin:4px 0 -6px -8px;color:var(--muted)}.say svg{width:22px;height:22px}.say.on{color:var(--ok)}.say:focus-visible{outline:2px solid var(--blue);border-radius:12px}
+#vc{border:0;width:100%;max-width:none;height:100dvh;max-height:none;background:radial-gradient(circle at 50% 38%,#2a6a50,#12352a 60%,#0a1f18);color:#f3ece0;border-radius:0;text-align:center}#vc[open]{display:flex;flex-direction:column;align-items:center;justify-content:space-between}#orb{width:170px;height:170px;border-radius:50%;border:0;cursor:pointer;background:radial-gradient(circle at 35% 30%,#f6e2b0,#e6c27b 45%,#b98d3f);box-shadow:0 0 0 14px rgba(230,194,123,.14),0 0 70px rgba(230,194,123,.4);transition:transform .12s;transform:scale(var(--lv,1))}#vc .vt{min-height:84px;font-size:19px;padding:0 12px;overflow-wrap:anywhere;max-height:34dvh;overflow:auto}#vc .vs{opacity:.75;font-size:14px;margin-top:24px}#vc .btn{max-width:260px;background:rgba(255,255,255,.12);border-color:transparent;color:inherit;margin-bottom:env(safe-area-inset-bottom)}
 .file{display:block;text-align:center}.file input{position:absolute;opacity:0;width:1px;height:1px}
 @keyframes spin{to{transform:rotate(360deg)}}
 #toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:var(--text);color:var(--bg);padding:12px 18px;border-radius:14px;font-weight:600;opacity:0;pointer-events:none;transition:.2s;z-index:20;max-width:90vw}#toast.on{opacity:1;transform:translate(-50%,0)}
 </style>
 </head>
-<body data-build="1795627637">
+<body data-build="1795628299">
 <svg width="0" height="0" style="position:absolute"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#6a2cf5"/><stop offset=".5" stop-color="#e1306c"/><stop offset="1" stop-color="#f77737"/></linearGradient></defs></svg>
-<header><div class="wrap"><img class="logo" src="icon-192.png?2" alt="" width="42" height="42"><div style="flex:1"><h1>Eslarma</h1><div class="sub" id="upd">загрузка…</div></div><button class="btn small" id="reload" aria-label="Обновить" hidden>↻</button></div></header>
+<header><div class="wrap"><img class="logo" src="mark.png?3" alt="" width="42" height="42"><div style="flex:1"><h1>Eslarma</h1><div class="sub" id="upd">загрузка…</div></div><button class="btn small" id="reload" aria-label="Обновить" hidden>↻</button></div></header>
 
 <main class="wrap">
   <form id="login" class="card" hidden>
@@ -165,7 +166,7 @@ textarea{font:inherit;width:100%;padding:13px 14px;border-radius:14px;border:1px
     <div id="aibox">
       <div class="chips" id="qs"></div>
       <div class="chat" id="chat" aria-live="polite"></div>
-      <form class="card add" id="askf"><textarea id="q" rows="2" placeholder="Спросите о роликах, Instagram, стиле или пришлите ссылку" aria-label="Вопрос агенту" required></textarea><div class="tools"><button class="btn ic" type="button" id="mic" aria-label="Диктовать голосом"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><button class="btn main" type="submit">Отправить</button></div></form>
+      <form class="card add" id="askf"><textarea id="q" rows="2" placeholder="Спросите о роликах, Instagram, стиле или пришлите ссылку" aria-label="Вопрос агенту" required></textarea><div class="tools"><button class="btn ic" type="button" id="talk" aria-label="Голосовой чат"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 10v4M7.5 7v10M12 4v16M16.5 7v10M21 10v4"/></svg></button><button class="btn ic" type="button" id="mic" aria-label="Диктовать голосом"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><button class="btn main" type="submit">Отправить</button></div></form>
     </div>
   </section>
 
@@ -199,6 +200,7 @@ textarea{font:inherit;width:100%;padding:13px 14px;border-radius:14px;border:1px
   </div>
 </main>
 
+<dialog id="vc" aria-label="Голосовой чат"><div class="vs" id="vs" role="status"></div><button id="orb" aria-label="Закончить фразу или остановить ответ"></button><div class="vt" id="vt"></div><button class="btn" id="vx">Закончить</button></dialog>
 <dialog id="dlg"><div class="dh"><b id="dt"></b><button class="btn small" id="dx" aria-label="Закрыть">✕</button></div><div id="db"></div></dialog>
 <div id="toast" role="status"></div>
 
@@ -231,7 +233,7 @@ async function api(cmd,arg,more){
   if(!r.ok)throw Object.assign(Error(d.error||'http'),{kind:d.error,http:d.http,len:d.len});
   return d}
 let tt;const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),4000)};
-const WHY={nokey:'Сайт готов, но осталось вставить ключ GitHub ниже.',forbidden:'Этот вход не хозяина программы.',github:'GitHub не ответил. Попробуйте позже или проверьте ключ.',ghdown:'GitHub сейчас сбоит. Попробуйте через несколько минут.',noai:'Сначала подключите ИИ.',aikey:'Ключ ИИ не принимают, вставьте новый.',aibusy:'ИИ сейчас занят, попробуйте через минуту.',novideo:'Видео этого ролика не найдено.'};
+const WHY={nokey:'Сайт готов, но осталось вставить ключ GitHub ниже.',forbidden:'Этот вход не хозяина программы.',github:'GitHub не ответил. Попробуйте позже или проверьте ключ.',ghdown:'GitHub сейчас сбоит. Попробуйте через несколько минут.',noai:'Сначала подключите ИИ.',aikey:'Ключ ИИ не принимают, вставьте новый.',voicebusy:'Голос сейчас занят, попробуйте через минуту.',aibusy:'ИИ сейчас занят, попробуйте через минуту.',novideo:'Видео этого ролика не найдено.'};
 const fail=e=>toast(WHY[e.kind]||'Не получилось. Проверьте интернет и попробуйте ещё раз.');
 function show(){$('#login').hidden=!!S;$('#app').hidden=!S;$('nav').hidden=!S;$('#reload').hidden=!S;if(!S){$('#warn').hidden=true;$('#keyf').hidden=true;$('#upd').textContent='только для владельца'}}
 const list=(el,html,empty)=>{$(el).innerHTML=html||`<div class="empty">${empty}</div>`};
@@ -326,7 +328,7 @@ const QS=['Как дела у роликов?','Почему ролик не п�
 $('#qs').innerHTML=QS.map(x=>`<button type="button">${x}</button>`).join('');
 $('#qs').querySelectorAll('button').forEach(b=>b.onclick=()=>ask(b.textContent));
 const SP='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>';
-function talk(){$('#chat').innerHTML=H.map((m,n)=>`<div class="msg ${m.role==='user'?'u':'a'}">${esc(m.content)}${m.role!=='user'&&'speechSynthesis' in window?`<div><button class="say" data-say="${n}">${SP}Прочитать вслух</button></div>`:''}${(m.actions||[]).map((x,k)=>`<button class="btn" data-m="${n}" data-a="${k}" ${x.done?'disabled':''}>${esc(x.label)}${x.done?' ✓':''}</button>`).join('')}</div>`).join('');
+function talk(){$('#chat').innerHTML=H.map((m,n)=>`<div class="msg ${m.role==='user'?'u':'a'}">${esc(m.content)}${m.role!=='user'&&'speechSynthesis' in window?`<div><button class="say" aria-label="Прочитать вслух" data-say="${n}">${SP}</button></div>`:''}${(m.actions||[]).map((x,k)=>`<button class="btn" data-m="${n}" data-a="${k}" ${x.done?'disabled':''}>${esc(x.label)}${x.done?' ✓':''}</button>`).join('')}</div>`).join('');
   $('#chat').querySelectorAll('[data-a]').forEach(b=>b.onclick=async()=>{const x=H[b.dataset.m].actions[b.dataset.a];const what=({mode:'Сменить режим',pub:'Выпустить в Instagram ролик',rej:'Отклонить ролик',redo:'Переделать ролик',link:'Сделать ролик из',comp:'Добавить в анализ',style:'Стиль картин',wish:'Пожелание',wishclear:'Очистить пожелания',make:'Запустить производство',growth:'Обновить статистику'})[x.cmd];if(!confirm(what+' '+x.arg+'?'))return;b.disabled=true;if(await send(x.cmd,x.arg,'Принято')){x.done=true;save()}else b.disabled=false})}
 function save(){H=H.slice(-40);try{localStorage.eslarmaChat=JSON.stringify(H)}catch{}talk()}
 let busy=false;
@@ -341,13 +343,44 @@ async function ask(q){q=q.trim();if(!q||busy)return;busy=true;const hist=H.slice
   const a=quick(q);if(a){H.push({role:'assistant',...a});busy=false;save();$('#chat').lastElementChild.scrollIntoView({block:'end'});return}
   H.push({role:'assistant',content:'Думаю, 1–2 минуты. Можно уйти на другой экран.'});talk();$('#chat').lastElementChild.scrollIntoView({block:'end'});
   let out=null;
+  if(D&&D.ai){try{const d=await api('ask',q,{history:hist});H[H.length-1]={role:'assistant',content:d.reply||'…',actions:d.actions||[]};await act(H[H.length-1]);busy=false;save();return}catch{}}
   try{const{id}=await api('ask',q,{history:hist,fn:'eslarma-ask'});
     for(let n=1;n<=40&&!out;n++){await new Promise(z=>setTimeout(z,8000));try{const x=await api('answer',id,{fn:'eslarma-ask',again:n===15});if(!x.wait)out=x}catch(e){if(!S)break}}
     H[H.length-1]={role:'assistant',content:out?out.reply:'Ответ не пришёл. Спросите ещё раз через несколько минут.',actions:out?out.actions:[]};if(out)await act(H[H.length-1])
   }catch(e){H[H.length-1]={role:'assistant',content:WHY[e.kind]||'Не получилось отправить вопрос. Попробуйте ещё раз.'}}
   busy=false;save();if($('#chat').lastElementChild)$('#chat').lastElementChild.scrollIntoView({block:'end'})}
-let speaking=null;
-$('#chat').addEventListener('click',e=>{const b=e.target.closest('[data-say]');if(!b)return;const y=speechSynthesis;const was=speaking===b.dataset.say&&y.speaking;y.cancel();speaking=null;if(was)return;const x=H[b.dataset.say].content.replace(/https?:\S+/g,'');const u=new SpeechSynthesisUtterance(x);u.lang=/[а-яё]/i.test(x)?'ru-RU':'uz-UZ';const v=y.getVoices().find(z=>z.lang.replace('_','-').startsWith(u.lang.slice(0,2)));if(v)u.voice=v;speaking=b.dataset.say;u.onend=()=>speaking=null;y.speak(u)});
+let speaking=null;const au=new Audio();let unlocked=false;
+const unlock=()=>{if(unlocked)return;unlocked=true;au.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA=';au.play().catch(()=>{})};
+function hush(){au.pause();try{speechSynthesis.cancel()}catch{}speaking=null;document.querySelectorAll('.say.on').forEach(b=>b.classList.remove('on'))}
+function voices(){return new Promise(z=>{const y=window.speechSynthesis;if(!y)return z([]);const v=y.getVoices();if(v.length)return z(v);y.onvoiceschanged=()=>z(y.getVoices());setTimeout(()=>z(y.getVoices()),1500)})}
+async function browserSay(x){const y=window.speechSynthesis;if(!y)throw Error();const l=/[а-яё]/i.test(x)?'ru':'uz',all=await voices(),v=all.filter(z=>z.lang.toLowerCase().startsWith(l)),W=/natural|svetlana|dariya|milena|katya|google|irina|madina|female/i,best=v.find(z=>/natural|svetlana|dariya/i.test(z.name))||v.find(z=>W.test(z.name))||v[0];
+  const parts=x.match(/[^.!?\n]{1,180}[.!?\n]*|\S{1,180}/g)||[x];y.cancel();await new Promise(z=>setTimeout(z,80));
+  for(const p of parts){await new Promise((z,no)=>{const u=new SpeechSynthesisUtterance(p);u.lang=l==='ru'?'ru-RU':'uz-UZ';if(best)u.voice=best;u.onend=z;u.onerror=e=>e.error==='interrupted'||e.error==='canceled'?no(Error('stop')):no(Error('voice'));y.speak(u);window._u=u})}}
+async function sayText(x,id){hush();speaking=id;x=x.replace(/https?:\S+/g,'').trim();
+  if(D&&D.ai){try{const q=await raw('say',x);if(q.ok&&(q.headers.get('content-type')||'').includes('audio')){const b=URL.createObjectURL(await q.blob());if(speaking!==id)return;au.src=b;await au.play();await new Promise(z=>{au.onended=z;au.onpause=z});URL.revokeObjectURL(b);return}}catch{}}
+  if(speaking!==id)return;await browserSay(x)}
+async function raw(cmd,arg,more){if(S.e-Date.now()<60000)await auth('refresh_token',{refresh_token:S.r});return fetch(U+'/functions/v1/eslarma-voice',{method:'POST',headers:{apikey:K,Authorization:'Bearer '+S.a,'Content-Type':'application/json'},body:JSON.stringify({cmd,arg,...more}),signal:AbortSignal.timeout(60000)})}
+$('#chat').addEventListener('click',async e=>{const b=e.target.closest('[data-say]');if(!b)return;unlock();if(speaking===b.dataset.say){hush();return}const id=b.dataset.say;const go=sayText(H[id].content,id);b.classList.add('on');try{await go}catch(x){if(x.message!=='stop')toast('На этом устройстве нет голоса. Подключите голос в «!» у AI-агента')}b.classList.remove('on');if(speaking===id)speaking=null});
+// ---------- voice chat: talk - answer - talk again
+const vc=$('#vc');let V=null;
+const vs=(s,x)=>{$('#vs').textContent=s;if(x!==undefined)$('#vt').textContent=x};
+function vclose(){if(V){V.stop=true;try{V.mr?.state==='recording'&&V.mr.stop()}catch{}V.st?.getTracks().forEach(z=>z.stop());V.ac?.close().catch(()=>{});V=null}hush();if(vc.open)vc.close()}
+$('#vx').onclick=vclose;vc.oncancel=vclose;
+$('#orb').onclick=()=>{if(!V)return;if(V.mr?.state==='recording')V.mr.stop();else if(speaking!==null)hush()};
+$('#talk').onclick=async()=>{unlock();if(!D?.ai){aiKey();return}
+  vc.showModal();vs('Включаю микрофон…','');
+  try{const st=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}}),ac=new (window.AudioContext||window.webkitAudioContext)();await ac.resume();const an=ac.createAnalyser();an.fftSize=512;ac.createMediaStreamSource(st).connect(an);V={st,ac,an,stop:false}}catch{vs('Разрешите микрофон в настройках телефона','');return}
+  const me=V;while(V===me&&!me.stop){try{await turn(me)}catch(e){if(V!==me)return;vs(WHY[e.kind]||'Не получилось, попробуем ещё раз');await new Promise(z=>setTimeout(z,2500))}}};
+async function turn(v){const type=['audio/webm;codecs=opus','audio/mp4','audio/ogg'].find(x=>MediaRecorder.isTypeSupported(x))||'';const mr=v.mr=new MediaRecorder(v.st,type?{mimeType:type}:{}),ch=[];mr.ondataavailable=e=>e.data.size&&ch.push(e.data);const end=new Promise(z=>mr.onstop=z);mr.start();vs('Слушаю… говорите');
+  const buf=new Uint8Array(v.an.fftSize);let heard=0,quiet=0,t0=Date.now(),last=t0;
+  const tick=()=>{if(mr.state!=='recording')return;v.an.getByteTimeDomainData(buf);let m=0;for(const x of buf)m=Math.max(m,Math.abs(x-128));const now=Date.now(),dt=now-last;last=now;$('#orb').style.setProperty('--lv',1+Math.min(m,60)/220);if(m>14){heard+=dt;quiet=0}else quiet+=dt;if(heard>250&&quiet>1400||now-t0>45000||!heard&&now-t0>20000){mr.stop();return}setTimeout(tick,60)};tick();
+  await end;$('#orb').style.setProperty('--lv',1);if(v.stop||heard<250)return;
+  vs('Распознаю…');const blob=new Blob(ch,{type:mr.mimeType||type});const b64=await new Promise(z=>{const f=new FileReader();f.onload=()=>z(String(f.result).split(',')[1]);f.readAsDataURL(blob)});
+  const q=await raw('hear',b64,{mime:(mr.mimeType||type||'audio/mp4')}),d=await q.json();if(!q.ok)throw Object.assign(Error(),{kind:d.error});if(v.stop||!d.text.trim())return;
+  vs('Думаю…',d.text);const a=await think(d.text);if(v.stop)return;vs('Отвечаю',a.content);try{await sayText(a.content,'vc')}catch{}speaking=null}
+async function think(q){const hist=H.slice(-8).map(({role,content})=>({role,content}));H.push({role:'user',content:q});let a=quick(q);if(!a){const d=await api('ask',q,{history:hist});a={content:d.reply||'…',actions:d.actions||[]}}const m={role:'assistant',...a};H.push(m);save();await act(m);save();return m}
+function aiKey(){pop('Голос и быстрый агент',`<form class="card add" id="aif"><span>Нужен бесплатный ключ Google, один раз: <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> → Create API key → скопировать → вставить сюда.</span><input id="aikey" type="password" autocomplete="off" aria-label="Ключ ИИ" required><button class="btn main" type="submit">Сохранить и проверить</button><p class="help" id="aiMsg" role="alert" style="padding:0"></p></form>`);
+  $('#aif').onsubmit=async e=>{e.preventDefault();const m=$('#aiMsg');m.textContent='Проверяю…';try{await api('setai',$('#aikey').value.trim());toast('Голос подключён');shut();load()}catch(x){m.textContent=({aiformat:'Это не похоже на ключ.',aikey:'Этот ключ не принимают. Вставьте целиком.'})[x.kind]||'Не получилось, попробуйте ещё раз.'}}}
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;let rec=null;
 $('#mic').onclick=()=>{if(rec){rec.stop();return}
   if(!SR){$('#q').focus();return toast('Здесь диктуйте через микрофон на клавиатуре телефона')}
@@ -377,12 +410,12 @@ talk();
 const TIPS={now:['Сейчас','Готовы к выходу — выйдут в ближайший слот.\nЖдут вас — только в режиме «С одобрением».\nИсходных видео — речи домлы, из которых сделаем ролики.\nВышло — уже в Instagram.\nНажмите на цифру, чтобы увидеть список.'],
 new:['Новое видео домлы','Вставьте ссылку на ролик с речью домлы. Программа возьмёт голос и сама сделает новый ролик: картины, движение, субтитры, обложку.'],
 wait:['Ждут вашего решения','В режиме «С одобрением» готовый ролик появится здесь: посмотреть, выпустить, переделать или отклонить. В режиме «Автоматически» ролики выходят сами.'],
-ai:['AI-агент','На кнопки и ссылки отвечает сразу, на свои вопросы — за 1–2 минуты.\nСтиль, пожелания, ссылки, переделку выполняет сам. Выпустить, отклонить или сменить режим — после вашей кнопки.\nМикрофон — диктовать, «Прочитать вслух» — слушать ответ.\nМодель бесплатная, важное проверяйте.'],
+ai:['AI-агент','На кнопки и ссылки отвечает сразу, на свои вопросы — за 1–2 минуты.\nСтиль, пожелания, ссылки, переделку выполняет сам. Выпустить, отклонить или сменить режим — после вашей кнопки.\nВолны — голосовой чат, микрофон — диктовать, динамик — прочитать вслух.\nМодель бесплатная, важное проверяйте.'],
 mode:['Управление','Автоматически — программа выпускает ролики сама. С одобрением — сначала вам. Режим меняется за 1–2 минуты.'],
 style:['Стиль картин','Подействует со следующих роликов.'],wish:['Пожелания','Например: больше природы, меньше людей. Программа учтёт до 6 последних пожеланий.'],
 grow:['Рост','Нажмите на любую кнопку: откроются подробности. Данные обновляются сами в 08:35 и 21:35.'],
 comp:['Конкуренты','Ссылка на ролик или видео с телефона (до 18 МБ): ИИ посмотрит само видео и скажет, что взять нам.\nНазвание аккаунта: программа его запомнит, но сам список роликов Instagram не открывает, нужны ссылки.']};
-document.addEventListener('click',e=>{const b=e.target.closest('[data-tip]');if(b){e.preventDefault();pop(TIPS[b.dataset.tip][0],`<div style="white-space:pre-line;padding:4px">${TIPS[b.dataset.tip][1]}</div>`)}});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-tip]');if(b){e.preventDefault();pop(TIPS[b.dataset.tip][0],`<div style="white-space:pre-line;padding:4px">${TIPS[b.dataset.tip][1]}</div>${b.dataset.tip==='ai'?`<button class="btn main" id="aik" style="margin-top:12px">${D?.ai?'Заменить ключ голоса':'Подключить живой голос'}</button>`:''}`);if($('#aik'))$('#aik').onclick=aiKey}});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-id]');if(b)open(b.dataset.id)});
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id==='v-'+b.dataset.v));scrollTo({top:0})});
 $('#login').onsubmit=async e=>{e.preventDefault();$('#loginMsg').textContent='';try{await auth('password',{email:$('#email').value.trim(),password:$('#pass').value});$('#pass').value='';show();load()}catch(x){$('#loginMsg').textContent=x.code===400?'Неверная почта или пароль.':'Не получилось войти, попробуйте ещё раз.'}};
