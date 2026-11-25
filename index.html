@@ -116,6 +116,12 @@ video{width:100%;max-height:60dvh;border-radius:16px;background:#000;display:blo
     <p class="note" id="loginMsg" role="alert"></p>
   </form>
   <div id="warn" class="card warnbox" role="alert" hidden></div>
+  <form id="keyf" class="card add" hidden style="margin-top:16px">
+    <b>Ключ GitHub</b><span class="note" style="padding:0">Вставьте ключ, который начинается с github_pat_. Он уйдёт только в ваш Supabase.</span>
+    <input id="key" type="password" autocomplete="off" aria-label="Ключ GitHub" required>
+    <button class="btn main" type="submit">Сохранить и проверить</button>
+    <p class="note" id="keyMsg" role="alert" style="padding:0"></p>
+  </form>
   <div id="app" hidden>
   <section class="view on" id="v-home">
     <h2>Сейчас</h2>
@@ -191,9 +197,9 @@ async function api(cmd,arg){
   if(!r.ok)throw Object.assign(Error(d.error||'http'),{kind:d.error});
   return d}
 let tt;const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),4000)};
-const WHY={nokey:'Сайт готов, но ключ GitHub ещё не вставлен в Supabase.',forbidden:'Этот вход не хозяина программы.',github:'GitHub не ответил. Попробуйте позже или проверьте ключ.',novideo:'Видео этого ролика не найдено.'};
+const WHY={nokey:'Сайт готов, но осталось вставить ключ GitHub ниже.',forbidden:'Этот вход не хозяина программы.',github:'GitHub не ответил. Попробуйте позже или проверьте ключ.',novideo:'Видео этого ролика не найдено.'};
 const fail=e=>toast(WHY[e.kind]||'Не получилось. Проверьте интернет и попробуйте ещё раз.');
-function show(){$('#login').hidden=!!S;$('#app').hidden=!S;$('nav').hidden=!S;$('#reload').hidden=!S;if(!S){$('#warn').hidden=true;$('#upd').textContent='только для владельца'}}
+function show(){$('#login').hidden=!!S;$('#app').hidden=!S;$('nav').hidden=!S;$('#reload').hidden=!S;if(!S){$('#warn').hidden=true;$('#keyf').hidden=true;$('#upd').textContent='только для владельца'}}
 const list=(el,html,empty)=>{$(el).innerHTML=html||`<div class="empty">${empty}</div>`};
 function row(i){
   const s=i.stats,open=['awaiting_approval','ready','needs_owner','rejected'].includes(i.status);
@@ -221,7 +227,7 @@ function draw(){
   list('#topics',tp.map(t=>`<div class="row"><div class="main"><div class="t">${esc(t.topic)}</div><div class="m">${esc(t.reels)} рол. · медиана ${fmt(t.v)} просм. · репосты ${esc(t.median_shares)}</div><div class="bar"><i style="width:${Math.round(t.v/mx*100)}%"></i></div></div></div>`).join(''),'Нет данных');
   list('#comp',((d.competitors||{}).top||[]).slice(0,15).map(x=>`<a class="row" href="${link(x.url)}" target="_blank" rel="noopener"><div class="main"><div class="t">${esc(x.hook||x.caption||x.url)}</div><div class="m">❤ ${fmt(x.likes)} · 💬 ${fmt(x.comments)}</div></div><span class="chev">›</span></a>`).join(''),'Анализ конкурентов ещё не запускался');
   list('#learned',((d.learned||{}).prompt_notes||[]).map(n=>`<div class="row"><div class="main"><div class="t" style="white-space:normal">${esc(n)}</div></div></div>`).join(''),'Выводов пока нет')}
-async function load(){if(!S)return;try{D=await api('state');$('#warn').hidden=true;draw()}catch(e){if(S){$('#warn').hidden=false;$('#warn').textContent=WHY[e.kind]||'Нет связи с программой. Нажмите ↻.';$('#upd').textContent='нет данных'}}}
+async function load(){if(!S)return;try{D=await api('state');$('#warn').hidden=true;$('#keyf').hidden=true;draw()}catch(e){if(S){$('#keyf').hidden=!['nokey','github'].includes(e.kind);$('#warn').hidden=false;$('#warn').textContent=WHY[e.kind]||'Нет связи с программой. Нажмите ↻.';$('#upd').textContent='нет данных'}}}
 async function send(cmd,arg,msg){try{await api(cmd,arg);toast(msg);setTimeout(load,90000);return true}catch(e){fail(e);return false}}
 const dlg=$('#dlg');let blob;
 const shut=()=>{dlg.close();$('#db').innerHTML='';if(blob)URL.revokeObjectURL(blob);blob=null};
@@ -250,6 +256,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-id]');if(b
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id==='v-'+b.dataset.v));scrollTo({top:0})});
 $('#login').onsubmit=async e=>{e.preventDefault();$('#loginMsg').textContent='';try{await auth('password',{email:$('#email').value.trim(),password:$('#pass').value});$('#pass').value='';show();load()}catch(x){$('#loginMsg').textContent=x.code===400?'Неверная почта или пароль.':'Не получилось войти, попробуйте ещё раз.'}};
 $('#add').onsubmit=async e=>{e.preventDefault();const u=$('#url').value.trim();if(!/^https?:\/\/(www\.)?instagram\.com\/\S+/i.test(u))return toast('Нужна ссылка instagram.com');if(await send('link',u,'Ссылка принята'))$('#url').value=''};
+$('#keyf').onsubmit=async e=>{e.preventDefault();const m=$('#keyMsg');m.textContent='Проверяю…';try{const d=await api('setkey',$('#key').value.trim());$('#key').value='';m.textContent='';toast('Ключ сохранён');load()}catch(x){m.textContent=({format:'Это не похоже на ключ: он начинается с github_pat_.',engine:'У ключа нет доступа к eslarma-engine с правом Actions.',bot:'У ключа нет доступа к eslarma-bot с правами Contents и Actions.'})[x.kind]||'Не получилось сохранить, попробуйте ещё раз.'}};
 $('#m-auto').onclick=()=>confirm('Публиковать ролики без вашего одобрения?')&&send('mode','auto','Режим: автоматически');
 $('#m-approve').onclick=()=>send('mode','approve','Режим: с одобрением');
 $('#make').onclick=()=>send('make','','Запускаю');
