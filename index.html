@@ -6,8 +6,8 @@
 <title>Eslarma — студия</title>
 <meta name="theme-color" content="#0b0b10" id="metaTheme">
 <link rel="manifest" href="manifest.json">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?2">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?2">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -101,20 +101,26 @@ dialog{border:1px solid var(--line2);border-radius:22px;background:var(--surface
 .dh{display:flex;gap:12px;align-items:center;margin-bottom:12px}.dh b{flex:1}.acts{display:grid;gap:8px;margin-top:12px}
 video{width:100%;max-height:60dvh;border-radius:16px;background:#000;display:block}
 .kb{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.kb button{all:unset;box-sizing:border-box;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:14px;min-height:96px}
+.kb button{all:unset;box-sizing:border-box;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:14px;min-height:80px}
 .kb button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}.kb .v{display:block;font-size:24px;font-weight:800;letter-spacing:-.02em}.kb .k{display:block;font-size:14px;color:var(--muted2);font-weight:600}.kb .h{display:block;font-size:12px;color:var(--muted);margin-top:2px}
 .help{font-size:13px;color:var(--muted);padding:6px 4px 0}
 .chat{display:grid;gap:10px;margin-bottom:12px}.msg{padding:12px 14px;border-radius:18px;max-width:88%;white-space:pre-wrap;overflow-wrap:anywhere}.msg.u{justify-self:end;background:var(--grad);color:#fff}.msg.a{justify-self:start;background:var(--surface);border:1px solid var(--line)}
 .msg .btn{margin-top:8px}.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.chips button{font:inherit;font-size:14px;border:1px solid var(--line2);background:var(--surface);color:var(--text);border-radius:99px;padding:10px 14px;min-height:44px;cursor:pointer}.chips button.on{background:var(--grad);border-color:transparent;color:#fff}
 textarea{font:inherit;width:100%;padding:13px 14px;border-radius:14px;border:1px solid var(--line2);background:var(--surface2);color:var(--text);min-height:56px;resize:vertical}
 .spark{width:100%;height:120px;display:block}
+.tip{all:unset;box-sizing:border-box;cursor:pointer;display:inline-grid;place-items:center;width:44px;height:44px;margin:-12px -6px;vertical-align:middle}.tip i{width:22px;height:22px;border-radius:50%;background:var(--surface2);border:1px solid var(--line2);color:var(--muted2);font:800 13px/20px Inter,sans-serif;text-align:center;font-style:normal}.tip:focus-visible i{outline:2px solid var(--blue)}
+.num.cv{width:54px;height:72px;border-radius:12px;background-size:cover;background-position:center;overflow:hidden;position:relative}.num.cv img{width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0}
+.row .t{white-space:normal;display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.tools{display:flex;gap:10px}.tools .btn{width:auto}.tools .btn.main{flex:1}.ic{width:52px!important;padding:0!important;flex:none;display:grid;place-items:center}.ic svg{width:22px;height:22px}.ic.rec{background:var(--bad);color:#fff;animation:pulse 1.2s infinite}@keyframes pulse{50%{opacity:.6}}@media (prefers-reduced-motion:reduce){.ic.rec{animation:none}}
+.say{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:13px;min-height:44px;margin-top:4px}.say svg{width:18px;height:18px}
+.file{display:block;text-align:center}.file input{position:absolute;opacity:0;width:1px;height:1px}
 @keyframes spin{to{transform:rotate(360deg)}}
 #toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:var(--text);color:var(--bg);padding:12px 18px;border-radius:14px;font-weight:600;opacity:0;pointer-events:none;transition:.2s;z-index:20;max-width:90vw}#toast.on{opacity:1;transform:translate(-50%,0)}
 </style>
 </head>
-<body data-build="1795626107">
+<body data-build="1795627637">
 <svg width="0" height="0" style="position:absolute"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#6a2cf5"/><stop offset=".5" stop-color="#e1306c"/><stop offset="1" stop-color="#f77737"/></linearGradient></defs></svg>
-<header><div class="wrap"><div class="logo">e</div><div style="flex:1"><h1>Eslarma</h1><div class="sub" id="upd">загрузка…</div></div><button class="btn small" id="reload" aria-label="Обновить" hidden>↻</button></div></header>
+<header><div class="wrap"><img class="logo" src="icon-192.png?2" alt="" width="42" height="42"><div style="flex:1"><h1>Eslarma</h1><div class="sub" id="upd">загрузка…</div></div><button class="btn small" id="reload" aria-label="Обновить" hidden>↻</button></div></header>
 
 <main class="wrap">
   <form id="login" class="card" hidden>
@@ -133,18 +139,17 @@ textarea{font:inherit;width:100%;padding:13px 14px;border-radius:14px;border:1px
   </form>
   <div id="app" hidden>
   <section class="view on" id="v-home">
-    <h2>Сейчас</h2>
+    <h2>Сейчас <button class="tip" type="button" data-tip="now" aria-label="Подсказка"><i>!</i></button></h2>
     <div class="card hero">
       <div class="lbl">Что делает программа</div>
       <div class="big" id="now">—</div>
       <div class="lbl" id="nowSub"></div>
       <div class="slots" id="slots"></div>
     </div>
-    <div class="kb" id="kpi" style="margin-top:10px"></div><p class="help">Нажмите на цифру, чтобы увидеть список.</p>
-    <h3>Ждут вашего решения</h3>
+    <div class="kb" id="kpi" style="margin-top:10px"></div>
+    <h3>Ждут вашего решения <button class="tip" type="button" data-tip="wait" aria-label="Подсказка"><i>!</i></button></h3>
     <div class="card list" id="wait"></div>
-    <h3>Новое видео домлы</h3>
-    <p class="help" style="padding:0 4px 8px">Вставьте ссылку на ролик с речью домлы. Программа возьмёт из него голос и сама сделает новый ролик: картины, движение, субтитры.</p>
+    <h3>Новое видео домлы <button class="tip" type="button" data-tip="new" aria-label="Подсказка"><i>!</i></button></h3>
     <form class="card add" id="add">
       <input id="url" type="url" inputmode="url" placeholder="Ссылка на ролик Instagram" aria-label="Ссылка на ролик Instagram" required>
       <button class="btn main" type="submit">Добавить</button>
@@ -156,33 +161,33 @@ textarea{font:inherit;width:100%;padding:13px 14px;border-radius:14px;border:1px
   <section class="view" id="v-queue"><h2>Очередь</h2><div class="card list" id="queue"></div></section>
 
   <section class="view" id="v-ai">
-    <h2>AI-агент</h2>
+    <h2>AI-агент <button class="tip" type="button" data-tip="ai" aria-label="Подсказка"><i>!</i></button></h2>
     <div id="aibox">
       <div class="chips" id="qs"></div>
       <div class="chat" id="chat" aria-live="polite"></div>
-      <form class="card add" id="askf"><textarea id="q" rows="2" placeholder="Спросите о роликах, Instagram, стиле или пришлите ссылку" aria-label="Вопрос агенту" required></textarea><button class="btn main" type="submit">Отправить</button></form>
-      <p class="help">На кнопки сверху и ссылки агент отвечает сразу, на свои вопросы — за 1–2 минуты. Что попросите, выполняет сам; выпустить, отклонить ролик или сменить режим — после вашей кнопки.</p>
+      <form class="card add" id="askf"><textarea id="q" rows="2" placeholder="Спросите о роликах, Instagram, стиле или пришлите ссылку" aria-label="Вопрос агенту" required></textarea><div class="tools"><button class="btn ic" type="button" id="mic" aria-label="Диктовать голосом"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><button class="btn main" type="submit">Отправить</button></div></form>
     </div>
   </section>
 
   <section class="view" id="v-grow">
-    <h2>Рост</h2>
+    <h2>Рост <button class="tip" type="button" data-tip="grow" aria-label="Подсказка"><i>!</i></button></h2>
     <div class="kb" id="gk"></div>
     <p class="help" id="gnote"></p>
     <button class="btn" id="refresh" style="margin-top:10px">Обновить статистику</button>
-    <h3>Ролик конкурента</h3>
-    <form class="card add" id="compf"><input id="curl" type="url" inputmode="url" placeholder="Ссылка на ролик конкурента" aria-label="Ссылка на ролик конкурента" required><button class="btn main" type="submit">Добавить в анализ</button></form>
+    <h3>Конкуренты <button class="tip" type="button" data-tip="comp" aria-label="Подсказка"><i>!</i></button></h3>
+    <button class="btn main" id="compb">+ Добавить конкурента</button>
+    <div class="card list" id="clist" style="margin-top:10px"></div>
   </section>
 
   <section class="view" id="v-mode">
-    <h2>Управление</h2>
+    <h2>Управление <button class="tip" type="button" data-tip="mode" aria-label="Подсказка"><i>!</i></button></h2>
     <div class="seg">
       <button id="m-auto">Автоматически<small>публикует сам</small></button>
       <button id="m-approve">С одобрением<small>сначала вам</small></button>
     </div>
-    <p class="note">Режим меняется за 1–2 минуты.</p>
-    <h3>Стиль картин</h3><div class="chips" id="styles"></div>
-    <h3>Пожелания к картинам</h3>
+    
+    <h3>Стиль картин <button class="tip" type="button" data-tip="style" aria-label="Подсказка"><i>!</i></button></h3><div class="chips" id="styles"></div>
+    <h3>Пожелания к картинам <button class="tip" type="button" data-tip="wish" aria-label="Подсказка"><i>!</i></button></h3>
     <form class="card add" id="wishf"><input id="wish" maxlength="200" placeholder="Например: больше природы, меньше людей" aria-label="Пожелание"><button class="btn" type="submit">Добавить</button><div class="help" id="wishes" style="padding:0"></div></form>
     <h3>Производство</h3>
     <button class="btn" id="make">Запустить производство сейчас</button>
@@ -230,13 +235,16 @@ const WHY={nokey:'Сайт готов, но осталось вставить к
 const fail=e=>toast(WHY[e.kind]||'Не получилось. Проверьте интернет и попробуйте ещё раз.');
 function show(){$('#login').hidden=!!S;$('#app').hidden=!S;$('nav').hidden=!S;$('#reload').hidden=!S;if(!S){$('#warn').hidden=true;$('#keyf').hidden=true;$('#upd').textContent='только для владельца'}}
 const list=(el,html,empty)=>{$(el).innerHTML=html||`<div class="empty">${empty}</div>`};
+const CV=U+'/functions/v1/eslarma-cover/';
+function pic(i){const src=i.media?CV+'m'+encodeURIComponent(i.media)+'.jpg':/^\d{4}$/.test(i.id)&&['ready','approved','awaiting_approval','published'].includes(i.status)?CV+i.id+'.jpg':'';return `<span class="num cv">${esc(i.id)}${src?`<img loading="lazy" alt="" src="${src}" data-hide>`:''}</span>`}
+document.addEventListener('error',e=>{if(e.target.matches?.('img[data-hide]'))e.target.remove()},true);
 function row(i){
-  const s=i.stats||((D||{}).reels||[]).find(x=>x.permalink&&x.permalink===i.permalink),open=['awaiting_approval','ready','needs_owner','rejected'].includes(i.status);
+  const s=i.stats||((D||{}).reels||[]).find(x=>(i.media&&x.id===i.media)||(x.permalink&&x.permalink===i.permalink)),open=['awaiting_approval','ready','needs_owner','rejected'].includes(i.status);
   const m=s?`<div class="metrics"><span>👁 <b>${fmt(s.views)}</b></span><span>↗ <b>${fmt(s.shares)}</b></span><span>🔖 <b>${fmt(s.saved)}</b></span><span>❤ <b>${fmt(s.likes)}</b></span></div>`:'';
-  const pub=i.status==='published'&&i.permalink;
+  i={...i,permalink:i.permalink||(((D||{}).reels||[]).find(x=>i.media&&x.id===i.media)||{}).permalink};const pub=i.status==='published'&&i.permalink;
   const tag=pub?'a':open?'button':'div';
   return `<${tag} class="row" ${pub?`href="${link(i.permalink)}" target="_blank" rel="noopener"`:open?`data-id="${esc(i.id)}"`:''}>
-    <span class="num">${esc(i.id)}</span><span class="main"><span class="t">${esc(i.hook||'Без заголовка')}</span><span class="m">${date(i.published_at||i.received_at)}</span>${m}</span>
+    ${pic(i)}<span class="main"><span class="t">${esc((i.hook||'').replace(/\*/g,'').trim()||(i.status==='in_progress'?'Ролик делается':['downloaded','new','retry'].includes(i.status)?'Исходное видео':'Ролик '+i.id))}</span><span class="m">${date(i.published_at||i.received_at)}</span>${m}</span>
     <span class="pill ${CLS[i.status]||''}">${esc(RU[i.status]||i.status)}</span>${pub||open?'<span class="chev">›</span>':''}</${tag}>`}
 function draw(){
   const d=D,by=s=>d.items.filter(i=>s.includes(i.status));
@@ -247,7 +255,7 @@ function draw(){
   $('#slots').innerHTML=(d.slots||[]).map(s=>`<div class="slot">${esc(s)}</div>`).join('');
   const pub=by(['published']).sort((a,b)=>String(b.published_at).localeCompare(String(a.published_at)));
   const K=[['ready','готовы к выходу','выйдут в ближайший слот',by(['ready','approved'])],['wait','ждут вас','в режиме «с одобрением»',by(['awaiting_approval'])],['src','исходных видео','из них сделаем ролики',by(['downloaded','new','retry'])],['pub','вышло','уже в Instagram',pub]];
-  $('#kpi').innerHTML=K.map(([id,k,h,l])=>`<button data-k="${id}"><span class="v">${l.length}</span><span class="k">${k}</span><span class="h">${h}</span></button>`).join('');
+  $('#kpi').innerHTML=K.map(([id,k,h,l])=>`<button data-k="${id}"><span class="v">${l.length}</span><span class="k">${k}</span></button>`).join('');
   $('#kpi').querySelectorAll('button').forEach((b,n)=>b.onclick=()=>pop(K[n][1],K[n][3].map(row).join('')||'<div class="empty">Пусто</div>'));
   list('#wait',by(['awaiting_approval']).map(row).join(''),d.mode==='auto'?'Режим «Автоматически»: ролики выходят сами':'Готовый ролик появится здесь: посмотреть и выпустить');
   list('#recent',pub.slice(0,5).map(row).join(''),'Пока нет вышедших');
@@ -268,10 +276,10 @@ function draw(){
    ['Конкуренты',((d.competitors||{}).top||[]).length||'—','ролики других',()=>comps()],
    ['Выводы',((d.learned||{}).prompt_notes||[]).length||'—','что учесть дальше',()=>((d.learned||{}).prompt_notes||[]).map(n=>`<div class="row"><span class="main"><span class="t" style="white-space:normal">${esc(n)}</span></span></div>`).join('')||'<div class="empty">Появятся после анализа. Нажмите «Обновить статистику».</div>'],
    ['Публикации',pub.length,'вышедшие ролики',()=>pub.map(row).join('')]];
-  $('#gk').innerHTML=g.map(x=>`<button><span class="v">${x[1]}</span><span class="k">${x[0]}</span><span class="h">${x[2]}</span></button>`).join('');
+  $('#gk').innerHTML=g.map(x=>`<button><span class="v">${x[1]}</span><span class="k">${x[0]}</span></button>`).join('');
   $('#gk').querySelectorAll('button').forEach((b,n)=>b.onclick=()=>pop(g[n][0],g[n][3]()));
   $('#gnote').textContent=a.updated?'Данные Instagram от '+date(a.updated):'Статистика ещё собирается.';
-  const reelRow=(x,v)=>`<a class="row" href="${link(x.permalink)}" target="_blank" rel="noopener"><span class="main"><span class="t">${esc(x.hook||'Ролик')}</span><span class="m">${date(x.timestamp)}</span></span><b>${v}</b><span class="chev">›</span></a>`;
+  const reelRow=(x,v)=>`<a class="row" href="${link(x.permalink)}" target="_blank" rel="noopener"><span class="num cv"><img loading="lazy" alt="" src="${CV}m${encodeURIComponent(x.id)}.jpg" data-hide></span><span class="main"><span class="t">${esc(x.hook||'Ролик')}</span><span class="m">${date(x.timestamp)}</span></span><b>${v}</b><span class="chev">›</span></a>`;
   function top(k,n){return [...R].sort((p,q)=>(+q[k]||0)-(+p[k]||0)).slice(0,20).map(x=>reelRow(x,fmt(x[k])+' '+n)).join('')||'<div class="empty">Нет данных</div>'}
   function best(){return [...R].sort((p,q)=>((q.shares||0)*20+(q.saved||0)*10+(q.views||0))-((p.shares||0)*20+(p.saved||0)*10+(p.views||0))).slice(0,10).map(x=>reelRow(x,fmt(x.views))).join('')||'<div class="empty">Нет данных</div>'}
   function info(l){return l.map(([k,v])=>`<div class="row"><span class="main"><span class="t">${k}</span></span><b>${v}</b></div>`).join('')}
@@ -283,6 +291,7 @@ function draw(){
   $('#styles').querySelectorAll('button').forEach(b=>b.onclick=()=>send('style',b.dataset.s,'Стиль следующих роликов: '+SN[b.dataset.s]));
   $('#wishes').innerHTML=(d.wishes||[]).map(w=>'• '+esc(w)).join('<br>')+((d.wishes||[]).length?'<br><button type="button" class="btn" id="wc" style="margin-top:8px">Очистить пожелания</button>':'');
   if($('#wc'))$('#wc').onclick=()=>send('wishclear','','Пожелания очищены');
+  comps2();
   if(d.pending)$('#upd').textContent='Выполняю ваши команды: '+d.pending}
 function pop(title,html){$('#dt').textContent=title;$('#db').innerHTML=html;if(!dlg.open)dlg.showModal();dlg.scrollTop=0}
 async function load(){if(!S)return;try{D=await api('state');$('#warn').hidden=true;$('#keyf').hidden=true;draw();return true}catch(e){if(S){$('#keyf').hidden=!['nokey','github'].includes(e.kind);$('#warn').hidden=false;$('#warn').textContent=WHY[e.kind]||'Нет связи с программой. Нажмите ↻.';$('#upd').textContent='нет данных'}}}
@@ -294,7 +303,7 @@ async function open(id){
   const i=D.items.find(x=>x.id===id);if(!i)return;
   $('#dt').textContent=id+' · '+(i.hook||'');
   const can=i.status==='awaiting_approval'||i.status==='ready';
-  $('#db').innerHTML=`<div id="vid"><button class="btn main" id="play">▶ Посмотреть ролик</button></div><div class="acts">${can?'<button class="btn main" data-c="pub">Выпустить</button>':''}${i.started?'':'<button class="btn" data-c="redo">Переделать</button>'}${can?'<button class="btn bad" data-c="rej">Отклонить</button>':''}</div><div id="qa" class="note">Проверка…</div>`;
+  $('#db').innerHTML=`<div id="vid">${can?`<img alt="Обложка" src="${CV}${id}.jpg" data-hide style="width:100%;max-height:46dvh;object-fit:contain;border-radius:16px;margin-bottom:10px">`:''}<button class="btn main" id="play">▶ Посмотреть ролик</button></div><div class="acts">${can?'<button class="btn main" data-c="pub">Выпустить</button>':''}${i.started?'':'<button class="btn" data-c="redo">Переделать</button>'}${can?'<button class="btn bad" data-c="rej">Отклонить</button>':''}</div><div id="qa" class="note">Проверка…</div>`;
   dlg.showModal();
   $('#play').onclick=async()=>{const p=$('#play');p.disabled=true;try{
     const v=await api('video',id),r=await fetch(v.url);if(!r.ok)throw Error();
@@ -316,7 +325,8 @@ async function act(m){for(const x of m.actions||[])if(AUTO.includes(x.cmd)&&!x.d
 const QS=['Как дела у роликов?','Почему ролик не прошёл проверку?','Какие ролики смотрят лучше?','Что посоветуешь для роста?','Поменяй стиль картин'];
 $('#qs').innerHTML=QS.map(x=>`<button type="button">${x}</button>`).join('');
 $('#qs').querySelectorAll('button').forEach(b=>b.onclick=()=>ask(b.textContent));
-function talk(){$('#chat').innerHTML=H.map((m,n)=>`<div class="msg ${m.role==='user'?'u':'a'}">${esc(m.content)}${(m.actions||[]).map((x,k)=>`<button class="btn" data-m="${n}" data-a="${k}" ${x.done?'disabled':''}>${esc(x.label)}${x.done?' ✓':''}</button>`).join('')}</div>`).join('');
+const SP='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>';
+function talk(){$('#chat').innerHTML=H.map((m,n)=>`<div class="msg ${m.role==='user'?'u':'a'}">${esc(m.content)}${m.role!=='user'&&'speechSynthesis' in window?`<div><button class="say" data-say="${n}">${SP}Прочитать вслух</button></div>`:''}${(m.actions||[]).map((x,k)=>`<button class="btn" data-m="${n}" data-a="${k}" ${x.done?'disabled':''}>${esc(x.label)}${x.done?' ✓':''}</button>`).join('')}</div>`).join('');
   $('#chat').querySelectorAll('[data-a]').forEach(b=>b.onclick=async()=>{const x=H[b.dataset.m].actions[b.dataset.a];const what=({mode:'Сменить режим',pub:'Выпустить в Instagram ролик',rej:'Отклонить ролик',redo:'Переделать ролик',link:'Сделать ролик из',comp:'Добавить в анализ',style:'Стиль картин',wish:'Пожелание',wishclear:'Очистить пожелания',make:'Запустить производство',growth:'Обновить статистику'})[x.cmd];if(!confirm(what+' '+x.arg+'?'))return;b.disabled=true;if(await send(x.cmd,x.arg,'Принято')){x.done=true;save()}else b.disabled=false})}
 function save(){H=H.slice(-40);try{localStorage.eslarmaChat=JSON.stringify(H)}catch{}talk()}
 let busy=false;
@@ -336,12 +346,43 @@ async function ask(q){q=q.trim();if(!q||busy)return;busy=true;const hist=H.slice
     H[H.length-1]={role:'assistant',content:out?out.reply:'Ответ не пришёл. Спросите ещё раз через несколько минут.',actions:out?out.actions:[]};if(out)await act(H[H.length-1])
   }catch(e){H[H.length-1]={role:'assistant',content:WHY[e.kind]||'Не получилось отправить вопрос. Попробуйте ещё раз.'}}
   busy=false;save();if($('#chat').lastElementChild)$('#chat').lastElementChild.scrollIntoView({block:'end'})}
-$('#askf').onsubmit=e=>{e.preventDefault();ask($('#q').value)};
+let speaking=null;
+$('#chat').addEventListener('click',e=>{const b=e.target.closest('[data-say]');if(!b)return;const y=speechSynthesis;const was=speaking===b.dataset.say&&y.speaking;y.cancel();speaking=null;if(was)return;const x=H[b.dataset.say].content.replace(/https?:\S+/g,'');const u=new SpeechSynthesisUtterance(x);u.lang=/[а-яё]/i.test(x)?'ru-RU':'uz-UZ';const v=y.getVoices().find(z=>z.lang.replace('_','-').startsWith(u.lang.slice(0,2)));if(v)u.voice=v;speaking=b.dataset.say;u.onend=()=>speaking=null;y.speak(u)});
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;let rec=null;
+$('#mic').onclick=()=>{if(rec){rec.stop();return}
+  if(!SR){$('#q').focus();return toast('Здесь диктуйте через микрофон на клавиатуре телефона')}
+  const base=$('#q').value?$('#q').value.trim()+' ':'';rec=new SR();rec.lang='ru-RU';rec.interimResults=true;rec.continuous=true;
+  rec.onresult=e=>{$('#q').value=base+[...e.results].map(x=>x[0].transcript).join(' ').replace(/\s+/g,' ')};
+  rec.onerror=e=>toast(e.error==='not-allowed'||e.error==='service-not-allowed'?'Разрешите микрофон или диктуйте с клавиатуры телефона':e.error==='no-speech'?'Не услышал, попробуйте ещё раз':'Не получилось, диктуйте с клавиатуры телефона');
+  rec.onend=()=>{rec=null;$('#mic').classList.remove('rec');$('#mic').setAttribute('aria-label','Диктовать голосом')};
+  try{rec.start();$('#mic').classList.add('rec');$('#mic').setAttribute('aria-label','Остановить запись')}catch{rec=null}};
+$('#askf').onsubmit=e=>{e.preventDefault();if(rec)rec.stop();ask($('#q').value)};
 $('#q').onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();ask($('#q').value)}};
-$('#compf').onsubmit=async e=>{e.preventDefault();const u=$('#curl').value.trim();if(!/^https?:\/\/(www\.)?instagram\.com\/\S+/i.test(u))return toast('Нужна ссылка instagram.com');if(await send('comp',u,'Добавлено. Появится после «Обновить статистику»'))$('#curl').value=''};
+$('#compb').onclick=()=>{pop('Конкурент',`<form class="card add" id="cf"><input id="cv" placeholder="Ссылка или название аккаунта" aria-label="Ссылка или название аккаунта" autocapitalize="off" spellcheck="false"><button class="btn main" type="submit">Анализировать</button></form><p class="help" style="text-align:center">или</p><label class="btn file">Загрузить видео с телефона<input type="file" id="cfile" accept="video/*"></label><div class="note" id="cm" role="status"></div>`);
+  const say=x=>{if($('#cm'))$('#cm').textContent=x};
+  const wait=async id=>{say('Смотрю видео, 2–4 минуты. Окно можно закрыть, ответ появится в списке.');for(let n=1;n<=45;n++){await new Promise(z=>setTimeout(z,8000));try{const x=await api('answer',id,{fn:'eslarma-ask',again:n===20});if(!x.wait){const L=JSON.parse(localStorage.eslarmaComp||'[]');L.unshift({at:new Date().toISOString(),text:x.reply});localStorage.eslarmaComp=JSON.stringify(L.slice(0,20));comps2();say(x.reply);toast('Анализ конкурента готов');return}}catch{if(!S)return}}say('Ответ не пришёл, попробуйте ещё раз.')};
+  $('#cf').onsubmit=async e=>{e.preventDefault();const v=$('#cv').value.trim();const p=v.match(/^https?:\/\/(?:www\.)?instagram\.com\/([\w.]+)\/?(?:\?.*)?$/i),name=p?p[1]:v.replace(/^@/,'');
+    try{if(/^https?:\/\/(www\.)?instagram\.com\/(reel|reels|p|tv)\//i.test(v)){say('Отправляю…');const x=await api('complink',v,{fn:'eslarma-ask'});wait(x.id)}
+    else if(/^[\w.]{2,30}$/.test(name)){await api('account',name,{fn:'eslarma-ask'});say('Аккаунт @'+name+' сохранён. Сам список роликов Instagram нам не открывает: пришлите 2–3 ссылки на лучшие ролики этого аккаунта, их разберу полностью.')}
+    else say('Нужна ссылка на ролик или название аккаунта.')}catch(x){say(WHY[x.kind]||'Не получилось, попробуйте ещё раз.')}};
+  $('#cfile').onchange=async e=>{const f=e.target.files[0];if(!f)return;if(f.size>18e6)return say('Видео больше 18 МБ. Выберите короче или меньшего качества.');say('Загружаю…');
+    try{const u=await api('upload','',{fn:'eslarma-ask'});const q=await fetch(u.url,{method:'PUT',headers:{'Content-Type':f.type||'video/mp4'},body:f});if(!q.ok)throw Error();const x=await api('compvideo',u.path,{fn:'eslarma-ask',name:f.name});wait(x.id)}catch(x){say(WHY[x.kind]||'Не получилось загрузить, попробуйте ещё раз.')}}};
+function comps2(){const c=(D||{}).competitors||{},L=[];try{L.push(...JSON.parse(localStorage.eslarmaComp||'[]'))}catch{}
+  const all=[...(c.analysis||[]),...L.filter(x=>!(c.analysis||[]).some(y=>y.text===x.text))];
+  list('#clist',all.map((x,n)=>`<button class="row" data-c="${n}"><span class="main"><span class="t">${esc(x.name?'@'+x.name.replace(/^@/,''):'Разбор ролика')}</span><span class="m">${date(x.at)}${x.views?' · 👁 '+fmt(x.views):''}${x.likes?' · ❤ '+fmt(x.likes):''}</span></span><span class="chev">›</span></button>`).join('')+(c.accounts||[]).map(x=>`<a class="row" href="https://www.instagram.com/${esc(x)}/" target="_blank" rel="noopener"><span class="main"><span class="t">@${esc(x)}</span><span class="m">аккаунт сохранён, ждёт ссылок</span></span><span class="chev">›</span></a>`).join(''),'Пока пусто');
+  $('#clist').querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>pop('Разбор конкурента',`<div style="white-space:pre-wrap">${esc(all[b.dataset.c].text)}</div>`))}
 $('#wishf').onsubmit=async e=>{e.preventDefault();const w=$('#wish').value.trim();if(w.length>2&&await send('wish',w,'Учту в следующих роликах'))$('#wish').value=''};
 $('#refresh').onclick=()=>send('growth','','Собираю статистику, 2–3 минуты');
 talk();
+const TIPS={now:['Сейчас','Готовы к выходу — выйдут в ближайший слот.\nЖдут вас — только в режиме «С одобрением».\nИсходных видео — речи домлы, из которых сделаем ролики.\nВышло — уже в Instagram.\nНажмите на цифру, чтобы увидеть список.'],
+new:['Новое видео домлы','Вставьте ссылку на ролик с речью домлы. Программа возьмёт голос и сама сделает новый ролик: картины, движение, субтитры, обложку.'],
+wait:['Ждут вашего решения','В режиме «С одобрением» готовый ролик появится здесь: посмотреть, выпустить, переделать или отклонить. В режиме «Автоматически» ролики выходят сами.'],
+ai:['AI-агент','На кнопки и ссылки отвечает сразу, на свои вопросы — за 1–2 минуты.\nСтиль, пожелания, ссылки, переделку выполняет сам. Выпустить, отклонить или сменить режим — после вашей кнопки.\nМикрофон — диктовать, «Прочитать вслух» — слушать ответ.\nМодель бесплатная, важное проверяйте.'],
+mode:['Управление','Автоматически — программа выпускает ролики сама. С одобрением — сначала вам. Режим меняется за 1–2 минуты.'],
+style:['Стиль картин','Подействует со следующих роликов.'],wish:['Пожелания','Например: больше природы, меньше людей. Программа учтёт до 6 последних пожеланий.'],
+grow:['Рост','Нажмите на любую кнопку: откроются подробности. Данные обновляются сами в 08:35 и 21:35.'],
+comp:['Конкуренты','Ссылка на ролик или видео с телефона (до 18 МБ): ИИ посмотрит само видео и скажет, что взять нам.\nНазвание аккаунта: программа его запомнит, но сам список роликов Instagram не открывает, нужны ссылки.']};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-tip]');if(b){e.preventDefault();pop(TIPS[b.dataset.tip][0],`<div style="white-space:pre-line;padding:4px">${TIPS[b.dataset.tip][1]}</div>`)}});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-id]');if(b)open(b.dataset.id)});
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id==='v-'+b.dataset.v));scrollTo({top:0})});
 $('#login').onsubmit=async e=>{e.preventDefault();$('#loginMsg').textContent='';try{await auth('password',{email:$('#email').value.trim(),password:$('#pass').value});$('#pass').value='';show();load()}catch(x){$('#loginMsg').textContent=x.code===400?'Неверная почта или пароль.':'Не получилось войти, попробуйте ещё раз.'}};
