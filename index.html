@@ -113,13 +113,19 @@ textarea{font:inherit;width:100%;padding:13px 14px;border-radius:14px;border:1px
 .row .t{white-space:normal;display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 .tools{display:flex;gap:10px}.tools .btn{width:auto}.tools .btn.main{flex:1}.ic{width:52px!important;padding:0!important;flex:none;display:grid;place-items:center}#talk svg{width:22px;height:22px}.ic svg{width:22px;height:22px}.ic.rec{background:var(--bad);color:#fff;animation:pulse 1.2s infinite}@keyframes pulse{50%{opacity:.6}}@media (prefers-reduced-motion:reduce){.ic.rec{animation:none}}
 .say{all:unset;cursor:pointer;display:inline-grid;place-items:center;width:44px;height:44px;margin:4px 0 -6px -8px;color:var(--muted)}.say svg{width:22px;height:22px}.say.on{color:var(--ok)}.say:focus-visible{outline:2px solid var(--blue);border-radius:12px}
-#vc{border:0;width:100%;max-width:none;height:100dvh;max-height:none;background:radial-gradient(circle at 50% 38%,#2a6a50,#12352a 60%,#0a1f18);color:#f3ece0;border-radius:0;text-align:center}#vc[open]{display:flex;flex-direction:column;align-items:center;justify-content:space-between}#orb{width:170px;height:170px;border-radius:50%;border:0;cursor:pointer;background:radial-gradient(circle at 35% 30%,#f6e2b0,#e6c27b 45%,#b98d3f);box-shadow:0 0 0 14px rgba(230,194,123,.14),0 0 70px rgba(230,194,123,.4);transition:transform .12s;transform:scale(var(--lv,1))}#vc .vt{min-height:84px;font-size:19px;padding:0 12px;overflow-wrap:anywhere;max-height:34dvh;overflow:auto}#vc .vs{opacity:.75;font-size:14px;margin-top:24px}#vc .btn{max-width:260px;background:rgba(255,255,255,.12);border-color:transparent;color:inherit;margin-bottom:env(safe-area-inset-bottom)}
+#vcOld{background:radial-gradient(circle at 50% 38%,#2a6a50,#12352a 60%,#0a1f18);color:#f3ece0;border-radius:0;text-align:center}#orb{width:170px;height:170px;border-radius:50%;border:0;cursor:pointer;background:radial-gradient(circle at 35% 30%,#f6e2b0,#e6c27b 45%,#b98d3f);box-shadow:0 0 0 14px rgba(230,194,123,.14),0 0 70px rgba(230,194,123,.4);transition:transform .12s;transform:scale(var(--lv,1))}#vc .vt{min-height:84px;font-size:19px;padding:0 12px;overflow-wrap:anywhere;max-height:34dvh;overflow:auto}#vc .vs{opacity:.75;font-size:14px;margin-top:24px}#vc .btn{max-width:260px;background:rgba(255,255,255,.12);border-color:transparent;color:inherit;margin-bottom:env(safe-area-inset-bottom)}
 .file{display:block;text-align:center}.file input{position:absolute;opacity:0;width:1px;height:1px}
+#askf{display:none;position:fixed;left:0;right:0;bottom:calc(64px + env(safe-area-inset-bottom));z-index:8;gap:8px;align-items:flex-end;padding:8px max(12px,calc(50% - 348px));background:var(--nav);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--line)}
+body.ai #askf{display:flex}body.ai main{padding-bottom:84px}
+#askf textarea{flex:1;min-height:48px;max-height:140px;resize:none;border-radius:24px;padding:12px 16px;line-height:1.4}
+#askf .ic{width:48px!important;height:48px;min-height:48px;border-radius:50%}#askf .ic.main{background:var(--grad);color:#fff;border:0}
+#vc{position:fixed;inset:auto 0 calc(128px + env(safe-area-inset-bottom)) 0;margin:0 auto;width:min(560px,calc(100% - 24px));height:auto;border:0;border-radius:20px;padding:10px 14px;background:#163d2e;color:#f3ece0;box-shadow:var(--shadow);z-index:9}
+#vc[open]{display:flex;flex-direction:row;align-items:center;gap:12px}#vc #orb{width:44px;height:44px;flex:none;box-shadow:0 0 0 6px rgba(230,194,123,.18)}#vc .vs{margin:0;flex:1;text-align:left;opacity:.9;font-size:14px}#vc .vt{display:none}#vc .btn{width:auto;margin:0;min-height:44px;padding:0 14px}
 @keyframes spin{to{transform:rotate(360deg)}}
 #toast{position:fixed;left:50%;top:calc(76px + env(safe-area-inset-top));transform:translate(-50%,-12px);font-size:14px;background:var(--text);color:var(--bg);padding:12px 18px;border-radius:14px;font-weight:600;opacity:0;pointer-events:none;transition:.2s;z-index:20;max-width:90vw}#toast.on{opacity:1;transform:translate(-50%,0)}
 </style>
 </head>
-<body data-build="1795692121">
+<body data-build="1795692459">
 <svg width="0" height="0" style="position:absolute"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#6a2cf5"/><stop offset=".5" stop-color="#e1306c"/><stop offset="1" stop-color="#f77737"/></linearGradient></defs></svg>
 <header><div class="wrap"><img class="logo" src="mark.png?3" alt="" width="42" height="42"><div style="flex:1"><h1>Eslarma</h1><div class="sub" id="upd">загрузка…</div></div><button class="btn small" id="reload" aria-label="Обновить" hidden>↻</button></div></header>
 
@@ -164,11 +170,8 @@ textarea{font:inherit;width:100%;padding:13px 14px;border-radius:14px;border:1px
   <section class="view" id="v-ai">
     <h2>AI-агент <button class="tip" type="button" data-tip="ai" aria-label="Подсказка"><i>!</i></button></h2>
     <div id="aibox">
-      <button class="btn main" type="button" id="talk" aria-label="Голосовой чат" style="display:flex;gap:10px;justify-content:center;align-items:center;margin-bottom:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 10v4M7.5 7v10M12 4v16M16.5 7v10M21 10v4"/></svg>Голосовой чат</button>
       <div class="chips" id="qs"></div>
       <div class="chat" id="chat" aria-live="polite"></div>
-      <form class="card add" id="askf"><textarea id="q" rows="2" placeholder="Спросите о роликах, Instagram, стиле или пришлите ссылку" aria-label="Вопрос агенту" required></textarea>
-      <div class="tools"><button class="btn ic" type="button" id="mic" aria-label="Диктовать голосом"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><button class="btn main" type="submit">Отправить</button></div></form>
     </div>
   </section>
 
@@ -202,6 +205,7 @@ textarea{font:inherit;width:100%;padding:13px 14px;border-radius:14px;border:1px
   </div>
 </main>
 
+<form id="askf"><textarea id="q" rows="1" aria-label="Сообщение агенту" enterkeyhint="send" required></textarea><button class="btn ic" type="button" id="talk" aria-label="Голосовой чат"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 10v4M7.5 7v10M12 4v16M16.5 7v10M21 10v4"/></svg></button><button class="btn ic main" type="submit" aria-label="Отправить"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button></form>
 <dialog id="vc" aria-label="Голосовой чат"><div class="vs" id="vs" role="status"></div><button id="orb" aria-label="Закончить фразу или остановить ответ"></button><div class="vt" id="vt"></div><button class="btn" id="vx">Закрыть</button></dialog>
 <dialog id="dlg"><div class="dh"><b id="dt"></b><button class="btn small" id="dx" aria-label="Закрыть">✕</button></div><div id="db"></div></dialog>
 <div id="toast" role="status"></div>
@@ -336,7 +340,7 @@ $('#qs').querySelectorAll('button').forEach(b=>b.onclick=()=>ask(b.textContent))
 const SP='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>';
 function talk(){$('#chat').innerHTML=H.map((m,n)=>`<div class="msg ${m.role==='user'?'u':'a'}">${esc(m.content)}${m.role!=='user'&&!m.pend?`<div><button class="say" aria-label="Прочитать вслух" data-say="${n}">${SP}</button></div>`:''}${(m.actions||[]).map((x,k)=>`<button class="btn" data-m="${n}" data-a="${k}" ${x.done?'disabled':''}>${esc(x.label)}${x.done?' ✓':''}</button>`).join('')}</div>`).join('');
   $('#chat').querySelectorAll('[data-a]').forEach(b=>b.onclick=async()=>{const x=H[b.dataset.m].actions[b.dataset.a];const what=({mode:'Сменить режим',pub:'Выпустить в Instagram ролик',rej:'Отклонить ролик',redo:'Переделать ролик',link:'Сделать ролик из',comp:'Добавить в анализ',style:'Стиль картин',wish:'Пожелание',wishclear:'Очистить пожелания',make:'Запустить производство',growth:'Обновить статистику',apply:'Применить изменение программы',undo:'Вернуть программу как было',set:'Изменить настройку',code:'Изменить программу'})[x.cmd];if(!confirm(what+(['apply','undo'].includes(x.cmd)?'':' '+x.arg)+'?'))return;b.disabled=true;if(['code','apply','undo'].includes(x.cmd)?await dev(x):await send(x.cmd,x.arg,'Принято')){x.done=true;save()}else b.disabled=false})}
-function save(){H=H.slice(-40);try{localStorage.eslarmaChat=JSON.stringify(H,(k,v)=>k==='cb'?undefined:v)}catch{}talk()}
+function save(){H=H.slice(-40);requestAnimationFrame(()=>{if(document.body.classList.contains('ai'))scrollTo({top:document.body.scrollHeight,behavior:'smooth'})});try{localStorage.eslarmaChat=JSON.stringify(H,(k,v)=>k==='cb'?undefined:v)}catch{}talk()}
 let busy=false;
 function quick(q){const d=D;if(!d)return null;const by=s=>d.items.filter(i=>s.includes(i.status)),R=(d.reels||[]).filter(x=>x.views!=null),nm=i=>i.id+(i.hook?' «'+i.hook+'»':'');
   if(q===QS[0]){const p=d.runs.find(x=>x.name==='produce'&&x.status!=='completed'),c=by(['in_progress'])[0];return{content:[p||c?'Сейчас делается ролик'+(c?' '+nm(c):'')+'.':'Сейчас ничего не делается.','Готовы к выходу: '+by(['ready','approved']).length+'. Ждут вас: '+by(['awaiting_approval']).length+'. Исходных видео: '+by(['downloaded','new','retry']).length+'.','Режим: '+(d.mode==='auto'?'автоматически':'с одобрением')+'. Слоты: '+(d.slots||[]).join(', ')+'.'].join('\n'),actions:p||c?[]:[{cmd:'make',arg:'',label:'Запустить производство'}]}}
@@ -346,7 +350,7 @@ function quick(q){const d=D;if(!d)return null;const by=s=>d.items.filter(i=>s.in
   if(/^(привет|салом|ассалому?\s*алейкум|ассалому?\s*алайкум|здравствуй(те)?|salom|assalomu alaykum)[\s,!.]*(как дела|что нового)?[?!.\s]*$/i.test(q)){const p=by(['in_progress'])[0];return{content:'Ва алейкум ассалам! '+(p?'Сейчас делается ролик'+(p.hook?' «'+p.hook+'»':' '+p.id)+'. ':'Сейчас ничего не делается. ')+'Исходных видео: '+by(['downloaded','new','retry']).length+', готовы к выходу: '+by(['ready','approved']).length+'. Подписчиков: '+fmt((d.account||{}).followers)+'. Чем помочь?',actions:[]}}
   const m=q.match(/https?:\/\/(www\.)?instagram\.com\/\S+/i);if(m)return{content:'Что сделать с этой ссылкой?',actions:[{cmd:'link',arg:m[0],label:'Это речь домлы: сделать ролик'},{cmd:'comp',arg:m[0],label:'Это конкурент: в анализ'}]};
   return null}
-async function ask(q){q=q.trim();if(!q||busy)return;busy=true;const hist=H.slice(-8).map(({role,content})=>({role,content}));H.push({role:'user',content:q});$('#q').value='';
+async function ask(q){q=q.trim();if(!q||busy)return;busy=true;const hist=H.slice(-8).map(({role,content})=>({role,content}));H.push({role:'user',content:q});$('#q').value='';$('#q').style.height='';
   const a=quick(q);if(a){H.push({role:'assistant',...a});busy=false;save();$('#chat').lastElementChild.scrollIntoView({block:'end'});return}
   H.push({role:'assistant',content:'Думаю, 1–2 минуты. Можно уйти на другой экран.'});talk();$('#chat').lastElementChild.scrollIntoView({block:'end'});
   let out=null;
@@ -366,13 +370,13 @@ $('#chat').addEventListener('click',async e=>{const b=e.target.closest('[data-sa
 const vc=$('#vc');let V=null;
 const vs=(s,x)=>{$('#vs').textContent=s;if(x!==undefined)$('#vt').textContent=x};
 function vclose(){if(V){V.stop=true;try{V.sr?.abort()}catch{}try{V.mr?.state==='recording'&&V.mr.stop()}catch{}V.st?.getTracks().forEach(z=>z.stop());V.ac?.close().catch(()=>{});V=null}hush();if(vc.open)vc.close()}
-$('#vx').onclick=vclose;vc.oncancel=vclose;
+$('#vx').onclick=vclose;vc.oncancel=vclose;addEventListener('keydown',e=>{if(e.key==='Escape'&&vc.open)vclose()});
 $('#orb').onclick=()=>{if(!V)return;if(V.mr?.state==='recording'){V.send=true;V.mr.stop()}else if(speaking!==null)hush()};
 $('#talk').onclick=async()=>{unlock();if(!D?.ai){aiKey();return}
-  vc.showModal();vs('Включаю микрофон…','');
+  vc.show();vs('Включаю микрофон…','');
   try{const st=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}}),ac=new (window.AudioContext||window.webkitAudioContext)();await ac.resume();const an=ac.createAnalyser();an.fftSize=512;ac.createMediaStreamSource(st).connect(an);V={st,ac,an,stop:false}}catch{vs('Разрешите микрофон в настройках телефона','');return}
   const me=V;while(V===me&&!me.stop){try{await turn(me)}catch(e){if(V!==me)return;vs(WHY[e.kind]||'Не получилось, попробуем ещё раз');await new Promise(z=>setTimeout(z,2500))}}};
-async function turn(v){const type=['audio/webm;codecs=opus','audio/mp4','audio/ogg'].find(x=>MediaRecorder.isTypeSupported(x))||'';const mr=v.mr=new MediaRecorder(v.st,type?{mimeType:type}:{}),ch=[];mr.ondataavailable=e=>e.data.size&&ch.push(e.data);const end=new Promise(z=>mr.onstop=z);mr.start();vs('Слушаю… Скажите и сделайте паузу или нажмите на шар');
+async function turn(v){const type=['audio/webm;codecs=opus','audio/mp4','audio/ogg'].find(x=>MediaRecorder.isTypeSupported(x))||'';const mr=v.mr=new MediaRecorder(v.st,type?{mimeType:type}:{}),ch=[];mr.ondataavailable=e=>e.data.size&&ch.push(e.data);const end=new Promise(z=>mr.onstop=z);mr.start();vs('Слушаю… пауза — отправить');
   const buf=new Uint8Array(v.an.fftSize);let floor=6,heard=0,quiet=0,t0=Date.now(),last=t0;v.send=false;
   const tick=()=>{if(mr.state!=='recording')return;v.an.getByteTimeDomainData(buf);let s=0;for(const x of buf)s+=(x-128)*(x-128);const m=Math.sqrt(s/buf.length),now=Date.now(),dt=now-last;last=now;
     if(now-t0<500)floor=Math.max(floor,m);const on=m>floor*1.8+3;$('#orb').style.setProperty('--lv',1+Math.min(m,40)/120);
@@ -386,15 +390,9 @@ function facts(){const d=D||{};return JSON.stringify({now:new Date().toLocaleStr
 async function talkTo(q,more){const z=await raw('talk',q,{history:H.slice(-10).filter(m=>!m.pend).map(({role,content})=>({role,content})),data:facts(),...more}),d=await z.json();if(!z.ok)throw Object.assign(Error(),{kind:d.error});return d}
 function aiKey(){pop('Голос и быстрый агент',`<form class="card add" id="aif"><span>Нужен бесплатный ключ Google, один раз: <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> → Create API key → скопировать → вставить сюда.</span><input id="aikey" type="password" autocomplete="off" aria-label="Ключ ИИ" required><button class="btn main" type="submit">Сохранить и проверить</button><p class="help" id="aiMsg" role="alert" style="padding:0"></p></form>`);
   $('#aif').onsubmit=async e=>{e.preventDefault();const m=$('#aiMsg');m.textContent='Проверяю…';try{const z=await raw('setai',$('#aikey').value.trim()),w=await z.json();if(!z.ok)throw Object.assign(Error(),{kind:w.error});toast('Голос подключён');shut();load()}catch(x){m.textContent=({aiformat:'Это не похоже на ключ.',aikey:'Этот ключ не принимают. Вставьте целиком.'})[x.kind]||'Не получилось, попробуйте ещё раз.'}}}
-const SR=window.SpeechRecognition||window.webkitSpeechRecognition;let rec=null;
-$('#mic').onclick=()=>{if(rec){rec.stop();return}
-  if(!SR){$('#q').focus();return toast('Здесь диктуйте через микрофон на клавиатуре телефона')}
-  const base=$('#q').value?$('#q').value.trim()+' ':'';rec=new SR();rec.lang='ru-RU';rec.interimResults=true;rec.continuous=true;
-  rec.onresult=e=>{$('#q').value=base+[...e.results].map(x=>x[0].transcript).join(' ').replace(/\s+/g,' ')};
-  rec.onerror=e=>toast(e.error==='not-allowed'||e.error==='service-not-allowed'?'Разрешите микрофон или диктуйте с клавиатуры телефона':e.error==='no-speech'?'Не услышал, попробуйте ещё раз':'Не получилось, диктуйте с клавиатуры телефона');
-  rec.onend=()=>{rec=null;$('#mic').classList.remove('rec');$('#mic').setAttribute('aria-label','Диктовать голосом')};
-  try{rec.start();$('#mic').classList.add('rec');$('#mic').setAttribute('aria-label','Остановить запись')}catch{rec=null}};
-$('#askf').onsubmit=e=>{e.preventDefault();if(rec)rec.stop();ask($('#q').value)};
+const SR=null;
+$('#q').addEventListener('input',()=>{const q=$('#q');q.style.height='auto';q.style.height=Math.min(q.scrollHeight,140)+'px'});
+$('#askf').onsubmit=e=>{e.preventDefault();ask($('#q').value)};
 $('#q').onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();ask($('#q').value)}};
 $('#compb').onclick=()=>{pop('Конкурент',`<form class="card add" id="cf"><input id="cv" placeholder="Ссылка или название аккаунта" aria-label="Ссылка или название аккаунта" autocapitalize="off" spellcheck="false"><button class="btn main" type="submit">Анализировать</button></form><p class="help" style="text-align:center">или</p><label class="btn file">Загрузить видео с телефона<input type="file" id="cfile" accept="video/*"></label><div class="note" id="cm" role="status"></div>`);
   const say=x=>{if($('#cm'))$('#cm').textContent=x};
@@ -415,14 +413,14 @@ talk();
 const TIPS={now:['Сейчас','Готовы к выходу — выйдут в ближайший слот.\nЖдут вас — только в режиме «С одобрением».\nИсходных видео — речи домлы, из которых сделаем ролики.\nВышло — уже в Instagram.\nНажмите на цифру, чтобы увидеть список.'],
 new:['Новое видео домлы','Вставьте ссылку на ролик с речью домлы. Программа возьмёт голос и сама сделает новый ролик: картины, движение, субтитры, обложку.'],
 wait:['Ждут вашего решения','В режиме «С одобрением» готовый ролик появится здесь: посмотреть, выпустить, переделать или отклонить. В режиме «Автоматически» ролики выходят сами.'],
-ai:['AI-агент','На кнопки и ссылки отвечает сразу, на свои вопросы — за 1–2 минуты.\nСтиль, пожелания, ссылки, переделку выполняет сам. Выпустить, отклонить или сменить режим — после вашей кнопки.\nВолны — голосовой чат, микрофон — диктовать, динамик — прочитать вслух.\nПопросите изменить программу: дизайн сайта, субтитры, картины, движение. Простое сделает сразу, для сложного подготовит код, проверит и даст кнопку «Применить». Любое изменение можно вернуть.\nМодель бесплатная, важное проверяйте.'],
+ai:['AI-агент','На кнопки и ссылки отвечает сразу, на свои вопросы — за 1–2 минуты.\nСтиль, пожелания, ссылки, переделку выполняет сам. Выпустить, отклонить или сменить режим — после вашей кнопки.\nВолны внизу — говорить голосом, динамик под ответом — прочитать вслух.\nПопросите изменить программу: дизайн сайта, субтитры, картины, движение. Простое сделает сразу, для сложного подготовит код, проверит и даст кнопку «Применить». Любое изменение можно вернуть.\nМодель бесплатная, важное проверяйте.'],
 mode:['Управление','Автоматически — программа выпускает ролики сама. С одобрением — сначала вам. Режим меняется за 1–2 минуты.'],
 style:['Стиль картин','Подействует со следующих роликов.'],wish:['Пожелания','Например: больше природы, меньше людей. Программа учтёт до 6 последних пожеланий.'],
 grow:['Рост','Нажмите на любую кнопку: откроются подробности. Данные обновляются сами в 08:35 и 21:35.'],
 comp:['Конкуренты','Ссылка на ролик или видео с телефона (до 18 МБ): ИИ посмотрит само видео и скажет, что взять нам.\nНазвание аккаунта: программа его запомнит, но сам список роликов Instagram не открывает, нужны ссылки.']};
 document.addEventListener('click',e=>{const b=e.target.closest('[data-tip]');if(b){e.preventDefault();pop(TIPS[b.dataset.tip][0],`<div style="white-space:pre-line;padding:4px">${TIPS[b.dataset.tip][1]}</div>${b.dataset.tip==='ai'?`<button class="btn main" id="aik" style="margin-top:12px">${D?.ai?'Заменить ключ голоса':'Подключить живой голос'}</button>`:''}`);if($('#aik'))$('#aik').onclick=aiKey}});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-id]');if(b)open(b.dataset.id)});
-document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id==='v-'+b.dataset.v));scrollTo({top:0})});
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id==='v-'+b.dataset.v));document.body.classList.toggle('ai',b.dataset.v==='ai');if(b.dataset.v!=='ai'&&V)vclose();if(b.dataset.v==='grow'&&D&&!window._gr&&Date.now()-new Date((D.account||{}).updated||0)>2*3600e3){window._gr=1;api('growth','').then(()=>toast('Обновляю статистику, 2–3 минуты')).catch(()=>{})}if(b.dataset.v==='ai')setTimeout(()=>scrollTo(0,document.body.scrollHeight),50);scrollTo({top:0})});
 $('#login').onsubmit=async e=>{e.preventDefault();$('#loginMsg').textContent='';try{await auth('password',{email:$('#email').value.trim(),password:$('#pass').value});$('#pass').value='';show();load()}catch(x){$('#loginMsg').textContent=x.code===400?'Неверная почта или пароль.':'Не получилось войти, попробуйте ещё раз.'}};
 $('#add').onsubmit=async e=>{e.preventDefault();const u=$('#url').value.trim();if(!/^https?:\/\/(www\.)?instagram\.com\/\S+/i.test(u))return toast('Нужна ссылка instagram.com');if(await send('link',u,'Ссылка принята'))$('#url').value=''};
 $('#keyf').onsubmit=async e=>{e.preventDefault();const m=$('#keyMsg');m.textContent='Проверяю…';try{const d=await api('setkey',$('#key').value.trim());$('#key').value='';m.textContent='';toast('Ключ сохранён');load()}catch(x){m.textContent=({format:'Это не похоже на ключ: он начинается с github_pat_.',badkey:'GitHub не узнаёт этот ключ: он скопирован не целиком или уже удалён (символов: '+x.len+', обычно 93).',ghdown:'GitHub сейчас сбоит. Нажмите ещё раз через минуту.',engine:'У ключа нет доступа к eslarma-engine с правом Actions.',bot:'У ключа нет доступа к eslarma-bot с правами Contents и Actions.'})[x.kind]||'Не получилось сохранить, попробуйте ещё раз.';if(x.http)m.textContent+=' (код '+x.http+')'}};
