@@ -1,2 +1,2 @@
-{"name":"Eslarma","short_name":"Eslarma","start_url":"./","display":"standalone","background_color":"#214d39","theme_color":"#214d39","lang":"ru",
- "icons":[{"src":"icon-192.png?3","sizes":"192x192","type":"image/png"},{"src":"icon-512.png?3","sizes":"512x512","type":"image/png","purpose":"any maskable"}]}
+{"name":"Eslarma","short_name":"Eslarma","start_url":"./","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","lang":"ru",
+ "icons":[{"src":"icon-192.png?5","sizes":"192x192","type":"image/png"},{"src":"icon-512.png?5","sizes":"512x512","type":"image/png","purpose":"any"}]}

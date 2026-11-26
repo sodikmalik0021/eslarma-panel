@@ -6,8 +6,8 @@
 <title>Eslarma — студия</title>
 <meta name="theme-color" content="#ffffff" id="metaTheme">
 <link rel="manifest" href="manifest.json">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?4">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?3">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?5">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?5">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -220,11 +220,43 @@ dialog{background:#fff;border:0;box-shadow:0 30px 80px -20px rgba(16,70,50,.45)}
 :focus-visible{outline-color:var(--green)}
 ::selection{background:#CDEFDF}
 .spark polyline{stroke:var(--green)}
+
+/* ===== exactly the chosen picture ===== */
+header{position:static;background:#fff!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+header .wrap{padding-top:22px;padding-bottom:4px;align-items:center}
+#greet{font-size:14px;font-weight:600;color:var(--muted)}
+header h1#vt{font-size:28px;font-weight:800;letter-spacing:-.02em;margin-top:2px}
+#reload{display:none!important}
+.av{all:unset;cursor:pointer;width:52px;height:52px;border-radius:50%;overflow:hidden;box-shadow:var(--shadow);flex:none}.av img{width:100%;height:100%;object-fit:cover;display:block}
+.av:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+.view>h2{display:none}
+.kb3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+.kb3 button{all:unset;box-sizing:border-box;cursor:pointer;background:#fff;border-radius:22px;box-shadow:var(--shadow);padding:14px;min-height:124px;display:flex;flex-direction:column;transition:transform .3s var(--spring)}
+.kb3 button:active{transform:scale(.96)}.kb3 button:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+.kic{width:40px;height:40px;border-radius:13px;background:var(--soft);color:var(--green);display:grid;place-items:center;margin-bottom:auto}
+.kb3 .v{font-size:28px;font-weight:800;letter-spacing:-.02em;margin-top:14px;font-variant-numeric:tabular-nums;line-height:1.1}.kb3 .k{font-size:13px;color:var(--muted);font-weight:600}
+.wk{margin-top:16px;padding:18px}
+.tabs{display:flex;gap:6px;margin:12px 0 4px}.tabs button{all:unset;cursor:pointer;font-size:13px;font-weight:700;color:var(--muted);padding:7px 14px;border-radius:11px;min-height:20px}
+.tabs button.on{background:var(--soft);color:var(--text)}.tabs button:focus-visible{outline:2px solid var(--green)}
+#wk{margin-top:26px}
+.wkd.wide span{min-width:0;flex:1;text-align:center}
+.tipc{all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;gap:14px;align-items:center;padding:14px;margin-top:16px;background:#fff;border-radius:22px;box-shadow:var(--shadow)}
+.tipc:focus-visible{outline:2px solid var(--green)}
+.tic{width:48px;height:48px;border-radius:15px;background:var(--soft);color:var(--green);display:grid;place-items:center;flex:none}
+.tipc .tx b{display:block;font-size:17px;font-weight:800}.tipc .tx span{display:block;font-size:14px;color:var(--muted);margin-top:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+nav .wrap{grid-template-columns:repeat(4,1fr)!important;padding:8px 10px!important}
+nav button[data-v=mode]{display:none!important}
+nav button{padding:0!important;height:52px;min-height:52px;border-radius:18px!important;display:grid!important;place-items:center}
+nav button svg{width:24px!important;height:24px!important}
+nav{width:min(400px,calc(100% - 28px))!important;border-radius:28px!important}
 </style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap">
 </head>
 <body data-build="1795714292">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M16 3.5a4 4 0 0 1 0 8M22 21a7 7 0 0 0-4-6.3"/></symbol>
+<symbol id="i-film" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M7 4v16M17 4v16M2 12h20"/></symbol>
 <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol>
 <symbol id="i-play" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="m10 8.5 5 3.5-5 3.5z"/></symbol>
 <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.9 5.6 5.6 1.9-5.6 1.9L12 18l-1.9-5.6-5.6-1.9 5.6-1.9z"/><path d="M19 15v4M17 17h4"/></symbol>
@@ -239,7 +271,7 @@ dialog{background:#fff;border:0;box-shadow:0 30px 80px -20px rgba(16,70,50,.45)}
 <symbol id="i-reload" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8M21 3v5h-5"/></symbol>
 <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
 </defs></svg>
-<header><div class="wrap"><img class="logo" src="mark.png?4" alt="" width="42" height="42"><div style="flex:1"><h1>Eslarma</h1><div class="sub" id="upd">загрузка…</div></div><button class="btn small" id="reload" aria-label="Обновить" hidden><svg class="i"><use href="#i-reload"/></svg></button></div></header>
+<header><div class="wrap"><div style="flex:1;min-width:0"><div class="sub" id="greet"></div><h1 id="vt">Статистика <button class="tip" type="button" id="vtip" data-tip="now" aria-label="Подсказка"><i>!</i></button></h1><span id="upd" hidden></span></div><button class="btn small" id="reload" aria-label="Обновить" hidden><svg class="i"><use href="#i-reload"/></svg></button><button class="av" id="me" type="button" aria-label="Управление"><img src="mark.png?5" alt="" width="48" height="48"></button></div></header>
 
 <main class="wrap">
   <form id="login" class="card" hidden>
@@ -258,27 +290,20 @@ dialog{background:#fff;border:0;box-shadow:0 30px 80px -20px rgba(16,70,50,.45)}
   </form>
   <div id="app" hidden>
   <section class="view on" id="v-home">
-    <h2>Сейчас <button class="tip" type="button" data-tip="now" aria-label="Подсказка"><i>!</i></button></h2>
-    <div class="card hero">
-      <div class="lbl">Что делает программа</div>
-      <div class="big" id="now">—</div>
-      <div class="lbl" id="nowSub"></div>
-      <div class="slots" id="slots"></div>
-    </div>
-    <div class="kb" id="kpi" style="margin-top:10px"></div>
-    <div class="card wk"><div class="wkh"><b>Просмотры</b> <span>за неделю</span></div><div id="wk"></div></div>
-    <h3 class="ap">Ждут вашего решения <button class="tip" type="button" data-tip="wait" aria-label="Подсказка"><i>!</i></button></h3>
+    <div class="kb3" id="kpi"></div>
+    <div class="card wk"><div class="wkh"><b>Просмотры</b> <span id="wkp">за неделю</span></div>
+      <div class="tabs" id="wkt" role="tablist"><button class="on" data-r="7" role="tab">Неделя</button><button data-r="30" role="tab">Месяц</button><button data-r="0" role="tab">Всё</button></div>
+      <div id="wk"></div></div>
+    <button class="card tipc" id="tipc" type="button"><span class="tic"><svg class="i"><use href="#i-spark"/></svg></span><span class="tx"><b>Совет агента</b><span id="tipt">Собираю статистику…</span></span></button>
+    <h3 class="ap" id="waith">Ждут вашего решения</h3>
     <div class="card list ap" id="wait"></div>
-    <h3>Новое видео домлы <button class="tip" type="button" data-tip="new" aria-label="Подсказка"><i>!</i></button></h3>
-    <form class="card add" id="add">
-      <input id="url" type="url" inputmode="url" placeholder="Ссылка на ролик Instagram" aria-label="Ссылка на ролик Instagram" required>
-      <button class="btn main" type="submit">Добавить</button>
-    </form>
-    <h3>Последние ролики</h3>
-    <div class="card list" id="recent"></div>
   </section>
 
-  <section class="view" id="v-queue"><h2>Очередь</h2><div class="card list" id="queue"></div></section>
+  <section class="view" id="v-queue"><h2>Очередь</h2>
+    <div class="card hero"><div class="lbl">Что делает программа</div><div class="big" id="now">—</div><div class="lbl" id="nowSub"></div><div class="slots" id="slots"></div></div>
+    <h3>Новое видео домлы <button class="tip" type="button" data-tip="new" aria-label="Подсказка"><i>!</i></button></h3>
+    <form class="card add" id="add"><input id="url" type="url" inputmode="url" placeholder="Ссылка на ролик Instagram" aria-label="Ссылка на ролик Instagram" required><button class="btn main" type="submit">Добавить</button></form>
+    <h3>Все ролики</h3><div class="card list" id="queue"></div><div id="recent" hidden></div></section>
 
   <section class="view" id="v-ai">
     <h2>AI-агент <button class="tip" type="button" data-tip="ai" aria-label="Подсказка"><i>!</i></button></h2>
@@ -324,11 +349,11 @@ dialog{background:#fff;border:0;box-shadow:0 30px 80px -20px rgba(16,70,50,.45)}
 <div id="toast" role="status"></div>
 
 <nav hidden><div class="wrap">
-  <button class="on" data-v="home"><svg class="i"><use href="#i-home"/></svg>Сейчас</button>
-  <button data-v="queue"><svg class="i"><use href="#i-play"/></svg>Очередь</button>
-  <button data-v="ai"><svg class="i"><use href="#i-spark"/></svg>AI-агент</button>
-  <button data-v="grow"><svg class="i"><use href="#i-chart"/></svg>Рост</button>
-  <button data-v="mode"><svg class="i"><use href="#i-sliders"/></svg>Управление</button>
+  <button class="on" data-v="home" aria-label="Сейчас"><svg class="i"><use href="#i-home"/></svg><span class="sr">Сейчас</span></button>
+  <button data-v="queue" aria-label="Очередь"><svg class="i"><use href="#i-play"/></svg><span class="sr">Очередь</span></button>
+  <button data-v="grow" aria-label="Рост"><svg class="i"><use href="#i-chart"/></svg><span class="sr">Рост</span></button>
+  <button data-v="ai" aria-label="AI-агент"><svg class="i"><use href="#i-spark"/></svg><span class="sr">AI-агент</span></button>
+  <button data-v="mode" aria-label="Управление"><svg class="i"><use href="#i-sliders"/></svg><span class="sr">Управление</span></button>
 </div></nav>
 
 <script type="module">
@@ -367,15 +392,19 @@ function row(i){
   return `<${tag} class="row" ${pub?`href="${link(i.permalink)}" target="_blank" rel="noopener"`:open?`data-id="${esc(i.id)}"`:''}>
     ${pic(i)}<span class="main"><span class="t">${esc((i.hook||'').replace(/\*/g,'').trim()||(i.status==='in_progress'?'Ролик делается':['downloaded','new','retry'].includes(i.status)?'Исходное видео':'Ролик '+i.id))}</span><span class="m">${date(i.published_at||i.received_at)}</span>${m}</span>
     <span class="pill ${CLS[i.status]||''}">${esc(RU[i.status]||i.status)}</span>${pub||open?'<span class="chev"><svg class="i"><use href="#i-right"/></svg></span>':''}</${tag}>`}
+let RNG=7;
 function week(){
-  const R=(D&&D.reels)||[],day=864e5,t0=new Date();t0.setHours(0,0,0,0);
-  const v=[...Array(7)].map((_,k)=>{const a=t0-(6-k)*day;return R.filter(x=>{const t=+new Date(x.timestamp);return t>=a&&t<a+day}).reduce((s,x)=>s+(+x.views||0),0)});
-  const W=['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],lab=[...Array(7)].map((_,k)=>W[new Date(t0-(6-k)*day).getDay()]);
-  if(!v.some(Boolean)){$('#wk').innerHTML='<div class="empty">За неделю роликов не выходило</div>';return}
-  const mx=Math.max(...v),pt=v.map((x,k)=>[k*50+5,128-x/mx*100]),bi=v.indexOf(mx);
-  let d='M'+pt[0];for(let k=1;k<7;k++){const[a,b]=pt[k-1],[c,e]=pt[k];d+=' C'+(a+25)+' '+b+','+(c-25)+' '+e+','+c+' '+e}
-  const[x,y]=pt[bi];
-  $('#wk').innerHTML='<svg viewBox="0 0 310 140" role="img" aria-label="Просмотры за 7 дней, максимум '+fmt(mx)+'"><path d="'+d+'" fill="none" stroke="var(--green)" stroke-width="3" stroke-linecap="round"/><circle cx="'+x+'" cy="'+y+'" r="6" fill="#fff" stroke="var(--green)" stroke-width="3"/></svg><span class="wkv" style="left:'+(x/310*100)+'%;top:'+(y/140*100)+'%">'+fmt(mx)+'</span><div class="wkd">'+lab.map((l,k)=>'<span'+(k===bi?' class="on"':'')+'>'+l+'</span>').join('')+'</div>'}
+  const R=((D&&D.reels)||[]).filter(x=>x.timestamp),day=864e5,t0=new Date();t0.setHours(0,0,0,0);
+  let v,lab,on=-1;
+  if(RNG){v=[...Array(RNG)].map((_,k)=>{const a=t0-(RNG-1-k)*day;return R.filter(x=>{const t=+new Date(x.timestamp);return t>=a&&t<a+day}).reduce((s,x)=>s+(+x.views||0),0)});
+    const W=['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];lab=[...Array(RNG)].map((_,k)=>{const dt=new Date(t0-(RNG-1-k)*day);return RNG===7?W[dt.getDay()]:k%6===0||k===RNG-1?String(dt.getDate()):''})}
+  else{const s=[...R].sort((p,q)=>new Date(p.timestamp)-new Date(q.timestamp));v=s.map(x=>+x.views||0);lab=s.map((x,k)=>k===0||k===s.length-1?new Date(x.timestamp).toLocaleDateString('ru',{day:'numeric',month:'short'}):'')}
+  $('#wkp').textContent=RNG===7?'за неделю':RNG?'за месяц':'за всё время';
+  if(v.length<2||!v.some(Boolean)){$('#wk').innerHTML='<div class="empty">Пока нет данных за этот период</div>';return}
+  const n=v.length,mx=Math.max(...v),pt=v.map((x,k)=>[5+k*300/(n-1),128-x/mx*100]),bi=v.indexOf(mx),c=300/(n-1)/2;
+  let p='M'+pt[0];for(let k=1;k<n;k++){const[a,b]=pt[k-1],[x,y]=pt[k];p+=' C'+(a+c)+' '+b+','+(x-c)+' '+y+','+x+' '+y}
+  const[x,y]=pt[bi];on=bi;
+  $('#wk').innerHTML='<svg viewBox="0 0 310 140" role="img" aria-label="Просмотры, максимум '+fmt(mx)+'"><path d="'+p+'" fill="none" stroke="var(--green)" stroke-width="3" stroke-linecap="round"/><circle cx="'+x+'" cy="'+y+'" r="6" fill="#fff" stroke="var(--green)" stroke-width="3"/></svg><span class="wkv" style="left:'+Math.min(88,Math.max(12,x/310*100))+'%;top:'+(y/140*100)+'%">'+fmt(mx)+'</span><div class="wkd'+(RNG===7?'':' wide')+'">'+lab.map((l,k)=>'<span'+(k===on&&RNG===7?' class="on"':'')+'>'+l+'</span>').join('')+'</div>'}
 function draw(){
   const d=D,by=s=>d.items.filter(i=>s.includes(i.status));
   $('#upd').textContent='Обновлено '+date(new Date());
@@ -384,10 +413,12 @@ function draw(){
   $('#nowSub').textContent=!run&&cur?'идёт производство':run?'начало: '+date(run.at):(by(['downloaded']).length?'':'нет исходных видео — добавьте ссылки');
   $('#slots').innerHTML=(d.slots||[]).map(s=>`<div class="slot">${esc(s)}</div>`).join('');
   const pub=by(['published']).sort((a,b)=>String(b.published_at).localeCompare(String(a.published_at)));
-  const K=[['ready','готовы к выходу','выйдут в ближайший слот',by(['ready','approved'])],['wait','ждут вас','в режиме «с одобрением»',by(['awaiting_approval'])],['src','исходных видео','из них сделаем ролики',by(['downloaded','new','retry'])],['pub','вышло','уже в Instagram',pub]];
-  const KK=d.mode==='approve'?K:K.filter(x=>x[0]!=='wait');$('#kpi').innerHTML=KK.map(([id,k,h,l])=>`<button data-k="${id}"><span class="v">${l.length}</span><span class="k">${k}</span></button>`).join('');
-  $('#kpi').querySelectorAll('button').forEach((b,n)=>b.onclick=()=>pop(KK[n][1],KK[n][3].map(row).join('')||'<div class="empty">Пусто</div>'));
-  document.querySelectorAll('.ap').forEach(x=>x.hidden=d.mode!=='approve');
+  const src=by(['downloaded','new','retry']),KK=[['users',fmt((d.account||{}).followers),'подписчика',()=>go('grow')],['film',pub.length,'вышло',()=>pop('Вышло',pub.map(row).join('')||'<div class="empty">Пусто</div>')],['play',src.length,'в запасе',()=>pop('Исходные видео',src.map(row).join('')||'<div class="empty">Пусто</div>')]];
+  $('#kpi').innerHTML=KK.map(([ic,v,k])=>'<button><span class="kic"><svg class="i"><use href="#i-X"/></svg></span><span class="v">'+v+'</span><span class="k">'+k+'</span></button>').join('').replace(/i-X/g,'i-'+'X');
+  $('#kpi').querySelectorAll('button').forEach((b,n)=>{b.querySelector('use').setAttribute('href','#i-'+KK[n][0]);b.onclick=KK[n][3]});
+  const w=by(['awaiting_approval']);$('#waith').hidden=$('#wait').hidden=d.mode!=='approve'||!w.length;
+  const tp=(d.topics||[]).map(x=>({...x,v:+x.median_views_24h||0})).sort((p,q)=>q.v-p.v)[0];
+  $('#tipt').textContent=tp?'Тема «'+tp.topic+'» собирает больше всего — обычно '+fmt(Math.round(tp.v))+' просмотров':'Спросите агента, что улучшить';
   list('#wait',by(['awaiting_approval']).map(row).join(''),d.mode==='auto'?'Режим «Автоматически»: ролики выходят сами':'Готовый ролик появится здесь: посмотреть и выпустить');
   list('#recent',pub.slice(0,5).map(row).join(''),'Пока нет вышедших');
   week();
@@ -557,6 +588,15 @@ $('#pwf').onsubmit=async e=>{e.preventDefault();const m=$('#pwMsg');m.textConten
 $('#reload').onclick=async()=>{const b=$('#reload');b.disabled=true;b.style.animation='spin .8s linear infinite';toast('Обновляю…');
   try{const h=await(await fetch('index.html?'+Date.now(),{cache:'no-store'})).text();const v=s=>(s.match(/data-build="([^"]+)"/)||[])[1];if(v(h)&&v(h)!==document.body.dataset.build){const g=await navigator.serviceWorker?.getRegistration();await g?.update();location.replace(location.pathname+'?'+Date.now());return}}catch{}
   const ok=await load();b.disabled=false;b.style.animation='';toast(ok?'Данные обновлены':'Не получилось обновить, нет связи')};$('#out').onclick=()=>{keep(null);show()};
+
+const VT={home:['Статистика','now'],queue:['Очередь',''],ai:['AI-агент','ai'],grow:['Рост','grow'],mode:['Управление','mode']};
+function go(v){$('nav [data-v='+v+']').click()}
+function title(v){const[t,tip]=VT[v]||VT.home;$('#vt').firstChild.textContent=t+' ';$('#vtip').hidden=!tip;if(tip)$('#vtip').dataset.tip=tip}
+function greet(){const hr=new Date().getHours();$('#greet').textContent=hr<5?'Доброй ночи':hr<12?'Доброе утро':hr<18?'Добрый день':'Добрый вечер'}
+greet();setInterval(greet,600000);
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>title(b.dataset.v)));
+$('#me').onclick=()=>go('mode');$('#tipc').onclick=()=>go('ai');
+$('#wkt').querySelectorAll('button').forEach(b=>b.onclick=()=>{RNG=+b.dataset.r;$('#wkt').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));week()});
 show();load();setInterval(()=>{if(!document.hidden)load()},60000);
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
