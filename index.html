@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Eslarma — студия</title>
-<meta name="theme-color" content="#000000" id="metaTheme">
+<meta name="theme-color" content="#ffffff" id="metaTheme">
 <link rel="manifest" href="manifest.json">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?3">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?4">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?3">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -15,9 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script>
-(function(){var mq=matchMedia('(prefers-color-scheme: light)');function a(){var t=mq.matches?'light':'dark';document.documentElement.dataset.theme=t;document.getElementById('metaTheme')&&document.getElementById('metaTheme').setAttribute('content',t==='light'?'#f2f2f7':'#000000')}a();try{mq.addEventListener('change',a)}catch(e){}})();
-</script>
+<script>document.documentElement.dataset.theme='light'</script>
 <style>
 :root{
   --bg:#0b0b10;--surface:#14141c;--surface2:#1c1c27;--line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);
@@ -179,11 +177,69 @@ dialog::backdrop{background:rgba(0,0,0,.35);backdrop-filter:blur(6px);-webkit-ba
 .tip i{background:var(--surface2);border:0;color:var(--muted)}
 #nowSub{text-transform:none!important;letter-spacing:0!important;font-size:15px!important;color:rgba(255,255,255,.75)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ===== Soft white + green (owner's choice, Nov 2026) ===== */
+:root,[data-theme=light]{--bg:#fff;--surface:#fff;--surface2:#F1F5F3;--line:rgba(16,70,50,.08);--line2:rgba(16,70,50,.14);
+  --text:#13211B;--muted:#7B8A84;--muted2:#4E5D57;--green:#12A36F;--green2:#0E8A5F;--soft:#E8F6EF;
+  --grad:linear-gradient(160deg,#2FD08F,#12A36F 55%,#0E8A5F);--grad-soft:#E8F6EF;--ok:#12A36F;--bad:#E5484D;--warn:#C77700;--blue:#12A36F;
+  --r:24px;--nav:rgba(255,255,255,.9);--shadow:0 10px 28px -12px rgba(16,70,50,.22),0 1px 2px rgba(16,70,50,.06)}
+html,body{font-family:Manrope,-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;background:#fff!important;background-image:none!important;color:var(--text)}
+h1,h2,.hero .big,.kb .v{font-family:Manrope,-apple-system,system-ui,sans-serif}
+svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none;vertical-align:middle}
+header{background:rgba(255,255,255,.92);border-bottom:0}
+.logo{border-radius:11px;box-shadow:0 6px 16px -6px rgba(16,120,80,.45)!important}
+#reload{display:grid;place-items:center;background:var(--surface2);color:var(--muted2)}
+h2{font-weight:800}h3{font-weight:700;color:var(--muted);text-transform:none;font-size:15px;letter-spacing:0;margin:26px 4px 10px}
+.card,.kb button,.st,.list{background:#fff;backdrop-filter:none;-webkit-backdrop-filter:none;border:0;box-shadow:var(--shadow)}
+.hero{background:#fff!important;color:var(--text)!important;border:0!important;box-shadow:var(--shadow)}
+.hero::after{display:none}
+.hero .lbl{color:var(--muted)!important}.hero .big{color:var(--green)}#nowSub{color:var(--muted)!important}
+.slot{background:var(--soft)!important;border:0!important;color:var(--green2)}
+.kb .v{font-weight:800}.kb .k{color:var(--muted)}
+.wk{padding:16px;margin-top:12px;position:relative}.wkh b{font-size:18px;font-weight:800}.wkh span{color:var(--muted);font-weight:700;font-size:18px}
+#wk{position:relative;margin-top:8px}#wk svg{width:100%;height:auto;display:block}
+.wkv{position:absolute;transform:translate(-50%,-150%);background:var(--soft);color:var(--green2);font-weight:800;font-size:13px;padding:4px 10px;border-radius:10px;font-variant-numeric:tabular-nums}
+.wkd{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--muted);margin-top:6px}.wkd .on{color:var(--green)}
+.metrics{gap:14px;color:var(--muted)}.metrics span{display:inline-flex;align-items:center;gap:4px}.metrics svg.i{width:16px;height:16px}
+.chev{display:grid;place-items:center;color:#B3BFBA}.chev svg.i{width:18px;height:18px}
+.pill{background:var(--surface2);color:var(--muted2)}.pill.ok{background:var(--soft);color:var(--green2)}.pill.warn{background:#FFF3DC;color:#A35F00}.pill.blue{background:var(--soft);color:var(--green2)}.pill.bad{background:#FDECEC;color:#C8333A}
+.qa{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;margin-right:6px;vertical-align:middle}.qa svg.i{width:14px;height:14px;stroke-width:2.4}.qa.ok{background:var(--soft);color:var(--green)}.qa.no{background:#FDECEC;color:var(--bad)}
+#qa>div{padding:4px 0}
+.btn{background:var(--surface2);color:var(--text)}.btn.main{background:var(--green);color:#fff;box-shadow:0 10px 22px -10px rgba(18,163,111,.7)}.btn.bad{color:var(--bad)}
+.btn.small{display:grid;place-items:center}
+input,textarea{background:var(--surface2);border:0}input:focus,textarea:focus{box-shadow:0 0 0 3px rgba(18,163,111,.25)}
+.seg{background:var(--surface2)}.seg button.on{background:#fff;color:var(--green2);box-shadow:var(--shadow)}
+nav{background:rgba(255,255,255,.94);border:0;box-shadow:0 16px 40px -14px rgba(16,70,50,.35),0 1px 2px rgba(16,70,50,.06)}
+nav button{color:#93A19B}nav button svg{width:24px;height:24px}nav button.on{color:var(--green);background:var(--soft)}
+#askf{background:rgba(255,255,255,.94);border:0;box-shadow:0 16px 40px -14px rgba(16,70,50,.35)}#askf .ic.main{background:var(--green)}
+.msg.u{background:var(--green);color:#fff}.msg.a{background:var(--surface2);border:0;backdrop-filter:none}
+.chips button{background:#fff;border:0;box-shadow:var(--shadow)}
+dialog{background:#fff;border:0;box-shadow:0 30px 80px -20px rgba(16,70,50,.45)}dialog::backdrop{background:rgba(19,33,27,.25)}
+#toast{background:#fff;color:var(--text);border:0}
+.tip i{background:var(--soft);color:var(--green2)}
+:focus-visible{outline-color:var(--green)}
+::selection{background:#CDEFDF}
+.spark polyline{stroke:var(--green)}
 </style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap">
 </head>
 <body data-build="1795714292">
-<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#6a2cf5"/><stop offset=".5" stop-color="#e1306c"/><stop offset="1" stop-color="#f77737"/></linearGradient></defs></svg>
-<header><div class="wrap"><img class="logo" src="mark.png?3" alt="" width="42" height="42"><div style="flex:1"><h1>Eslarma</h1><div class="sub" id="upd">загрузка…</div></div><button class="btn small" id="reload" aria-label="Обновить" hidden>↻</button></div></header>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="m10 8.5 5 3.5-5 3.5z"/></symbol>
+<symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.9 5.6 5.6 1.9-5.6 1.9L12 18l-1.9-5.6-5.6-1.9 5.6-1.9z"/><path d="M19 15v4M17 17h4"/></symbol>
+<symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
+<symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+<symbol id="i-share" viewBox="0 0 24 24"><path d="M22 3 11 14M22 3l-7 19-4-8-8-4z"/></symbol>
+<symbol id="i-save" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></symbol>
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-8-4.8-8-10.5A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 8 2.5C20 15.2 12 20 12 20z"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></symbol>
+<symbol id="i-reload" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8M21 3v5h-5"/></symbol>
+<symbol id="i-right" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+</defs></svg>
+<header><div class="wrap"><img class="logo" src="mark.png?4" alt="" width="42" height="42"><div style="flex:1"><h1>Eslarma</h1><div class="sub" id="upd">загрузка…</div></div><button class="btn small" id="reload" aria-label="Обновить" hidden><svg class="i"><use href="#i-reload"/></svg></button></div></header>
 
 <main class="wrap">
   <form id="login" class="card" hidden>
@@ -210,6 +266,7 @@ dialog::backdrop{background:rgba(0,0,0,.35);backdrop-filter:blur(6px);-webkit-ba
       <div class="slots" id="slots"></div>
     </div>
     <div class="kb" id="kpi" style="margin-top:10px"></div>
+    <div class="card wk"><div class="wkh"><b>Просмотры</b> <span>за неделю</span></div><div id="wk"></div></div>
     <h3 class="ap">Ждут вашего решения <button class="tip" type="button" data-tip="wait" aria-label="Подсказка"><i>!</i></button></h3>
     <div class="card list ap" id="wait"></div>
     <h3>Новое видео домлы <button class="tip" type="button" data-tip="new" aria-label="Подсказка"><i>!</i></button></h3>
@@ -263,15 +320,15 @@ dialog::backdrop{background:rgba(0,0,0,.35);backdrop-filter:blur(6px);-webkit-ba
 
 <form id="askf"><textarea id="q" rows="1" aria-label="Сообщение агенту" enterkeyhint="send" required></textarea><button class="btn ic" type="button" id="talk" aria-label="Голосовой чат"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 10v4M7.5 7v10M12 4v16M16.5 7v10M21 10v4"/></svg></button><button class="btn ic main" type="submit" aria-label="Отправить"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button></form>
 <dialog id="vc" aria-label="Голосовой чат"><div class="vs" id="vs" role="status"></div><button id="orb" aria-label="Закончить фразу или остановить ответ"></button><div class="vt" id="vt"></div><button class="btn" id="vx">Закрыть</button></dialog>
-<dialog id="dlg"><div class="dh"><b id="dt"></b><button class="btn small" id="dx" aria-label="Закрыть">✕</button></div><div id="db"></div></dialog>
+<dialog id="dlg"><div class="dh"><b id="dt"></b><button class="btn small" id="dx" aria-label="Закрыть"><svg class="i"><use href="#i-x"/></svg></button></div><div id="db"></div></dialog>
 <div id="toast" role="status"></div>
 
 <nav hidden><div class="wrap">
-  <button class="on" data-v="home"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Сейчас</button>
-  <button data-v="queue"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="m10 9 5 3-5 3z"/></svg>Очередь</button>
-  <button data-v="ai"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/><path d="M9 12h.01M13 12h.01M17 12h.01"/></svg>AI-агент</button>
-  <button data-v="grow"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>Рост</button>
-  <button data-v="mode"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>Управление</button>
+  <button class="on" data-v="home"><svg class="i"><use href="#i-home"/></svg>Сейчас</button>
+  <button data-v="queue"><svg class="i"><use href="#i-play"/></svg>Очередь</button>
+  <button data-v="ai"><svg class="i"><use href="#i-spark"/></svg>AI-агент</button>
+  <button data-v="grow"><svg class="i"><use href="#i-chart"/></svg>Рост</button>
+  <button data-v="mode"><svg class="i"><use href="#i-sliders"/></svg>Управление</button>
 </div></nav>
 
 <script type="module">
@@ -304,12 +361,21 @@ function pic(i){const src=i.media?CV+'m'+encodeURIComponent(i.media)+'.jpg':/^\d
 document.addEventListener('error',e=>{if(e.target.matches?.('img[data-hide]'))e.target.remove()},true);
 function row(i){
   const s=i.stats||((D||{}).reels||[]).find(x=>(i.media&&x.id===i.media)||(x.permalink&&x.permalink===i.permalink)),open=['awaiting_approval','ready','needs_owner','rejected'].includes(i.status);
-  const m=s?`<div class="metrics"><span>👁 <b>${fmt(s.views)}</b></span><span>↗ <b>${fmt(s.shares)}</b></span><span>🔖 <b>${fmt(s.saved)}</b></span><span>❤ <b>${fmt(s.likes)}</b></span></div>`:'';
+  const m=s?`<div class="metrics"><span><svg class="i"><use href="#i-eye"/></svg><b>${fmt(s.views)}</b></span><span><svg class="i"><use href="#i-share"/></svg><b>${fmt(s.shares)}</b></span><span><svg class="i"><use href="#i-save"/></svg><b>${fmt(s.saved)}</b></span><span><svg class="i"><use href="#i-heart"/></svg><b>${fmt(s.likes)}</b></span></div>`:'';
   i={...i,permalink:i.permalink||(((D||{}).reels||[]).find(x=>i.media&&x.id===i.media)||{}).permalink};const pub=i.status==='published'&&i.permalink;
   const tag=pub?'a':open?'button':'div';
   return `<${tag} class="row" ${pub?`href="${link(i.permalink)}" target="_blank" rel="noopener"`:open?`data-id="${esc(i.id)}"`:''}>
     ${pic(i)}<span class="main"><span class="t">${esc((i.hook||'').replace(/\*/g,'').trim()||(i.status==='in_progress'?'Ролик делается':['downloaded','new','retry'].includes(i.status)?'Исходное видео':'Ролик '+i.id))}</span><span class="m">${date(i.published_at||i.received_at)}</span>${m}</span>
-    <span class="pill ${CLS[i.status]||''}">${esc(RU[i.status]||i.status)}</span>${pub||open?'<span class="chev">›</span>':''}</${tag}>`}
+    <span class="pill ${CLS[i.status]||''}">${esc(RU[i.status]||i.status)}</span>${pub||open?'<span class="chev"><svg class="i"><use href="#i-right"/></svg></span>':''}</${tag}>`}
+function week(){
+  const R=(D&&D.reels)||[],day=864e5,t0=new Date();t0.setHours(0,0,0,0);
+  const v=[...Array(7)].map((_,k)=>{const a=t0-(6-k)*day;return R.filter(x=>{const t=+new Date(x.timestamp);return t>=a&&t<a+day}).reduce((s,x)=>s+(+x.views||0),0)});
+  const W=['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],lab=[...Array(7)].map((_,k)=>W[new Date(t0-(6-k)*day).getDay()]);
+  if(!v.some(Boolean)){$('#wk').innerHTML='<div class="empty">За неделю роликов не выходило</div>';return}
+  const mx=Math.max(...v),pt=v.map((x,k)=>[k*50+5,128-x/mx*100]),bi=v.indexOf(mx);
+  let d='M'+pt[0];for(let k=1;k<7;k++){const[a,b]=pt[k-1],[c,e]=pt[k];d+=' C'+(a+25)+' '+b+','+(c-25)+' '+e+','+c+' '+e}
+  const[x,y]=pt[bi];
+  $('#wk').innerHTML='<svg viewBox="0 0 310 140" role="img" aria-label="Просмотры за 7 дней, максимум '+fmt(mx)+'"><path d="'+d+'" fill="none" stroke="var(--green)" stroke-width="3" stroke-linecap="round"/><circle cx="'+x+'" cy="'+y+'" r="6" fill="#fff" stroke="var(--green)" stroke-width="3"/></svg><span class="wkv" style="left:'+(x/310*100)+'%;top:'+(y/140*100)+'%">'+fmt(mx)+'</span><div class="wkd">'+lab.map((l,k)=>'<span'+(k===bi?' class="on"':'')+'>'+l+'</span>').join('')+'</div>'}
 function draw(){
   const d=D,by=s=>d.items.filter(i=>s.includes(i.status));
   $('#upd').textContent='Обновлено '+date(new Date());
@@ -324,7 +390,8 @@ function draw(){
   document.querySelectorAll('.ap').forEach(x=>x.hidden=d.mode!=='approve');
   list('#wait',by(['awaiting_approval']).map(row).join(''),d.mode==='auto'?'Режим «Автоматически»: ролики выходят сами':'Готовый ролик появится здесь: посмотреть и выпустить');
   list('#recent',pub.slice(0,5).map(row).join(''),'Пока нет вышедших');
-  list('#queue',[...by(['in_progress']),...by(['awaiting_approval','approved','ready']),...by(['downloaded','new','retry']),...by(['needs_owner','rejected','failed']),...pub].map(row).join(''),'Очередь пуста');
+  week();
+  list('#queue',[...by(['in_progress']),...by(['awaiting_approval','approved','ready']),...by(['downloaded','new','retry']),...by(['needs_owner','failed']),...pub].map(row).join(''),'Очередь пуста');
   $('#m-auto').classList.toggle('on',d.mode==='auto');$('#m-approve').classList.toggle('on',d.mode==='approve');
   list('#runs',d.runs.map(r=>`<div class="row"><span class="main"><span class="t">${({produce:'Производство ролика',beat:'Будильник'})[r.name]||esc(r.name)}</span><span class="m">${date(r.at)}</span></span><span class="pill ${r.status!=='completed'?'blue':r.conclusion==='success'?'ok':'bad'}">${r.status!=='completed'?'идёт':r.conclusion==='success'?'закончено':r.conclusion==='cancelled'?'остановлено':'ошибка'}</span></div>`).join(''),'Нет данных');
   const a=d.account||{},R=(d.reels||[]).filter(x=>x.views!=null),sum=k=>R.reduce((s,x)=>s+(+x[k]||0),0);
@@ -344,13 +411,13 @@ function draw(){
   $('#gk').innerHTML=g.map(x=>`<button><span class="v">${x[1]}</span><span class="k">${x[0]}</span></button>`).join('');
   $('#gk').querySelectorAll('button').forEach((b,n)=>b.onclick=()=>pop(g[n][0],g[n][3]()));
   $('#gnote').textContent=a.updated?'Данные Instagram от '+date(a.updated):'Статистика ещё собирается.';
-  const reelRow=(x,v)=>`<a class="row" href="${link(x.permalink)}" target="_blank" rel="noopener"><span class="num cv"><img loading="lazy" alt="" src="${CV}m${encodeURIComponent(x.id)}.jpg" data-hide></span><span class="main"><span class="t">${esc(x.hook||'Ролик')}</span><span class="m">${date(x.timestamp)}</span></span><b>${v}</b><span class="chev">›</span></a>`;
+  const reelRow=(x,v)=>`<a class="row" href="${link(x.permalink)}" target="_blank" rel="noopener"><span class="num cv"><img loading="lazy" alt="" src="${CV}m${encodeURIComponent(x.id)}.jpg" data-hide></span><span class="main"><span class="t">${esc(x.hook||'Ролик')}</span><span class="m">${date(x.timestamp)}</span></span><b>${v}</b><span class="chev"><svg class="i"><use href="#i-right"/></svg></span></a>`;
   function top(k,n){return [...R].sort((p,q)=>(+q[k]||0)-(+p[k]||0)).slice(0,20).map(x=>reelRow(x,fmt(x[k])+' '+n)).join('')||'<div class="empty">Нет данных</div>'}
   function best(){return [...R].sort((p,q)=>((q.shares||0)*20+(q.saved||0)*10+(q.views||0))-((p.shares||0)*20+(p.saved||0)*10+(p.views||0))).slice(0,10).map(x=>reelRow(x,fmt(x.views))).join('')||'<div class="empty">Нет данных</div>'}
   function info(l){return l.map(([k,v])=>`<div class="row"><span class="main"><span class="t">${k}</span></span><b>${v}</b></div>`).join('')}
   function spark(v){v=v.map(Number).filter(x=>!isNaN(x));if(v.length<2)return'';const lo=Math.min(...v),hi=Math.max(...v),p=v.map((x,i)=>`${(i/(v.length-1)*300).toFixed(1)},${(110-(x-lo)/(hi-lo||1)*100).toFixed(1)}`).join(' ');return `<svg class="spark" viewBox="0 0 300 120" preserveAspectRatio="none" role="img" aria-label="График от ${fmt(v[0])} до ${fmt(v[v.length-1])}"><polyline points="${p}" fill="none" stroke="#e1306c" stroke-width="2.5" vector-effect="non-scaling-stroke"/></svg><p class="help">слева старые, справа новые · минимум ${fmt(lo)}, максимум ${fmt(hi)}</p>`}
   function topics(){const tp=(d.topics||[]).map(x=>({...x,v:+x.median_views_24h||0})).sort((p,q)=>q.v-p.v),mx=Math.max(1,...tp.map(x=>x.v));return tp.map(x=>`<div class="row"><div class="main"><div class="t">${esc(x.topic)}</div><div class="m">${esc(x.reels)} рол. · обычно ${fmt(x.v)} просм. · репостов ${esc(x.median_shares)}</div><div class="bar"><i style="width:${Math.round(x.v/mx*100)}%"></i></div></div></div>`).join('')||'<div class="empty">Нет данных</div>'}
-  function comps(){const c=d.competitors||{};return ((c.top||[]).slice(0,40).map(x=>`<a class="row" href="${link(x.url)}" target="_blank" rel="noopener"><span class="main"><span class="t">${esc(x.hook||x.url)}</span><span class="m">${esc(x.author||'')} ❤ ${fmt(x.likes)} · 💬 ${fmt(x.comments)}${x.views?' · 👁 '+fmt(x.views):''}</span></span><span class="chev">›</span></a>`).join('')||`<div class="empty">${esc(c.note||'Пришлите ссылки на ролики конкурентов ниже на экране «Рост».')}</div>`)}
+  function comps(){const c=d.competitors||{};return ((c.top||[]).slice(0,40).map(x=>`<a class="row" href="${link(x.url)}" target="_blank" rel="noopener"><span class="main"><span class="t">${esc(x.hook||x.url)}</span><span class="m">${esc(x.author||'')} ❤ ${fmt(x.likes)} · 💬 ${fmt(x.comments)}${x.views?' · 👁 '+fmt(x.views):''}</span></span><span class="chev"><svg class="i"><use href="#i-right"/></svg></span></a>`).join('')||`<div class="empty">${esc(c.note||'Пришлите ссылки на ролики конкурентов ниже на экране «Рост».')}</div>`)}
   const SN={watercolor:'Акварель',oil:'Масло',gouache:'Гуашь',miniature:'Восточная миниатюра',cinematic:'Кино',pencil:'Карандаш'};
   $('#styles').innerHTML=Object.entries(SN).map(([k,v])=>`<button class="${d.style===k?'on':''}" aria-pressed="${d.style===k}" data-s="${k}">${v}</button>`).join('');
   $('#styles').querySelectorAll('button').forEach(b=>b.onclick=()=>send('style',b.dataset.s,'Стиль следующих роликов: '+SN[b.dataset.s]));
@@ -369,7 +436,7 @@ async function open(id){
   const i=D.items.find(x=>x.id===id);if(!i)return;
   $('#dt').textContent=id+' · '+(i.hook||'');
   const can=i.status==='awaiting_approval'||i.status==='ready';
-  $('#db').innerHTML=`<div id="vid">${can?`<img alt="Обложка" src="${CV}${id}.jpg" data-hide style="width:100%;max-height:46dvh;object-fit:contain;border-radius:16px;margin-bottom:10px">`:''}<button class="btn main" id="play">▶ Посмотреть ролик</button></div><div class="acts">${can?'<button class="btn main" data-c="pub">Выпустить</button>':''}${i.started?'':'<button class="btn" data-c="redo">Переделать</button>'}${can?'<button class="btn bad" data-c="rej">Отклонить</button>':''}</div><div id="qa" class="note">Проверка…</div>`;
+  $('#db').innerHTML=`<div id="vid">${can?`<img alt="Обложка" src="${CV}${id}.jpg" data-hide style="width:100%;max-height:46dvh;object-fit:contain;border-radius:16px;margin-bottom:10px">`:''}<button class="btn main" id="play">Посмотреть ролик</button></div><div class="acts">${can?'<button class="btn main" data-c="pub">Выпустить</button>':''}${i.started?'':'<button class="btn" data-c="redo">Переделать</button>'}${can?'<button class="btn bad" data-c="rej">Отклонить</button>':''}</div><div id="qa" class="note">Проверка…</div>`;
   dlg.showModal();
   $('#play').onclick=async()=>{const p=$('#play');p.disabled=true;try{
     const v=await api('video',id),r=await fetch(v.url);if(!r.ok)throw Error();
@@ -377,13 +444,13 @@ async function open(id){
     for(;;){const{done,value}=await rd.read();if(done)break;parts.push(value);n+=value.length;p.textContent='Загрузка '+Math.round(n/v.size*100)+'%'}
     if(!dlg.open||!p.isConnected)return;
     blob=URL.createObjectURL(new Blob(parts,{type:'video/mp4'}));$('#vid').innerHTML=`<video controls autoplay playsinline src="${blob}"></video>`
-  }catch(e){fail(e);p.disabled=false;p.textContent='▶ Посмотреть ролик'}};
+  }catch(e){fail(e);p.disabled=false;p.textContent='Посмотреть ролик'}};
   const T={pub:['Выпустить ролик в Instagram?','Принято, выйдет в течение нескольких минут'],redo:['Переделать ролик заново?','Вернул в производство'],rej:['Отклонить ролик?','Отклонён']};
-  dlg.querySelectorAll('[data-c]').forEach(b=>b.onclick=async()=>{if(confirm(T[b.dataset.c][0])){b.disabled=true;if(await send(b.dataset.c,id,T[b.dataset.c][1]))shut();else b.disabled=false}});
+  dlg.querySelectorAll('[data-c]').forEach(b=>b.onclick=async()=>{if(confirm(T[b.dataset.c][0])){b.disabled=true;if(await send(b.dataset.c,id,T[b.dataset.c][1])){i.status={pub:'approved',rej:'rejected',redo:'downloaded'}[b.dataset.c];draw();shut()}else b.disabled=false}});
   try{const q=await api('qa',id);if(!dlg.open||!$('#qa'))return;
     const it=Object.entries(q.qa?.items||{});
     const N={1:'Картинки = слова',2:'Понятность',3:'Перспектива',4:'Люди',5:'Стиль',6:'Движение',7:'Субтитры',8:'Звук',9:'Подпись'};
-    $('#qa').innerHTML=(it.map(([n,v])=>`<div>${v.ok?'✅':'❌'} ${esc(N[n]||v.name)}</div>`).join('')||'Проверки нет')+(q.plan?.caption?`<h3>Подпись</h3><div style="white-space:pre-wrap">${esc(q.plan.caption)}</div>`:'')
+    $('#qa').innerHTML=(it.map(([n,v])=>`<div><span class="qa ${v.ok?'ok':'no'}">${v.ok?'<svg class="i"><use href="#i-check"/></svg>':'<svg class="i"><use href="#i-x"/></svg>'}</span> ${esc(N[n]||v.name)}</div>`).join('')||'Проверки нет')+(q.plan?.caption?`<h3>Подпись</h3><div style="white-space:pre-wrap">${esc(q.plan.caption)}</div>`:'')
   }catch(e){if($('#qa'))$('#qa').textContent=''}}
 let H=[];try{H=JSON.parse(localStorage.eslarmaChat||'[]')}catch{}
 const AUTO=['set','code','style','wish','wishclear','link','comp','redo','make','growth'];
@@ -462,7 +529,7 @@ $('#compb').onclick=()=>{pop('Конкурент',`<form class="card add" id="cf
     try{const u=await api('upload','',{fn:'eslarma-ask'});const q=await fetch(u.url,{method:'PUT',headers:{'Content-Type':f.type||'video/mp4'},body:f});if(!q.ok)throw Error();const x=await api('compvideo',u.path,{fn:'eslarma-ask',name:f.name});wait(x.id)}catch(x){say(WHY[x.kind]||'Не получилось загрузить, попробуйте ещё раз.')}}};
 function comps2(){const c=(D||{}).competitors||{},L=[];try{L.push(...JSON.parse(localStorage.eslarmaComp||'[]'))}catch{}
   const all=[...(c.analysis||[]),...L.filter(x=>!(c.analysis||[]).some(y=>y.text===x.text))];
-  list('#clist',all.map((x,n)=>`<button class="row" data-c="${n}"><span class="main"><span class="t">${esc(x.name?'@'+x.name.replace(/^@/,''):'Разбор ролика')}</span><span class="m">${date(x.at)}${x.views?' · 👁 '+fmt(x.views):''}${x.likes?' · ❤ '+fmt(x.likes):''}</span></span><span class="chev">›</span></button>`).join('')+(c.accounts||[]).map(x=>`<a class="row" href="https://www.instagram.com/${esc(x)}/" target="_blank" rel="noopener"><span class="main"><span class="t">@${esc(x)}</span><span class="m">аккаунт сохранён, ждёт ссылок</span></span><span class="chev">›</span></a>`).join(''),'Пока пусто');
+  list('#clist',all.map((x,n)=>`<button class="row" data-c="${n}"><span class="main"><span class="t">${esc(x.name?'@'+x.name.replace(/^@/,''):'Разбор ролика')}</span><span class="m">${date(x.at)}${x.views?' · 👁 '+fmt(x.views):''}${x.likes?' · ❤ '+fmt(x.likes):''}</span></span><span class="chev"><svg class="i"><use href="#i-right"/></svg></span></button>`).join('')+(c.accounts||[]).map(x=>`<a class="row" href="https://www.instagram.com/${esc(x)}/" target="_blank" rel="noopener"><span class="main"><span class="t">@${esc(x)}</span><span class="m">аккаунт сохранён, ждёт ссылок</span></span><span class="chev"><svg class="i"><use href="#i-right"/></svg></span></a>`).join(''),'Пока пусто');
   $('#clist').querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>pop('Разбор конкурента',`<div style="white-space:pre-wrap">${esc(all[b.dataset.c].text)}</div>`))}
 $('#wishf').onsubmit=async e=>{e.preventDefault();const w=$('#wish').value.trim();if(w.length>2&&await send('wish',w,'Учту в следующих роликах'))$('#wish').value=''};
 $('#refresh').onclick=()=>send('growth','','Собираю статистику, 2–3 минуты');
