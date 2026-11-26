@@ -6,8 +6,8 @@
 <title>Eslarma — студия</title>
 <meta name="theme-color" content="#ffffff" id="metaTheme">
 <link rel="manifest" href="manifest.json">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?7">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?7">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?8">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?8">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -250,10 +250,25 @@ nav button[data-v=mode]{display:none!important}
 nav button{padding:0!important;height:52px;min-height:52px;border-radius:18px!important;display:grid!important;place-items:center}
 nav button svg{width:24px!important;height:24px!important}
 nav{width:min(400px,calc(100% - 28px))!important;border-radius:28px!important}
+
+/* ===== живой график ===== */
+.wkpl{position:relative}#wk{margin-top:44px;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+#wk svg{width:100%;height:170px;display:block;cursor:pointer;overflow:visible}
+.wkline{fill:none;stroke:#12A36F;stroke-width:3.5;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.wkgrid{stroke:#EEF3F1;stroke-width:1;stroke-dasharray:3 5;vector-effect:non-scaling-stroke}
+.wkguide{stroke:#12A36F;stroke-opacity:.35;stroke-width:1.5;stroke-dasharray:4 4;vector-effect:non-scaling-stroke;transition:all .35s cubic-bezier(.32,1.25,.5,1)}
+.wkdot{position:absolute;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;background:#fff;border:4px solid #12A36F;box-shadow:0 4px 12px rgba(18,163,111,.45);pointer-events:none;transition:left .35s cubic-bezier(.32,1.25,.5,1),top .35s cubic-bezier(.32,1.25,.5,1)}
+.wkv{position:absolute;transform:translate(-50%,calc(-100% - 16px));background:#0E3D2C;color:#fff;font-size:12px;font-weight:600;padding:7px 12px;border-radius:12px;white-space:nowrap;text-align:center;pointer-events:none;box-shadow:0 8px 20px -8px rgba(14,61,44,.6);transition:left .35s cubic-bezier(.32,1.25,.5,1),top .35s cubic-bezier(.32,1.25,.5,1)}
+.wkv b{font-size:16px;font-weight:800;margin-right:2px;font-variant-numeric:tabular-nums}.wkv small{display:block;font-size:11px;font-weight:500;opacity:.75;margin-top:1px;max-width:220px;overflow:hidden;text-overflow:ellipsis}
+.wkv:after{content:"";position:absolute;left:50%;bottom:-5px;margin-left:-6px;border:6px solid transparent;border-bottom:0;border-top-color:#0E3D2C}
+.wkd{display:flex;justify-content:space-between;gap:2px;margin-top:10px}
+.wkd button{all:unset;cursor:pointer;flex:1;text-align:center;font-size:12px;font-weight:700;color:#9AA8A2;padding:6px 0;border-radius:10px;transition:background .25s,color .25s}
+.wkd button.on{background:#E8F6EF;color:#0E8A5F}.wkd button:focus-visible{outline:2px solid #12A36F}
+.wkd.wide button{font-size:11px}
 </style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap">
 </head>
-<body data-build="1795718913">
+<body data-build="1795719113">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
 <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M16 3.5a4 4 0 0 1 0 8M22 21a7 7 0 0 0-4-6.3"/></symbol>
 <symbol id="i-film" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M7 4v16M17 4v16M2 12h20"/></symbol>
@@ -271,7 +286,7 @@ nav{width:min(400px,calc(100% - 28px))!important;border-radius:28px!important}
 <symbol id="i-reload" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8M21 3v5h-5"/></symbol>
 <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
 </defs></svg>
-<header><div class="wrap"><div style="flex:1;min-width:0"><div class="sub" id="greet"></div><h1 id="vt">Статистика <button class="tip" type="button" id="vtip" data-tip="now" aria-label="Подсказка"><i>!</i></button></h1><span id="upd" hidden></span></div><button class="btn small" id="reload" aria-label="Обновить" hidden><svg class="i"><use href="#i-reload"/></svg></button><button class="av" id="me" type="button" aria-label="Управление"><img src="mark.png?7" alt="" width="48" height="48"></button></div></header>
+<header><div class="wrap"><div style="flex:1;min-width:0"><div class="sub" id="greet"></div><h1 id="vt">Статистика <button class="tip" type="button" id="vtip" data-tip="now" aria-label="Подсказка"><i>!</i></button></h1><span id="upd" hidden></span></div><button class="btn small" id="reload" aria-label="Обновить" hidden><svg class="i"><use href="#i-reload"/></svg></button><button class="av" id="me" type="button" aria-label="Управление"><img src="mark.png?8" alt="" width="48" height="48"></button></div></header>
 
 <main class="wrap">
   <form id="login" class="card" hidden>
@@ -392,19 +407,36 @@ function row(i){
   return `<${tag} class="row" ${pub?`href="${link(i.permalink)}" target="_blank" rel="noopener"`:open?`data-id="${esc(i.id)}"`:''}>
     ${pic(i)}<span class="main"><span class="t">${esc((i.hook||'').replace(/\*/g,'').trim()||(i.status==='in_progress'?'Ролик делается':['downloaded','new','retry'].includes(i.status)?'Исходное видео':'Ролик '+i.id))}</span><span class="m">${date(i.published_at||i.received_at)}</span>${m}</span>
     <span class="pill ${CLS[i.status]||''}">${esc(RU[i.status]||i.status)}</span>${pub||open?'<span class="chev"><svg class="i"><use href="#i-right"/></svg></span>':''}</${tag}>`}
-let RNG=7;
+let RNG=7,CH=null;
 function week(){
   const R=((D&&D.reels)||[]).filter(x=>x.timestamp),day=864e5,t0=new Date();t0.setHours(0,0,0,0);
-  let v,lab,on=-1;
-  if(RNG){v=[...Array(RNG)].map((_,k)=>{const a=t0-(RNG-1-k)*day;return R.filter(x=>{const t=+new Date(x.timestamp);return t>=a&&t<a+day}).reduce((s,x)=>s+(+x.views||0),0)});
-    const W=['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];lab=[...Array(RNG)].map((_,k)=>{const dt=new Date(t0-(RNG-1-k)*day);return RNG===7?W[dt.getDay()]:k%6===0||k===RNG-1?String(dt.getDate()):''})}
-  else{const s=[...R].sort((p,q)=>new Date(p.timestamp)-new Date(q.timestamp));v=s.map(x=>+x.views||0);lab=s.map((x,k)=>k===0||k===s.length-1?new Date(x.timestamp).toLocaleDateString('ru',{day:'numeric',month:'short'}):'')}
+  let v,lab,full;
+  if(RNG){const ds=[...Array(RNG)].map((_,k)=>new Date(t0-(RNG-1-k)*day));
+    v=ds.map(dt=>R.filter(x=>{const t=+new Date(x.timestamp);return t>=+dt&&t<+dt+day}).reduce((s,x)=>s+(+x.views||0),0));
+    const W=['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];lab=ds.map((dt,k)=>RNG===7?W[dt.getDay()]:k%6===0||k===RNG-1?String(dt.getDate()):'');
+    full=ds.map(dt=>dt.toLocaleDateString('ru',{weekday:'long',day:'numeric',month:'long'}))}
+  else{const s=[...R].sort((p,q)=>new Date(p.timestamp)-new Date(q.timestamp));v=s.map(x=>+x.views||0);
+    lab=s.map((x,k)=>k===0||k===s.length-1?new Date(x.timestamp).toLocaleDateString('ru',{day:'numeric',month:'short'}):'');
+    full=s.map(x=>(x.hook?'«'+String(x.hook).replace(/\*/g,'').slice(0,40)+'» · ':'')+new Date(x.timestamp).toLocaleDateString('ru',{day:'numeric',month:'long'}))}
   $('#wkp').textContent=RNG===7?'за неделю':RNG?'за месяц':'за всё время';
-  if(v.length<2||!v.some(Boolean)){$('#wk').innerHTML='<div class="empty">Пока нет данных за этот период</div>';return}
-  const n=v.length,mx=Math.max(...v),pt=v.map((x,k)=>[5+k*300/(n-1),128-x/mx*100]),bi=v.indexOf(mx),c=300/(n-1)/2;
+  if(v.length<2||!v.some(Boolean)){$('#wk').innerHTML='<div class="empty">Пока нет данных за этот период</div>';CH=null;return}
+  const n=v.length,mx=Math.max(...v),W=320,H=150,top=34,bot=128,pt=v.map((x,k)=>[10+k*(W-20)/(n-1),bot-x/mx*(bot-top)]),c=(W-20)/(n-1)/2.2;
   let p='M'+pt[0];for(let k=1;k<n;k++){const[a,b]=pt[k-1],[x,y]=pt[k];p+=' C'+(a+c)+' '+b+','+(x-c)+' '+y+','+x+' '+y}
-  const[x,y]=pt[bi];on=bi;
-  $('#wk').innerHTML='<svg viewBox="0 0 310 140" role="img" aria-label="Просмотры, максимум '+fmt(mx)+'"><path d="'+p+'" fill="none" stroke="var(--green)" stroke-width="3" stroke-linecap="round"/><circle cx="'+x+'" cy="'+y+'" r="6" fill="#fff" stroke="var(--green)" stroke-width="3"/></svg><span class="wkv" style="left:'+Math.min(88,Math.max(12,x/310*100))+'%;top:'+(y/140*100)+'%">'+fmt(mx)+'</span><div class="wkd'+(RNG===7?'':' wide')+'">'+lab.map((l,k)=>'<span'+(k===on&&RNG===7?' class="on"':'')+'>'+l+'</span>').join('')+'</div>'}
+  const area=p+' L'+pt[n-1][0]+' '+H+' L'+pt[0][0]+' '+H+' Z';
+  $('#wk').innerHTML='<div class="wkpl"><svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" role="img" aria-label="Просмотры, максимум '+fmt(mx)+'"><defs><linearGradient id="wkg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#12A36F" stop-opacity=".28"/><stop offset="1" stop-color="#12A36F" stop-opacity="0"/></linearGradient></defs>'
+    +[0,1,2].map(k=>'<line x1="0" x2="'+W+'" y1="'+(top+k*(bot-top)/2)+'" y2="'+(top+k*(bot-top)/2)+'" class="wkgrid"/>').join('')
+    +'<path d="'+area+'" fill="url(#wkg)"/><path d="'+p+'" class="wkline"/><line id="wkguide" y1="'+top+'" y2="'+H+'" class="wkguide"/></svg>'
+    +'<span id="wkdot" class="wkdot"></span><span id="wkv" class="wkv"></span></div>'
+    +'<div class="wkd'+(RNG===7?'':' wide')+'">'+lab.map((l,k)=>'<button type="button" data-k="'+k+'" tabindex="'+(l?0:-1)+'">'+l+'</button>').join('')+'</div>';
+  CH={v,pt,full,W,H,n};pick(v.indexOf(mx));
+  const box=$('#wk').querySelector('svg'),at=e=>{const r=box.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*W;let k=Math.round((x-10)/((W-20)/(n-1)));pick(Math.max(0,Math.min(n-1,k)))};
+  box.onpointerdown=e=>{box.setPointerCapture?.(e.pointerId);at(e)};box.onpointermove=e=>{if(e.buttons||e.pointerType==='mouse')at(e)};
+  $('#wk').querySelectorAll('.wkd button').forEach(b=>b.onclick=()=>pick(+b.dataset.k))}
+function pick(k){if(!CH)return;const{v,pt,full,W,H}=CH,[x,y]=pt[k],L=x/W*100,T=y/H*100;
+  const d=$('#wkdot'),t=$('#wkv'),g=$('#wkguide');d.style.left=t.style.left=Math.min(84,Math.max(16,L))+'%';d.style.left=L+'%';d.style.top=T+'%';t.style.top=T+'%';
+  g.setAttribute('x1',x);g.setAttribute('x2',x);
+  t.innerHTML='<b>'+fmt(v[k])+'</b> просм.<small>'+esc(full[k])+'</small>';
+  $('#wk').querySelectorAll('.wkd button').forEach((b,i)=>b.classList.toggle('on',i===k))}
 function draw(){
   const d=D,by=s=>d.items.filter(i=>s.includes(i.status));
   $('#upd').textContent='Обновлено '+date(new Date());
