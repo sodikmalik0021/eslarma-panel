@@ -125,7 +125,7 @@ body.ai #askf{display:flex}body.ai main{padding-bottom:84px}
 #toast{position:fixed;left:50%;top:calc(76px + env(safe-area-inset-top));transform:translate(-50%,-12px);font-size:14px;background:var(--text);color:var(--bg);padding:12px 18px;border-radius:14px;font-weight:600;opacity:0;pointer-events:none;transition:.2s;z-index:20;max-width:90vw}#toast.on{opacity:1;transform:translate(-50%,0)}
 </style>
 </head>
-<body data-build="1795692459">
+<body data-build="1795709122">
 <svg width="0" height="0" style="position:absolute"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#6a2cf5"/><stop offset=".5" stop-color="#e1306c"/><stop offset="1" stop-color="#f77737"/></linearGradient></defs></svg>
 <header><div class="wrap"><img class="logo" src="mark.png?3" alt="" width="42" height="42"><div style="flex:1"><h1>Eslarma</h1><div class="sub" id="upd">загрузка…</div></div><button class="btn small" id="reload" aria-label="Обновить" hidden>↻</button></div></header>
 
@@ -239,7 +239,7 @@ async function api(cmd,arg,more){
   if(!r.ok)throw Object.assign(Error(d.error||'http'),{kind:d.error,http:d.http,len:d.len});
   return d}
 let tt;const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2600)};
-const WHY={nokey:'Сайт готов, но осталось вставить ключ GitHub ниже.',forbidden:'Этот вход не хозяина программы.',github:'GitHub не ответил. Попробуйте позже или проверьте ключ.',ghdown:'GitHub сейчас сбоит. Попробуйте через несколько минут.',noai:'Сначала подключите ИИ.',aikey:'Ключ ИИ не принимают, вставьте новый.',voicebusy:'Голос сейчас занят, попробуйте через минуту.',aibusy:'ИИ сейчас занят, попробуйте через минуту.',novideo:'Видео этого ролика не найдено.'};
+const WHY={nokey:'Сайт готов, но осталось вставить ключ GitHub ниже.',forbidden:'Этот вход не хозяина программы.',github:'GitHub не ответил. Попробуйте позже или проверьте ключ.',ghdown:'GitHub сейчас сбоит. Попробуйте через несколько минут.',noai:'Сначала подключите ИИ.',aikey:'Ключ ИИ не принимают, вставьте новый.',voicebusy:'Голос сейчас занят, попробуйте через минуту.',aibusy:'Google сейчас перегружен. Попробуйте через минуту.',novideo:'Видео этого ролика не найдено.'};
 const fail=e=>toast(WHY[e.kind]||'Не получилось. Проверьте интернет и попробуйте ещё раз.');
 function show(){$('#login').hidden=!!S;$('#app').hidden=!S;$('nav').hidden=!S;$('#reload').hidden=!S;if(!S){$('#warn').hidden=true;$('#keyf').hidden=true;$('#upd').textContent='только для владельца'}}
 const list=(el,html,empty)=>{$(el).innerHTML=html||`<div class="empty">${empty}</div>`};
@@ -376,18 +376,19 @@ $('#talk').onclick=async()=>{unlock();if(!D?.ai){aiKey();return}
   vc.show();vs('Включаю микрофон…','');
   try{const st=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}}),ac=new (window.AudioContext||window.webkitAudioContext)();await ac.resume();const an=ac.createAnalyser();an.fftSize=512;ac.createMediaStreamSource(st).connect(an);V={st,ac,an,stop:false}}catch{vs('Разрешите микрофон в настройках телефона','');return}
   const me=V;while(V===me&&!me.stop){try{await turn(me)}catch(e){if(V!==me)return;vs(WHY[e.kind]||'Не получилось, попробуем ещё раз');await new Promise(z=>setTimeout(z,2500))}}};
-async function turn(v){const type=['audio/webm;codecs=opus','audio/mp4','audio/ogg'].find(x=>MediaRecorder.isTypeSupported(x))||'';const mr=v.mr=new MediaRecorder(v.st,type?{mimeType:type}:{}),ch=[];mr.ondataavailable=e=>e.data.size&&ch.push(e.data);const end=new Promise(z=>mr.onstop=z);mr.start();vs('Слушаю… пауза — отправить');
-  const buf=new Uint8Array(v.an.fftSize);let floor=6,heard=0,quiet=0,t0=Date.now(),last=t0;v.send=false;
+async function turn(v){const type=['audio/webm;codecs=opus','audio/mp4','audio/ogg'].find(x=>MediaRecorder.isTypeSupported(x))||'';const mr=v.mr=new MediaRecorder(v.st,type?{mimeType:type}:{}),ch=[];mr.ondataavailable=e=>e.data.size&&ch.push(e.data);const end=new Promise(z=>mr.onstop=z);mr.start();vs('Слушаю… Скажите и нажмите на шар');
+  const buf=new Uint8Array(v.an.fftSize);let floor=1.5,peak=0,heard=0,quiet=0,t0=Date.now(),last=t0;v.send=false;
   const tick=()=>{if(mr.state!=='recording')return;v.an.getByteTimeDomainData(buf);let s=0;for(const x of buf)s+=(x-128)*(x-128);const m=Math.sqrt(s/buf.length),now=Date.now(),dt=now-last;last=now;
-    if(now-t0<500)floor=Math.max(floor,m);const on=m>floor*1.8+3;$('#orb').style.setProperty('--lv',1+Math.min(m,40)/120);
-    if(on){heard+=dt;quiet=0}else{quiet+=dt;if(!heard)floor=floor*.98+m*.02}
-    if(heard>300&&quiet>1300||now-t0>40000){v.send=true;mr.stop();return}setTimeout(tick,50)};tick();
+    peak=Math.max(peak,m);const on=m>Math.max(2.5,floor*2.2);$('#orb').style.setProperty('--lv',1+Math.min(m,30)/90);
+    if(on){heard+=dt;quiet=0}else{quiet+=dt;floor=floor*.97+Math.min(m,floor*1.5)*.03}
+    if(heard>250&&quiet>1200||now-t0>30000&&peak>floor*2||now-t0>60000){v.send=true;mr.stop();return}setTimeout(tick,50)};tick();
   await end;$('#orb').style.setProperty('--lv',1);if(v.stop||!v.send)return;
   vs('Думаю…');const blob=new Blob(ch,{type:mr.mimeType||type});const b64=await new Promise(z=>{const f=new FileReader();f.onload=()=>z(String(f.result).split(',')[1]);f.readAsDataURL(blob)});
   const d=await talkTo('',{audio:b64,mime:mr.mimeType||type||'audio/mp4'});if(v.stop||!d.heard.trim())return;
   const m={role:'assistant',content:d.reply,actions:d.actions};H.push({role:'user',content:d.heard},m);save();vs('Отвечаю',d.reply);act(m).then(save);try{await sayText(d.reply,'vc')}catch{vs('Голос занят, прочтите ответ',d.reply);await new Promise(z=>setTimeout(z,4000))}speaking=null}
 function facts(){const d=D||{};return JSON.stringify({now:new Date().toLocaleString('ru-RU',{timeZone:'Asia/Bishkek'}),mode:d.mode,style:d.style,wishes:d.wishes,slots:d.slots,account:{...(d.account||{}),history:undefined},queue:(d.items||[]).filter(i=>i.status!=='published').map(i=>({id:i.id,status:i.status,title:i.hook,qa:i.qa})),reels:(d.reels||[]).slice(0,20).map(x=>({title:x.hook,date:x.timestamp,views:x.views,shares:x.shares,saved:x.saved,likes:x.likes})),topics:(d.topics||[]).slice(0,10),lessons:(d.learned||{}).prompt_notes,competitors:((d.competitors||{}).analysis||[]).slice(0,4)})}
-async function talkTo(q,more){const z=await raw('talk',q,{history:H.slice(-10).filter(m=>!m.pend).map(({role,content})=>({role,content})),data:facts(),...more}),d=await z.json();if(!z.ok)throw Object.assign(Error(),{kind:d.error});return d}
+async function talkTo(q,more){for(let k=0;;k++){try{return await talk1(q,more)}catch(e){if(e.kind!=='aibusy'||k>=3)throw e;vs?.('Google перегружен, пробую ещё раз…');await new Promise(z=>setTimeout(z,3000*(k+1)))}}}
+async function talk1(q,more){const z=await raw('talk',q,{history:H.slice(-10).filter(m=>!m.pend).map(({role,content})=>({role,content})),data:facts(),...more}),d=await z.json();if(!z.ok)throw Object.assign(Error(),{kind:d.error});return d}
 function aiKey(){pop('Голос и быстрый агент',`<form class="card add" id="aif"><span>Нужен бесплатный ключ Google, один раз: <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> → Create API key → скопировать → вставить сюда.</span><input id="aikey" type="password" autocomplete="off" aria-label="Ключ ИИ" required><button class="btn main" type="submit">Сохранить и проверить</button><p class="help" id="aiMsg" role="alert" style="padding:0"></p></form>`);
   $('#aif').onsubmit=async e=>{e.preventDefault();const m=$('#aiMsg');m.textContent='Проверяю…';try{const z=await raw('setai',$('#aikey').value.trim()),w=await z.json();if(!z.ok)throw Object.assign(Error(),{kind:w.error});toast('Голос подключён');shut();load()}catch(x){m.textContent=({aiformat:'Это не похоже на ключ.',aikey:'Этот ключ не принимают. Вставьте целиком.'})[x.kind]||'Не получилось, попробуйте ещё раз.'}}}
 const SR=null;
