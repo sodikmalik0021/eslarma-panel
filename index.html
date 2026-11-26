@@ -265,10 +265,18 @@ nav{width:min(400px,calc(100% - 28px))!important;border-radius:28px!important}
 .wkd button{all:unset;cursor:pointer;flex:1;text-align:center;font-size:12px;font-weight:700;color:#9AA8A2;padding:6px 0;border-radius:10px;transition:background .25s,color .25s}
 .wkd button.on{background:#E8F6EF;color:#0E8A5F}.wkd button:focus-visible{outline:2px solid #12A36F}
 .wkd.wide button{font-size:11px}
+
+/* ===== голосовой чат в нашем стиле ===== */
+#vc{background:rgba(255,255,255,.96)!important;color:var(--text)!important;border:0!important;border-radius:28px!important;box-shadow:0 18px 44px -14px rgba(16,70,50,.45),0 1px 2px rgba(16,70,50,.08)!important;padding:10px 10px 10px 18px!important;backdrop-filter:blur(20px)}
+#vc .vs{color:var(--muted2)!important;font-weight:600;font-size:15px!important;opacity:1!important}
+#vc #orb{width:56px!important;height:56px!important;border-radius:50%!important;border:0;padding:0;background:url(mark.png?8) center/cover no-repeat!important;
+  box-shadow:0 0 0 calc((var(--lv,1) - 1)*36px + 3px) rgba(18,163,111,.16),0 6px 16px -6px rgba(18,163,111,.6)!important;outline:0!important;transition:box-shadow .12s;animation:none!important}#vc{overflow:visible!important}
+#vc #orb::before,#vc #orb::after{display:none!important}
+#vc .btn{background:var(--soft)!important;color:var(--green2)!important;border:0!important;min-height:44px;border-radius:22px!important;padding:0 18px!important;font-weight:700}
 </style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap">
 </head>
-<body data-build="1795719113">
+<body data-build="1795719870">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
 <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M16 3.5a4 4 0 0 1 0 8M22 21a7 7 0 0 0-4-6.3"/></symbol>
 <symbol id="i-film" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M7 4v16M17 4v16M2 12h20"/></symbol>
@@ -548,21 +556,26 @@ const unlock=()=>{if(unlocked)return;unlocked=true;au.src='data:audio/wav;base64
 function hush(){au.pause();try{speechSynthesis.cancel()}catch{}speaking=null;document.querySelectorAll('.say.on').forEach(b=>b.classList.remove('on'))}
 async function sayText(x,id,vid){hush();speaking=id;if(vid){try{const q=await raw('','',{id:vid},'eslarma-audio');if(q.ok){const b=URL.createObjectURL(await q.blob());if(speaking!==id)return;au.src=b;await au.play();await new Promise(z=>{au.onended=z;au.onpause=z});URL.revokeObjectURL(b);return}}catch{}if(speaking!==id)return}x=x.replace(/https?:\S+/g,'').trim();
   if(D&&D.ai){try{const q=await raw('say',x);if(q.ok&&(q.headers.get('content-type')||'').includes('audio')){const b=URL.createObjectURL(await q.blob());if(speaking!==id)return;au.src=b;await au.play();await new Promise(z=>{au.onended=z;au.onpause=z});URL.revokeObjectURL(b);return}}catch{}}
-  if(speaking!==id)return;if(id==='vc')throw Error('voice');toast('Готовлю голос, около минуты');const q=await api('ask','##SAY '+x.slice(0,900),{fn:'eslarma-ask'});
+  if(speaking!==id)return;if(id==='vc'||!D?.ai){await phone(x,id);return}toast('Готовлю голос, около минуты');const q=await api('ask','##SAY '+x.slice(0,900),{fn:'eslarma-ask'});
   for(let n=1;n<=25;n++){await new Promise(z=>setTimeout(z,6000));if(speaking!==id)throw Error('stop');const a=await api('answer',q.id,{fn:'eslarma-dev'});if(!a.wait){const g=await raw('','',{id:q.id},'eslarma-audio');if(!g.ok)throw Error('voice');if(H[id]){H[id].vid=q.id;save()}au.src=URL.createObjectURL(await g.blob());await au.play();await new Promise(z=>{au.onended=z;au.onpause=z});return}}throw Error('voice')}
+function phone(x,id){return new Promise(ok=>{try{const u=new SpeechSynthesisUtterance(x.slice(0,900)),uz=/[ʻʼ‘’]|\b(va|bilan|uchun|emas|kerak|bo'l|qil)\b/i.test(x);u.lang=uz?'uz-UZ':'ru-RU';
+  const vs=speechSynthesis.getVoices().filter(v=>v.lang.startsWith(uz?'uz':'ru'));u.voice=vs.find(v=>/Milena|Katya|female|Женск/i.test(v.name))||vs[0]||null;u.rate=1;u.onend=u.onerror=()=>ok();if(speaking!==id)return ok();speechSynthesis.speak(u)}catch{ok()}})}
 async function raw(cmd,arg,more,fn){if(S.e-Date.now()<60000)await auth('refresh_token',{refresh_token:S.r});return fetch(U+'/functions/v1/'+(fn||'eslarma-voice'),{method:'POST',headers:{apikey:K,Authorization:'Bearer '+S.a,'Content-Type':'application/json'},body:JSON.stringify({cmd,arg,...more}),signal:AbortSignal.timeout(60000)})}
 $('#chat').addEventListener('click',async e=>{const b=e.target.closest('[data-say]');if(!b)return;unlock();if(speaking===b.dataset.say){hush();return}const id=b.dataset.say;const go=sayText(H[id].content,id,H[id].vid);b.classList.add('on');try{await go}catch(x){if(x.message!=='stop')toast('Голос сейчас занят, попробуйте через минуту')}b.classList.remove('on');if(speaking===id)speaking=null});
 // ---------- voice chat: talk - answer - talk again
 const vc=$('#vc');let V=null;
 const vs=(s,x)=>{$('#vs').textContent=s;if(x!==undefined)$('#vt').textContent=x};
-function vclose(){if(V){V.stop=true;try{V.sr?.abort()}catch{}try{V.mr?.state==='recording'&&V.mr.stop()}catch{}V.st?.getTracks().forEach(z=>z.stop());V.ac?.close().catch(()=>{});V=null}hush();if(vc.open)vc.close()}
+let MIC=null,MAC=null;
+async function mic(){if(MIC&&MIC.getAudioTracks().some(t=>t.readyState==='live')){MIC.getAudioTracks().forEach(t=>t.enabled=true);return MIC}
+  MIC=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});return MIC}
+function vclose(){if(V){V.stop=true;try{V.mr?.state==='recording'&&V.mr.stop()}catch{}V.st?.getAudioTracks().forEach(z=>z.enabled=false);V=null}hush();if(vc.open)vc.close();document.body.classList.remove('vcon')}
 $('#vx').onclick=vclose;vc.oncancel=vclose;addEventListener('keydown',e=>{if(e.key==='Escape'&&vc.open)vclose()});
 $('#orb').onclick=()=>{if(!V)return;if(V.mr?.state==='recording'){V.send=true;V.mr.stop()}else if(speaking!==null)hush()};
 $('#talk').onclick=async()=>{unlock();if(!D?.ai){aiKey();return}
-  vc.show();vs('Включаю микрофон…','');
-  try{const st=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}}),ac=new (window.AudioContext||window.webkitAudioContext)();await ac.resume();const an=ac.createAnalyser();an.fftSize=512;ac.createMediaStreamSource(st).connect(an);V={st,ac,an,stop:false}}catch{vs('Разрешите микрофон в настройках телефона','');return}
+  vc.show();document.body.classList.add('vcon');vs('Слушаю…','');
+  try{const st=await mic();if(!MAC||MAC.st!==st){const ac=new (window.AudioContext||window.webkitAudioContext)(),an=ac.createAnalyser();an.fftSize=512;ac.createMediaStreamSource(st).connect(an);MAC={st,ac,an}}await MAC.ac.resume();V={st,ac:MAC.ac,an:MAC.an,stop:false}}catch{vclose();return}
   const me=V;while(V===me&&!me.stop){try{await turn(me)}catch(e){if(V!==me)return;vs(WHY[e.kind]||'Не получилось, попробуем ещё раз');await new Promise(z=>setTimeout(z,2500))}}};
-async function turn(v){const type=['audio/webm;codecs=opus','audio/mp4','audio/ogg'].find(x=>MediaRecorder.isTypeSupported(x))||'';const mr=v.mr=new MediaRecorder(v.st,type?{mimeType:type}:{}),ch=[];mr.ondataavailable=e=>e.data.size&&ch.push(e.data);const end=new Promise(z=>mr.onstop=z);mr.start();vs('Слушаю… Скажите и нажмите на шар');
+async function turn(v){const type=['audio/webm;codecs=opus','audio/mp4','audio/ogg'].find(x=>MediaRecorder.isTypeSupported(x))||'';const mr=v.mr=new MediaRecorder(v.st,type?{mimeType:type}:{}),ch=[];mr.ondataavailable=e=>e.data.size&&ch.push(e.data);const end=new Promise(z=>mr.onstop=z);mr.start();vs('Слушаю… говорите');
   const buf=new Uint8Array(v.an.fftSize);let floor=1.5,peak=0,heard=0,quiet=0,t0=Date.now(),last=t0;v.send=false;
   const tick=()=>{if(mr.state!=='recording')return;v.an.getByteTimeDomainData(buf);let s=0;for(const x of buf)s+=(x-128)*(x-128);const m=Math.sqrt(s/buf.length),now=Date.now(),dt=now-last;last=now;
     peak=Math.max(peak,m);const on=m>Math.max(2.5,floor*2.2);$('#orb').style.setProperty('--lv',1+Math.min(m,30)/90);
@@ -571,7 +584,7 @@ async function turn(v){const type=['audio/webm;codecs=opus','audio/mp4','audio/o
   await end;$('#orb').style.setProperty('--lv',1);if(v.stop||!v.send)return;
   vs('Думаю…');const blob=new Blob(ch,{type:mr.mimeType||type});const b64=await new Promise(z=>{const f=new FileReader();f.onload=()=>z(String(f.result).split(',')[1]);f.readAsDataURL(blob)});
   const d=await talkTo('',{audio:b64,mime:mr.mimeType||type||'audio/mp4'});if(v.stop||!d.heard.trim())return;
-  const m={role:'assistant',content:d.reply,actions:d.actions};H.push({role:'user',content:d.heard},m);save();vs('Отвечаю',d.reply);act(m).then(save);try{await sayText(d.reply,'vc')}catch{vs('Голос занят, прочтите ответ',d.reply);await new Promise(z=>setTimeout(z,4000))}speaking=null}
+  const m={role:'assistant',content:d.reply,actions:d.actions};H.push({role:'user',content:d.heard},m);save();vs('Отвечаю',d.reply);act(m).then(save);try{await sayText(d.reply,'vc')}catch{await phone(d.reply,'vc')}speaking=null}
 function facts(){const d=D||{};return JSON.stringify({now:new Date().toLocaleString('ru-RU',{timeZone:'Asia/Bishkek'}),mode:d.mode,style:d.style,wishes:d.wishes,slots:d.slots,account:{...(d.account||{}),history:undefined},queue:(d.items||[]).filter(i=>i.status!=='published').map(i=>({id:i.id,status:i.status,title:i.hook,qa:i.qa})),reels:(d.reels||[]).slice(0,20).map(x=>({title:x.hook,date:x.timestamp,views:x.views,shares:x.shares,saved:x.saved,likes:x.likes})),topics:(d.topics||[]).slice(0,10),lessons:(d.learned||{}).prompt_notes,competitors:((d.competitors||{}).analysis||[]).slice(0,4)})}
 async function talkTo(q,more){for(let k=0;;k++){try{return await talk1(q,more)}catch(e){if(e.kind!=='aibusy'||k>=3)throw e;vs?.('Google перегружен, пробую ещё раз…');await new Promise(z=>setTimeout(z,3000*(k+1)))}}}
 async function talk1(q,more){const z=await raw('talk',q,{history:H.slice(-10).filter(m=>!m.pend).map(({role,content})=>({role,content})),data:facts(),...more}),d=await z.json();if(!z.ok)throw Object.assign(Error(),{kind:d.error});return d}
